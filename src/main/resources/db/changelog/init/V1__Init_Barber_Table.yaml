@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ilia
+      created: 2023-03-24
+      changes:
+        - createTable:
+            tableName: "barber"
+            columns:
+              - column:
+                  name: "id"
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "avatar_id"
+                  type: bigint
+              - column:
+                  name: "firstname"
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "instagram"
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "rank"
+                  type: enum('BARBER','TRAINEE_BARBER')
+                  constraints:
+                    nullable: false

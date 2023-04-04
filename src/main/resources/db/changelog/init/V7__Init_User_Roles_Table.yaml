@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ilia
+      created: 2023-03-24
+      changes:
+        - createTable:
+            tableName: "user_roles"
+            columns:
+              - column:
+                  name: "user_id"
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "role_id"
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
