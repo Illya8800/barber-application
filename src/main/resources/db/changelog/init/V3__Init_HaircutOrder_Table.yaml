@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ilia
+      created: 2023-03-24
+      changes:
+        - createTable:
+            tableName: "haircut_order"
+            columns:
+              - column:
+                  name: "id"
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "client_id"
+                  type: bigint
+              - column:
+                  name: "description"
+                  type: varchar(255)
+              - column:
+                  name: "date_time"
+                  type: datetime(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "haircut_id"
+                  type: bigint
+              - column:
+                  name: "barber_id"
+                  type: bigint

@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ilia
+      created: 2023-03-24
+      changes:
+        - createTable:
+            tableName: "haircut"
+            columns:
+              - column:
+                  name: "id"
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "avatar_id"
+                  type: bigint
+              - column:
+                  name: "name"
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: "price"
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "duration"
+                  type: tinyint
+                  constraints:
+                    nullable: false
