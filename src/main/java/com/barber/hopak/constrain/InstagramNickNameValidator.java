@@ -1,27 +1,19 @@
 package com.barber.hopak.constrain;
 
+import com.barber.hopak.service.api.InstagramApiService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.StringUtils;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class InstagramNickNameValidator implements ConstraintValidator<InstagramNickName, String> {
-    private static final String instagramPattern = "^(?!.*\\.\\.)(?!.*\\.$)\\w[\\w.]{0,29}$";
+    private final InstagramApiService instagramApiService;
+    private static final String INSTAGRAM_VALIDITY_PATTERN = "^(?!.*\\.\\.)(?!.*\\.$)\\w[\\w.]{0,29}$";
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        String instagram = value.trim();
-        if (instagram.isEmpty()) return true;
-        if (!isLengthCorrect(value)) {
-            return true;
-        }
-        return value.matches(instagramPattern);
+        if (value.trim().isEmpty() || !value.matches(INSTAGRAM_VALIDITY_PATTERN)) return false;
+        return instagramApiService.isUserExist(value);
     }
 
-    private static boolean isLengthCorrect(String value) {
-        int minLength = 3;
-        int maxLength = 30;
-        return StringUtils.isEmpty(value)
-                && value.length() > minLength
-                && value.length() < maxLength;
-    }
 }

@@ -14,6 +14,7 @@ public class DtoConstraintMessage {
     public static final String HAIRCUT_ORDER_PHONE_NUMBER_CUSTOMER_ILLEGAL_TYPE = "Невірний номер телефону";
     public static final String HAIRCUT_ORDER_DATE_TIME_SHOULD_BE_IN_THE_FUTURE = "Дата запису не може бути зроблена на попередній час";
     public static final String IMAGE_NAME_SHOULD_NOT_BE_BLANK = "Назва фотографії порожня";
+    public static final String IMAGE_NAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_50 = "Назва фотографії повинна бути довжиною від 1 до 50 символів";
     public static final String IMAGE_TYPE_UNKNOWN = "Невідомий тип фотографії";
     public static final String IMAGE_PATH_UNKNOWN = "Невідомий шлях до фотографії";
     public static final String IMAGE_FILE_IS_NOT_SELECTED = "Фото не обрано";

@@ -1,6 +1,7 @@
 package com.barber.hopak.constrain;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,4 +17,7 @@ public @interface FileSize {
     int maxBytes() default 16777215;
 
     String message() default "This file hadn't a good size";
+
+    Class<?>[] groups() default { };
+    Class<? extends Payload>[] payload() default { };
 }

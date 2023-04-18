@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ilia
+      created: 2023-03-24
+      changes:
+        - createTable:
+            tableName: "image"
+            columns:
+              - column:
+                  name: "id"
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "image"
+                  type: MEDIUMBLOB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "image_name"
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true

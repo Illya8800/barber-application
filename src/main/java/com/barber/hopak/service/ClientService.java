@@ -1,6 +1,6 @@
 package com.barber.hopak.service;
 
-import com.barber.hopak.model.Client;
+import com.barber.hopak.model.impl.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
