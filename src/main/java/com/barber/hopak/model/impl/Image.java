@@ -39,7 +39,7 @@ public class Image implements com.barber.hopak.model.Entity<ImageDto> {
         return ImageDto.builder()
                 .id(id)
                 .imageName(imageName)
-                .image(ImageConverter.convertBlobToMultipartFile(image, imageName).orElse(null))
+                .image(ImageConverter.convertBlobToMultipartFile(image, imageName))
                 .build();
     }
 }

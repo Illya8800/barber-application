@@ -32,10 +32,10 @@ public class ImageController {
         return new ResponseEntity<>(imageService.findById(id), HttpStatus.OK);
     }
 
-    @GetMapping("name/{imageDto}")
-    public ResponseEntity<ImageDto> findImageByImageName(@PathVariable ImageDto imageDto) {
+    @GetMapping("/name/{imageName}")
+    public ResponseEntity<ImageDto> findImageByImageName(@PathVariable String imageName) {
         log.info("Controller processing the GET \"findImageByImageName\" mapping");
-        return new ResponseEntity<>(imageDto, HttpStatus.OK);
+        return new ResponseEntity<>(imageService.findByImageName(imageName), HttpStatus.OK);
     }
 
     @GetMapping
@@ -60,14 +60,14 @@ public class ImageController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         log.info("Controller processing the DELETE \"deleteImage\" mapping");
         imageService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("unique")
+    @GetMapping("/unique")
     public ResponseEntity<Boolean> isUniqueImage(@RequestParam ImageDto imageDto) {
         log.info("Controller processing the GET \"isUniqueImage\" mapping");
         return new ResponseEntity<>(imageService.isUnique(imageDto), HttpStatus.OK);

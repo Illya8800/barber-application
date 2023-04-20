@@ -39,7 +39,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
 
     @Override
     @Transactional(readOnly = true)
-    public ImageDto findImageByImageName(String imageName) {
+    public ImageDto findByImageName(String imageName) {
         log.info("Finding an image with name = {} in DB", imageName);
         Image image = imageRepository.findByImageName(imageName)
                 .orElseThrow(() -> new ImageNotFoundException("Image with name '" + imageName + "' not found"));

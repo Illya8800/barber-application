@@ -32,7 +32,7 @@ public class ImageDto implements DTO<Image> {
         return new Image(
                 id,
                 imageName,
-                ImageConverter.convertMultipartFileToBlob(image).orElse(null)
+                ImageConverter.convertMultipartFileToBlob(image)
         );
     }
 }

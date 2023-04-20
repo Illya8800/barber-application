@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ImageService<Entity, ID> {
     Entity findById(ID id);
-    Entity findImageByImageName(String imageName);
+    Entity findByImageName(String imageName);
     List<Entity> findAllImages();
     Entity createImage(Entity image);
     Entity updateImage(Entity image);

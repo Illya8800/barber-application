@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "instagram")
 @Getter
 @Setter
-public class Instagram {
+public class InstagramCredentialsConfig {
     private String username;
     private String password;
 }

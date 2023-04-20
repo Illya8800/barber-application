@@ -1,6 +1,6 @@
 package com.barber.hopak.service.api;
 
-import com.barber.hopak.config.Instagram;
+import com.barber.hopak.config.InstagramCredentialsConfig;
 import com.barber.hopak.exception.InstagramCredentialException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -17,7 +17,7 @@ import java.io.IOException;
 @Service
 public class InstagramApiService {
     public static final String OK = "ok";
-    private final Instagram instagramCredentials;
+    private final InstagramCredentialsConfig instagramCredentials;
 
     public boolean isUserExist(String username) {
         Instagram4j myAccount = loginMyAccount();
