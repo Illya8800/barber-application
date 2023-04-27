@@ -12,6 +12,4 @@ public interface ImageRepository extends CrudRepository<Image, Long> {
     Optional<Image> findByImageName(String imageName);
     <S extends Image> S save(S image);
     void deleteById(Long id);
-    void delete(Image imageDto);
-
 }

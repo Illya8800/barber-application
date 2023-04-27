@@ -11,7 +11,7 @@ public interface ImageService<Entity, ID> {
     Entity createImage(Entity image);
     Entity updateImage(Entity image);
     void deleteById(ID id);
-    void delete(Entity imageDto);
     boolean isUnique(Entity imageDto);
     void setImageNameByOriginalFileName(ImageDto imageDto);
+    boolean isExtensionValid(String fileName);
 }

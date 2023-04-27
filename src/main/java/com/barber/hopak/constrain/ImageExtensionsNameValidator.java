@@ -1,21 +1,17 @@
 package com.barber.hopak.constrain;
 
-import com.barber.hopak.model.enumeration.ImageExtensions;
+import com.barber.hopak.service.ImageService;
+import com.barber.hopak.web.domain.impl.ImageDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
+@RequiredArgsConstructor
 public class ImageExtensionsNameValidator implements ConstraintValidator<ImageExtensionsName, MultipartFile> {
+    private final ImageService<ImageDto, Long> imageService;
     @Override
     public boolean isValid(MultipartFile value, ConstraintValidatorContext context) {
-        Optional<Map.Entry<String, String>> result = ImageExtensions.getExtensions().entrySet()
-                .stream()
-                .filter(entry -> Objects.requireNonNull(value.getOriginalFilename()).endsWith(entry.getValue()))
-                .findFirst();
-        return result.isPresent();
+        return imageService.isExtensionValid(value.getOriginalFilename());
     }
 }

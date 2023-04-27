@@ -1,6 +1,6 @@
 package com.barber.hopak.org.springframework.web.multipart.custom;
 
-import lombok.AllArgsConstructor;
+import com.barber.hopak.util.StringUtils3C;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,11 +11,18 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 @Log4j2
-@AllArgsConstructor
 public class MultipartFileFromDateBase implements MultipartFile {
     private final String name;
     private final String contentType;
     private final byte[] content;
+    private static final String IMAGE_MEDIA_TYPE = "image/";
+    private static final String DOT = ".";
+    public MultipartFileFromDateBase(String name, byte[] content) {
+        this.name = name;
+        this.contentType = StringUtils3C.join(IMAGE_MEDIA_TYPE, name.substring(name.lastIndexOf(DOT) + 1));
+        this.content = content;
+    }
+
     @Override
     public String getName() {
         return name;
