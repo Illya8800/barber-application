@@ -1,4 +1,4 @@
-package com.barber.hopak.exception;
+package com.barber.hopak.exception.image;
 
 public class ImageExtensionsNotFoundException extends RuntimeException {
     public ImageExtensionsNotFoundException(String s) {

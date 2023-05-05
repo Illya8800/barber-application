@@ -1,6 +1,6 @@
 package com.barber.hopak.model.enumeration;
 
-import com.barber.hopak.exception.ImageExtensionsNotFoundException;
+import com.barber.hopak.exception.image.ImageExtensionsNotFoundException;
 import com.barber.hopak.util.StringUtils3C;
 
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public enum ImageExtensions {
         return Map.copyOf(extensions);
     }
 
-    private static String joinDotBeforeExtension(String extension){
+    private static String joinDotBeforeExtension(String extension) {
         return StringUtils3C.join('.', extension.toLowerCase());
     }
 }

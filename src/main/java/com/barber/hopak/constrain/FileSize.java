@@ -18,6 +18,7 @@ public @interface FileSize {
 
     String message() default "This file hadn't a good size";
 
-    Class<?>[] groups() default { };
-    Class<? extends Payload>[] payload() default { };
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

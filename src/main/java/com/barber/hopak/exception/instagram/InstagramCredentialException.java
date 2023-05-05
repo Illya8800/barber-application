@@ -1,4 +1,4 @@
-package com.barber.hopak.exception;
+package com.barber.hopak.exception.instagram;
 
 import java.io.IOException;
 

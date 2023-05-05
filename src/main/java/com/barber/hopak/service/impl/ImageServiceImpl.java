@@ -1,12 +1,12 @@
 package com.barber.hopak.service.impl;
 
-import com.barber.hopak.exception.ImageNotFoundException;
-import com.barber.hopak.exception.ImageNotUniqueException;
+import com.barber.hopak.buffer.BufferService;
+import com.barber.hopak.exception.image.ImageNotFoundException;
+import com.barber.hopak.exception.image.ImageNotUniqueException;
 import com.barber.hopak.model.enumeration.ImageExtensions;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.repository.ImageRepository;
 import com.barber.hopak.service.ImageService;
-import com.barber.hopak.service.buffer.BufferService;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +66,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     }
 
     @Override
-    public ImageDto createImage(ImageDto imageDto) {
+    public ImageDto create(ImageDto imageDto) {
         log.info("Inserting new image with name = {} in DB ", imageDto.getImageName());
         if (!isUnique(imageDto)) {
             throw new ImageNotUniqueException(StringUtils3C.join("Image with name ", imageDto.getImageName(), " exists"));
@@ -77,7 +77,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     }
 
     @Override
-    public ImageDto updateImage(ImageDto imageDto) {
+    public ImageDto update(ImageDto imageDto) {
         log.info("Updating image with name = {} in DB ", imageDto.getImageName());
         if (!isUnique(imageDto)) {
             ImageDto updatedImage = imageRepository.save(imageDto.toEntity()).toDto();
@@ -110,10 +110,10 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
 
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public boolean isExtensionValid(String value) {
+    public boolean isExtensionValid(String fileName) {
         Optional<Map.Entry<String, String>> first = ImageExtensions.getExtensions().entrySet()
                 .stream()
-                .filter(entry -> Objects.requireNonNull(value).endsWith(entry.getValue()))
+                .filter(entry -> Objects.requireNonNull(fileName).endsWith(entry.getValue()))
                 .findFirst();
         return first.isPresent();
     }

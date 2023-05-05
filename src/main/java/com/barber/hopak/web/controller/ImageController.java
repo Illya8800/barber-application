@@ -48,7 +48,7 @@ public class ImageController {
     public ResponseEntity<Void> createImage(@Valid @ModelAttribute ImageDto imageDto) {
         log.info("Controller processing the POST \"createImage\" mapping");
         imageService.setImageNameByOriginalFileName(imageDto);
-        imageService.createImage(imageDto);
+        imageService.create(imageDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -56,7 +56,7 @@ public class ImageController {
     public ResponseEntity<Void> updateImage(@Valid @ModelAttribute ImageDto imageDto) {
         log.info("Controller processing the PATCH \"updateImage\" mapping");
         imageService.setImageNameByOriginalFileName(imageDto);
-        imageService.createImage(imageDto);
+        imageService.create(imageDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

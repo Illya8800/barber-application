@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = ImageExtensionsNameValidator.class)
 public @interface ImageExtensionsName {
     String message() default "This extension isn't support";
-    Class<?>[] groups() default { };
-    Class<? extends Payload>[] payload() default { };
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

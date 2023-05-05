@@ -6,12 +6,20 @@ import java.util.List;
 
 public interface ImageService<Entity, ID> {
     Entity findById(ID id);
+
     Entity findByImageName(String imageName);
+
     List<Entity> findAllImages();
-    Entity createImage(Entity image);
-    Entity updateImage(Entity image);
+
+    Entity create(Entity image);
+
+    Entity update(Entity image);
+
     void deleteById(ID id);
+
     boolean isUnique(Entity imageDto);
+
     void setImageNameByOriginalFileName(ImageDto imageDto);
+
     boolean isExtensionValid(String fileName);
 }

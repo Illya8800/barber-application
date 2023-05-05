@@ -1,4 +1,4 @@
-package com.barber.hopak.exception;
+package com.barber.hopak.exception.image;
 
 public class SaveImageException extends RuntimeException {
     public SaveImageException(String s) {

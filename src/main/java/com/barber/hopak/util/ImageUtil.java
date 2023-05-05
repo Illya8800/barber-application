@@ -5,7 +5,12 @@ import com.barber.hopak.model.enumeration.ImageExtensions;
 import static com.barber.hopak.model.enumeration.ImageExtensions.PNG;
 
 public class ImageUtil {
-    public static final Long MAX_IMAGE_SIZE = 16777216L;
-    public static final String NO_IMAGE = "NO_IMAGE" + ImageExtensions.getDotExtension(PNG);
+    public static String BUFFER_FOLDER_NAME = "images";
+    public static final String CONVERTER_SPLIT_REGEX = " ";
+    public static final int MAX_IMAGE_SIZE = 16777216;
+    public static final String NO_IMAGE = StringUtils3C.join("NO_IMAGE", ImageExtensions.getDotExtension(PNG));
+    public static final String DOT_TXT = ".txt";
+    public static final String ID_SEPARATOR = "-";
 
+    public static final String FOLDER_SEPARATOR = "/";
 }

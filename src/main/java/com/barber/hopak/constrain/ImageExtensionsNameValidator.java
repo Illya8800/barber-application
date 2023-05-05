@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ImageExtensionsNameValidator implements ConstraintValidator<ImageExtensionsName, MultipartFile> {
     private final ImageService<ImageDto, Long> imageService;
+
     @Override
     public boolean isValid(MultipartFile value, ConstraintValidatorContext context) {
         return imageService.isExtensionValid(value.getOriginalFilename());

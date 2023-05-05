@@ -25,6 +25,6 @@ public class TestController {
         ImageDto byId = imageService.findById(id);
         long l1 = System.currentTimeMillis();
 
-        return new ResponseEntity<>(l1 -l, HttpStatus.OK);
+        return new ResponseEntity<>(l1 - l, HttpStatus.OK);
     }
 }

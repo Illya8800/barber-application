@@ -9,7 +9,4 @@ import java.util.Optional;
 @Repository
 public interface BarberRepository extends JpaRepository<Barber, Long> {
     Optional<Barber> findById(Long id);
-    default Barber saveBarber(Barber barber) {
-        return saveAndFlush(barber);
-    }
 }

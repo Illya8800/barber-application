@@ -17,6 +17,7 @@ public class MultipartFileFromDateBase implements MultipartFile {
     private final byte[] content;
     private static final String IMAGE_MEDIA_TYPE = "image/";
     private static final String DOT = ".";
+
     public MultipartFileFromDateBase(String name, byte[] content) {
         this.name = name;
         this.contentType = StringUtils3C.join(IMAGE_MEDIA_TYPE, name.substring(name.lastIndexOf(DOT) + 1));
@@ -27,35 +28,43 @@ public class MultipartFileFromDateBase implements MultipartFile {
     public String getName() {
         return name;
     }
+
     @Override
     public String getOriginalFilename() {
         return name;
     }
+
     @Override
     public String getContentType() {
         return this.contentType;
     }
+
     @Override
     public boolean isEmpty() {
         return this.content.length == 0;
     }
+
     @Override
     public long getSize() {
         return this.content.length;
     }
+
     @Override
     public byte[] getBytes() {
         return this.content;
     }
+
     @Override
     public InputStream getInputStream() {
         return new ByteArrayInputStream(content);
     }
+
     @Deprecated(since = "This implementation doesn't support this method, because the file doesn't save on the server")
     @Override
     public Resource getResource() {
         return null;
     }
+
     @Deprecated(since = "This implementation doesn't support this method, because the file doesn't save on the server")
     @Override
     public void transferTo(Path dest) {

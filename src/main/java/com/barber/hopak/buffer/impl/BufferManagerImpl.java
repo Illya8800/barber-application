@@ -1,33 +1,33 @@
-package com.barber.hopak.service.buffer.impl;
+package com.barber.hopak.buffer.impl;
 
-import com.barber.hopak.exception.ImageCantBeConvertedException;
-import com.barber.hopak.service.buffer.BufferManager;
-import com.barber.hopak.service.buffer.BufferedFileName;
-import com.barber.hopak.service.buffer.FileSearcher;
+import com.barber.hopak.buffer.BufferManager;
+import com.barber.hopak.buffer.BufferedFileName;
+import com.barber.hopak.buffer.FileSearcher;
+import com.barber.hopak.exception.buffer.ImageCantBeConvertedException;
+import com.barber.hopak.exception.image.SaveImageException;
+import com.barber.hopak.util.ArraysC;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.barber.hopak.util.ImageUtil.CONVERTER_SPLIT_REGEX;
 
 @Component
 @Log4j2
 @RequiredArgsConstructor
 public class BufferManagerImpl implements BufferManager<File, Long> {
-    private static final FileSearcher fileSearcher = new FileSearcherImpl();
+    private final FileSearcher fileSearcher;
 
     /**
      * @param imageDto should contain id, imageName and the image
@@ -41,11 +41,11 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
         log.info("Rewriting file as bytes in buffer");
         File file = new File(fileSearcher.getBufferPath(), new BufferedFileName(imageDto.getId(), imageDto.getImageName()).getFileName());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            String s = Arrays.toString(imageDto.getImage().getBytes());
-            writer.write(s.substring(1, s.length() - 1));
+            writer.write(ArraysC.toString(imageDto.getImage().getBytes()));
             return file;
         } catch (IOException e) {
-            throw new ImageCantBeConvertedException("Image can't be saved as txt file. \n" + e.getMessage());
+            log.error("The file {} has been deleted: {}", file.getName(), file.delete());
+            throw new SaveImageException("Image can't be saved as txt file." + e.getMessage());
         }
     }
 
@@ -67,21 +67,9 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
         StringBuilder sb = new StringBuilder();
         if (file.exists()) {
             buildStringWithBytes(sb, file);
-            byte[] byteArray = getByteArrayFromString(sb);
-            generateImageFromByteArray(byteArray, file);
-            return byteArray;
+            return getByteArrayFromString(sb);
         }
         throw new ImageCantBeConvertedException("Image can't be converted from the txt file to byte[]");
-    }
-
-    private void generateImageFromByteArray(byte[] byteArray, File file) {
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(byteArray)) {
-            BufferedImage image = ImageIO.read(bais);
-            String imageName = new BufferedFileName(file).getImageName();
-            ImageIO.write(image, imageName.substring(imageName.lastIndexOf('.') + 1), new File(imageName));
-        } catch (IOException e) {
-            log.error(" Converting byte array to image from file {} was unsuccessful\n{}", file.getName(), e.getMessage());
-        }
     }
 
     private void buildStringWithBytes(StringBuilder sb, File file) {
@@ -94,9 +82,6 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
     }
 
     private byte[] getByteArrayFromString(StringBuilder sb) {
-        String SPLIT_REGEX = ", ";
-        return ArrayUtils.toPrimitive(Arrays.stream(sb.toString().split(SPLIT_REGEX))
-                .map(Byte::parseByte)
-                .toArray(Byte[]::new));
+        return ArrayUtils.toPrimitive(java.util.Arrays.stream(sb.toString().split(CONVERTER_SPLIT_REGEX)).map(Byte::parseByte).toArray(Byte[]::new));
     }
 }

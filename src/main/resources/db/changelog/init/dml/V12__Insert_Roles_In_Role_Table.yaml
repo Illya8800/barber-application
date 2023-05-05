@@ -3,14 +3,14 @@ databaseChangeLog:
       id: insert-role-admin
       author: ilia
       changes:
-        - sql: INSERT barber.`role` VALUES (3, 'ROLE_ADMIN');
+        - sql: INSERT INTO `role` VALUES (3, 'ROLE_ADMIN');
   - changeSet:
      id: insert-role-user
      author: ilia
      changes:
-       - sql: INSERT barber.`role` VALUES (1, 'ROLE_USER');
+       - sql: INSERT INTO `role` VALUES (1, 'ROLE_USER');
   - changeSet:
      id: insert-role-moderator
      author: ilia
      changes:
-       - sql: INSERT barber.`role` VALUES (2, 'ROLE_MODERATOR');
+       - sql: INSERT INTO `role` VALUES (2, 'ROLE_MODERATOR');

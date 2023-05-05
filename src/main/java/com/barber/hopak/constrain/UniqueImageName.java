@@ -14,6 +14,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UniqueImageNameValidator.class)
 public @interface UniqueImageName {
     String message() default "This image name isn't unique";
-    Class<?>[] groups() default { };
-    Class<? extends Payload>[] payload() default { };
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

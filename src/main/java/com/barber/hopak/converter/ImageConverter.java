@@ -1,6 +1,6 @@
 package com.barber.hopak.converter;
 
-import com.barber.hopak.exception.ImageCantBeConvertedException;
+import com.barber.hopak.exception.buffer.ImageCantBeConvertedException;
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFromDateBase;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +30,7 @@ public class ImageConverter {
             throw new ImageCantBeConvertedException("Can't convert the MultipartFile file to the Blob");
         }
     }
+
     public static MultipartFile convertBlobToMultipartFile(Blob blob, String fileName) {
         log.info("Converting Blob type to the MultipartFile");
         try {

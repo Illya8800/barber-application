@@ -1,7 +1,7 @@
 package com.barber.hopak.service.api;
 
 import com.barber.hopak.config.InstagramCredentialsConfig;
-import com.barber.hopak.exception.InstagramCredentialException;
+import com.barber.hopak.exception.instagram.InstagramCredentialException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
@@ -20,11 +20,11 @@ public class InstagramApiService {
     private final InstagramCredentialsConfig instagramCredentials;
 
     public boolean isUserExist(String username) {
+        log.info("Searching instagram account");
         Instagram4j myAccount = loginMyAccount();
         InstagramSearchUsernameResult foundAccount;
         try {
             foundAccount = myAccount.sendRequest(new InstagramSearchUsernameRequest(username));
-            log.info("Instagram returned searched account");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
