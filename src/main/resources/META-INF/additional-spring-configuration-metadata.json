@@ -14,11 +14,6 @@
       "name": "no-image.path",
       "type": "java.lang.String",
       "description": "This file path will be use as NO_IMAGE file."
-    },
-    {
-      "name": "buffer.bufferFolderName",
-      "type": "java.lang.String",
-      "description": "This folder will be created as images buffer package."
     }
   ]
 }

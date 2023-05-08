@@ -37,7 +37,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
         return bufferService.findImageById(id)
                 .orElseGet(() -> {
                     Optional<Image> image = imageRepository.findById(id);
-                    image.ifPresent(i -> bufferService.saveImage(i.toDto()));
+                    image.ifPresent(i -> bufferService.save(i.toDto()));
                     return image.orElseThrow(() -> new ImageNotFoundException(StringUtils3C.join("Image with id ", id, " doesn't exist")))
                             .toDto();
                 });
@@ -45,12 +45,12 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
 
     @Override
     @Transactional(readOnly = true)
-    public ImageDto findByImageName(String imageName) {
+    public ImageDto findByImage(String imageName) {
         log.info("Finding an image with name = {} in DB", imageName);
         return bufferService.findImageByName(imageName)
                 .orElseGet(() -> {
-                    Optional<Image> image = imageRepository.findByImageName(imageName);
-                    image.ifPresent(i -> bufferService.saveImage(i.toDto()));
+                    Optional<Image> image = imageRepository.findByName(imageName);
+                    image.ifPresent(i -> bufferService.save(i.toDto()));
                     return image.orElseThrow(() -> new ImageNotFoundException("Image with name '" + imageName + "' not found"))
                             .toDto();
                 });
@@ -61,30 +61,30 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
         log.info("Finding all images in DB");
         return StreamSupport.stream(imageRepository.findAll().spliterator(), false)
                 .map(Image::toDto)
-                .peek(bufferService::saveImage)
+                .peek(bufferService::save)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ImageDto create(ImageDto imageDto) {
-        log.info("Inserting new image with name = {} in DB ", imageDto.getImageName());
+        log.info("Inserting new image with name = {} in DB ", imageDto.getName());
         if (!isUnique(imageDto)) {
-            throw new ImageNotUniqueException(StringUtils3C.join("Image with name ", imageDto.getImageName(), " exists"));
+            throw new ImageNotUniqueException(StringUtils3C.join("Image with name ", imageDto.getName(), " exists"));
         }
         ImageDto savedImage = imageRepository.save(imageDto.toEntity()).toDto();
-        bufferService.saveImage(savedImage);
+        bufferService.save(savedImage);
         return savedImage;
     }
 
     @Override
     public ImageDto update(ImageDto imageDto) {
-        log.info("Updating image with name = {} in DB ", imageDto.getImageName());
+        log.info("Updating image with name = {} in DB ", imageDto.getName());
         if (!isUnique(imageDto)) {
             ImageDto updatedImage = imageRepository.save(imageDto.toEntity()).toDto();
-            bufferService.saveImage(updatedImage);
+            bufferService.save(updatedImage);
             return updatedImage;
         } else {
-            throw new ImageNotFoundException(StringUtils3C.join("Image with name ", imageDto.getImageName(), " isn't found"));
+            throw new ImageNotFoundException(StringUtils3C.join("Image with name ", imageDto.getName(), " isn't found"));
         }
     }
 
@@ -98,14 +98,14 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public boolean isUnique(ImageDto imageDto) {
-        log.info("Checking imageName = {} on unique", imageDto.getImageName());
-        return imageRepository.findByImageName(imageDto.getImageName()).map(value -> value.getId().equals(imageDto.getId())).orElse(true);
+        log.info("Checking imageName = {} on unique", imageDto.getName());
+        return imageRepository.findByName(imageDto.getName()).map(value -> value.getId().equals(imageDto.getId())).orElse(true);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public void setImageNameByOriginalFileName(ImageDto imageDto) {
-        imageDto.setImageName(imageDto.getImage().getOriginalFilename());
+        imageDto.setName(imageDto.getImage().getOriginalFilename());
     }
 
     @Override

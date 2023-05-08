@@ -14,7 +14,7 @@ public class UniqueImageNameValidator implements ConstraintValidator<UniqueImage
     @Override
     public boolean isValid(ImageDto value, ConstraintValidatorContext context) {
         try {
-            ImageDto imageDtoByDb = imageService.findByImageName(value.getImage().getOriginalFilename());
+            ImageDto imageDtoByDb = imageService.findByImage(value.getImage().getOriginalFilename());
             return imageDtoByDb.getId().equals(value.getId());
         } catch (ImageNotFoundException e) {
             return true;

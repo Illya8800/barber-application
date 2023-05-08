@@ -29,7 +29,7 @@ public class Image implements com.barber.hopak.model.Entity<ImageDto> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true, length = 50)
-    private String imageName;
+    private String name;
     @Lob
     @Column(nullable = false)
     private Blob image;
@@ -38,8 +38,8 @@ public class Image implements com.barber.hopak.model.Entity<ImageDto> {
     public ImageDto toDto() {
         return ImageDto.builder()
                 .id(id)
-                .imageName(imageName)
-                .image(ImageConverter.convertBlobToMultipartFile(image, imageName))
+                .name(name)
+                .image(ImageConverter.convertBlobToMultipartFile(image, name))
                 .build();
     }
 }

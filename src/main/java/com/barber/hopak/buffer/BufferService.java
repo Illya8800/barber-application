@@ -3,7 +3,7 @@ package com.barber.hopak.buffer;
 import java.util.Optional;
 
 public interface BufferService<T> {
-    void saveImage(T imageDto);
+    void save(T imageDto);
 
     Optional<T> findImageById(Long id);
 

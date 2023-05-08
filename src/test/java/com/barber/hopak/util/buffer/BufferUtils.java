@@ -23,10 +23,10 @@ import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
 
 public class BufferUtils {
     public static final String UNEXISTING_FILE_NAME = " ";
-    public static final String EXISTING_FILE = "testFile.png";
+    public static final String EXISTING_FILE_NAME = "testFile.png";
     public static final Long EXISTING_FILE_ID = 1L;
     public static final Long UNEXISTING_FILE_ID = -1L;
-    public static final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE, DOT_TXT);
+    public static final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
     private static final String TARGET_FOLDER_PATH;
 
     static {
@@ -48,7 +48,7 @@ public class BufferUtils {
 
     public static void createTestFile() {
         try {
-            final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE, DOT_TXT);
+            final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
             boolean isCreated = new File(getBufferFolderPath(), BUFFERED_FILE_NAME).createNewFile();
             if (!isCreated) throw new RuntimeException("Test image file can't be created");
         } catch (IOException e) {
@@ -62,7 +62,7 @@ public class BufferUtils {
 
 
     public static File fillTestFile(ImageDto imageDto) {
-        final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE, DOT_TXT);
+        final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
         File file = new File(getBufferFolderPath(), BUFFERED_FILE_NAME);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(ArraysC.toString(imageDto.getImage().getBytes()));

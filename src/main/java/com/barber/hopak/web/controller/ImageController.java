@@ -35,7 +35,7 @@ public class ImageController {
     @GetMapping("/name/{imageName}")
     public ResponseEntity<ImageDto> findImageByImageName(@PathVariable String imageName) {
         log.info("Controller processing the GET \"findImageByImageName\" mapping");
-        return new ResponseEntity<>(imageService.findByImageName(imageName), HttpStatus.OK);
+        return new ResponseEntity<>(imageService.findByImage(imageName), HttpStatus.OK);
     }
 
     @GetMapping

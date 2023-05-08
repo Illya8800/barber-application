@@ -8,20 +8,18 @@ import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_FILE_IS_NOT_SELECTED;
 
 @Builder
 @UniqueImageName(message = "cwwcwc")
-@Getter
-@Setter
+@Data
 public class ImageDto implements DTO<Image> {
 
     private Long id;
-    private String imageName;
+    private String name;
     @NotNull(message = IMAGE_FILE_IS_NOT_SELECTED)
     @ImageExtensionsName
     @FileSize(message = "dwdwd")
@@ -31,7 +29,7 @@ public class ImageDto implements DTO<Image> {
     public Image toEntity() {
         return new Image(
                 id,
-                imageName,
+                name,
                 ImageConverter.convertMultipartFileToBlob(image)
         );
     }

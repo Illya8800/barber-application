@@ -35,7 +35,7 @@ class FileSearcherImplTest {
     @Test
     void getFileByName_thenFind() {
         BufferUtils.createTestFile();
-        Optional<File> fileByName = fileSearcher.getFileByName(BufferUtils.EXISTING_FILE);
+        Optional<File> fileByName = fileSearcher.getFileByName(BufferUtils.EXISTING_FILE_NAME);
         assertThat(fileByName).isPresent();
         boolean isFileDeleted = BufferUtils.deleteTestFile(fileByName.get().getName());
         assertThat(isFileDeleted).isTrue();

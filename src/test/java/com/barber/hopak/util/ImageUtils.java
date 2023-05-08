@@ -5,17 +5,18 @@ import com.barber.hopak.web.domain.impl.ImageDto;
 
 import static com.barber.hopak.util.ImageUtil.DOT_TXT;
 import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
-import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE;
+import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_ID;
+import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_NAME;
 
 public class ImageUtils {
-    public static final Long IMAGE_DTO_ID = 1L;
+    public static final Long IMAGE_DTO_ID = EXISTING_FILE_ID;
     public static final byte[] IMAGE_DTO_BYTES = {0};
-    public static final String IMAGE_DTO_NAME = EXISTING_FILE;
+    public static final String IMAGE_DTO_NAME = EXISTING_FILE_NAME;
 
     public static ImageDto getImageDto() {
         return ImageDto.builder()
                 .id(IMAGE_DTO_ID)
-                .imageName(IMAGE_DTO_NAME)
+                .name(IMAGE_DTO_NAME)
                 .image(new MultipartFileFromDateBase(IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
     }
 
