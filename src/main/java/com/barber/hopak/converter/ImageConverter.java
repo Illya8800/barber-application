@@ -1,6 +1,6 @@
 package com.barber.hopak.converter;
 
-import com.barber.hopak.exception.buffer.ImageCantBeConvertedException;
+import com.barber.hopak.exception.image.inh.ImageConversionException;
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFromDateBase;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +27,7 @@ public class ImageConverter {
             byte[] data = arrayOutputStream.toByteArray();
             return new SerialBlob(data);
         } catch (IOException | SQLException e) {
-            throw new ImageCantBeConvertedException("Can't convert the MultipartFile file to the Blob");
+            throw new ImageConversionException("Can't convert the MultipartFile file to the Blob");
         }
     }
 
@@ -38,7 +38,7 @@ public class ImageConverter {
                     blob.getBytes(1, (int) blob.length())
             );
         } catch (SQLException e) {
-            throw new ImageCantBeConvertedException("Can't convert the Blob file to the MultipartFileFromDateBase");
+            throw new ImageConversionException("Can't convert the Blob file to the MultipartFileFromDateBase");
         }
     }
 }

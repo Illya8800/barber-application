@@ -1,8 +1,8 @@
 package com.barber.hopak.buffer.impl;
 
 import com.barber.hopak.buffer.FileSearcher;
-import com.barber.hopak.exception.buffer.ImageCantBeConvertedException;
-import com.barber.hopak.exception.image.SaveImageException;
+import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
+import com.barber.hopak.exception.image.inh.SaveImageException;
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFromDateBase;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.util.buffer.BufferUtils;
@@ -21,18 +21,8 @@ import java.util.Optional;
 
 import static com.barber.hopak.util.ImageUtil.DOT_TXT;
 import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
-import static com.barber.hopak.util.ImageUtils.IMAGE_DTO_BYTES;
-import static com.barber.hopak.util.ImageUtils.IMAGE_DTO_ID;
-import static com.barber.hopak.util.ImageUtils.IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageUtils.getBufferedFileName;
-import static com.barber.hopak.util.ImageUtils.getImageDto;
-import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_ID;
-import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_NAME;
-import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_ID;
-import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_NAME;
-import static com.barber.hopak.util.buffer.BufferUtils.createTestFile;
-import static com.barber.hopak.util.buffer.BufferUtils.deleteTestFile;
-import static com.barber.hopak.util.buffer.BufferUtils.fillTestFile;
+import static com.barber.hopak.util.ImageUtils.*;
+import static com.barber.hopak.util.buffer.BufferUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
@@ -77,7 +67,7 @@ class BufferManagerImplTest {
     void save_thenThrow() throws IOException {
         ImageDto imageDto = mock(ImageDto.class);
         MultipartFile imageMock = mock(MultipartFileFromDateBase.class);
-        when(imageDto.getId()).thenReturn(IMAGE_DTO_ID);
+        when(imageDto.getId()).thenReturn(EXISTING_IMAGE_DTO_ID);
         when(imageDto.getName()).thenReturn(IMAGE_DTO_NAME);
         when(imageDto.getImage()).thenReturn(imageMock);
         IOException ioException = mock(IOException.class);
@@ -164,7 +154,7 @@ class BufferManagerImplTest {
         when(file.exists()).thenReturn(false);
 
         assertThatThrownBy(() -> bufferManager.getBytesByFile(file))
-                .isInstanceOf(ImageCantBeConvertedException.class)
+                .isInstanceOf(ImageCantBeConvertedForBufferException.class)
                 .hasMessage("Image can't be converted from the txt file to byte[]");
 
         deleteTestFile(BufferUtils.BUFFERED_FILE_NAME);

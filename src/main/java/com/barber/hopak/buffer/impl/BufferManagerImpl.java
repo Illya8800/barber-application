@@ -3,8 +3,8 @@ package com.barber.hopak.buffer.impl;
 import com.barber.hopak.buffer.BufferManager;
 import com.barber.hopak.buffer.BufferedFileName;
 import com.barber.hopak.buffer.FileSearcher;
-import com.barber.hopak.exception.buffer.ImageCantBeConvertedException;
-import com.barber.hopak.exception.image.SaveImageException;
+import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
+import com.barber.hopak.exception.image.inh.SaveImageException;
 import com.barber.hopak.util.ArraysC;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,7 +29,7 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
      *                 It will save in the BASIC_BUFFER_PATH.
      *                 File will get the next name "id-imageName.png.txt". Example: 1-no-image.png.txt
      * @return file with the image's bytes
-     * @throws ImageCantBeConvertedException If image can't be saved
+     * @throws ImageCantBeConvertedForBufferException If image can't be saved
      */
     @Override
     public File save(ImageDto imageDto) {
@@ -69,7 +64,7 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
             buildStringWithBytes(sb, file);
             return getByteArrayFromString(sb);
         }
-        throw new ImageCantBeConvertedException("Image can't be converted from the txt file to byte[]");
+        throw new ImageCantBeConvertedForBufferException("Image can't be converted from the txt file to byte[]");
     }
 
     private void buildStringWithBytes(StringBuilder sb, File file) {

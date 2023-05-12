@@ -1,7 +1,7 @@
 package com.barber.hopak.buffer.impl;
 
 import com.barber.hopak.buffer.FileSearcher;
-import com.barber.hopak.exception.buffer.ImagesBufferNotFount;
+import com.barber.hopak.exception.buffer.ImagesBufferNotFountException;
 import com.barber.hopak.util.StringUtils3C;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -13,10 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static com.barber.hopak.util.ImageUtil.BUFFER_FOLDER_NAME;
-import static com.barber.hopak.util.ImageUtil.DOT_TXT;
-import static com.barber.hopak.util.ImageUtil.FOLDER_SEPARATOR;
-import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
+import static com.barber.hopak.util.ImageUtil.*;
 
 @Component
 @Log4j2
@@ -56,7 +53,7 @@ public class FileSearcherImpl implements FileSearcher {
             }
             return bufferFolderPath;
         } catch (URISyntaxException e) {
-            throw new ImagesBufferNotFount("Images buffer doesn't exist");
+            throw new ImagesBufferNotFountException("Images buffer doesn't exist");
         }
     }
 

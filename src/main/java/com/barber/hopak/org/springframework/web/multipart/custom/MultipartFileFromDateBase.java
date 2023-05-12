@@ -2,6 +2,7 @@ package com.barber.hopak.org.springframework.web.multipart.custom;
 
 import com.barber.hopak.util.StringUtils3C;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +14,7 @@ import java.nio.file.Path;
 
 @Log4j2
 @EqualsAndHashCode
+@ToString
 public class MultipartFileFromDateBase implements MultipartFile {
     private final String name;
     private final String contentType;

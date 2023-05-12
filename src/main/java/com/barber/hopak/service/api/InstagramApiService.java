@@ -3,7 +3,7 @@ package com.barber.hopak.service.api;
 import com.barber.hopak.config.InstagramCredentialsConfig;
 import com.barber.hopak.exception.instagram.InstagramCredentialException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.brunocvcunha.instagram4j.Instagram4j;
 import org.brunocvcunha.instagram4j.requests.InstagramSearchUsernameRequest;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Log4j
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class InstagramApiService {

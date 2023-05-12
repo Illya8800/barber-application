@@ -2,13 +2,13 @@ package com.barber.hopak.service.impl;
 
 import com.barber.hopak.buffer.BufferService;
 import com.barber.hopak.exception.image.ImageNotFoundException;
-import com.barber.hopak.exception.image.ImageNotUniqueException;
 import com.barber.hopak.model.enumeration.ImageExtensions;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.repository.ImageRepository;
 import com.barber.hopak.service.ImageService;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.web.domain.impl.ImageDto;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -38,20 +38,20 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
                 .orElseGet(() -> {
                     Optional<Image> image = imageRepository.findById(id);
                     image.ifPresent(i -> bufferService.save(i.toDto()));
-                    return image.orElseThrow(() -> new ImageNotFoundException(StringUtils3C.join("Image with id ", id, " doesn't exist")))
+                    return image.orElseThrow(() -> new ImageNotFoundException(StringUtils3C.join("Image with id ", id, " not found")))
                             .toDto();
                 });
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ImageDto findByImage(String imageName) {
+    public ImageDto findByName(String imageName) {
         log.info("Finding an image with name = {} in DB", imageName);
         return bufferService.findImageByName(imageName)
                 .orElseGet(() -> {
                     Optional<Image> image = imageRepository.findByName(imageName);
                     image.ifPresent(i -> bufferService.save(i.toDto()));
-                    return image.orElseThrow(() -> new ImageNotFoundException("Image with name '" + imageName + "' not found"))
+                    return image.orElseThrow(() -> new ImageNotFoundException("Image with name " + imageName + " not found"))
                             .toDto();
                 });
     }
@@ -69,7 +69,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     public ImageDto create(ImageDto imageDto) {
         log.info("Inserting new image with name = {} in DB ", imageDto.getName());
         if (!isUnique(imageDto)) {
-            throw new ImageNotUniqueException(StringUtils3C.join("Image with name ", imageDto.getName(), " exists"));
+            throw new EntityExistsException(StringUtils3C.join("Image with name ", imageDto.getName(), " exists"));
         }
         ImageDto savedImage = imageRepository.save(imageDto.toEntity()).toDto();
         bufferService.save(savedImage);

@@ -7,7 +7,7 @@ import java.util.List;
 public interface ImageService<Entity, ID> {
     Entity findById(ID id);
 
-    Entity findByImage(String imageName);
+    Entity findByName(String imageName);
 
     List<Entity> findAllImages();
 

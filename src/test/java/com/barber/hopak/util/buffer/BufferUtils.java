@@ -2,8 +2,8 @@ package com.barber.hopak.util.buffer;
 
 import com.barber.hopak.exception.buffer.BufferCantBeDeleteException;
 import com.barber.hopak.exception.buffer.BufferedFileCantBeDeleteException;
-import com.barber.hopak.exception.buffer.ImageCantBeConvertedException;
-import com.barber.hopak.exception.buffer.ImagesBufferNotFount;
+import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
+import com.barber.hopak.exception.buffer.ImagesBufferNotFountException;
 import com.barber.hopak.util.ArraysC;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.web.domain.impl.ImageDto;
@@ -16,10 +16,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.barber.hopak.util.ImageUtil.BUFFER_FOLDER_NAME;
-import static com.barber.hopak.util.ImageUtil.DOT_TXT;
-import static com.barber.hopak.util.ImageUtil.FOLDER_SEPARATOR;
-import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
+import static com.barber.hopak.util.ImageUtil.*;
 
 public class BufferUtils {
     public static final String UNEXISTING_FILE_NAME = " ";
@@ -43,7 +40,7 @@ public class BufferUtils {
 
     public static void createTestPackage() {
         boolean mkdir = new File(getBufferFolderPath()).mkdir();
-        if (!mkdir) throw new ImagesBufferNotFount("Images buffer doesn't created");
+        if (!mkdir) throw new ImagesBufferNotFountException("Images buffer doesn't created");
     }
 
     public static void createTestFile() {
@@ -68,7 +65,7 @@ public class BufferUtils {
             writer.write(ArraysC.toString(imageDto.getImage().getBytes()));
             return file;
         } catch (IOException e) {
-            throw new ImageCantBeConvertedException("Image can't be saved as txt file." + e.getMessage());
+            throw new ImageCantBeConvertedForBufferException("Image can't be saved as txt file." + e.getMessage());
         }
 
     }
