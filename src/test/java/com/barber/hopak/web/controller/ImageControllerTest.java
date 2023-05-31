@@ -8,6 +8,7 @@ import com.barber.hopak.util.buffer.BufferUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,16 +41,24 @@ class ImageControllerTest {
         BufferUtils.destroyBuffer();
     }
 
+    @BeforeEach
+    void clearDbState() {
+        List<ImageDto> allImages = imageService.findAllImages();
+        allImages.forEach(image -> imageService.deleteById(image.getId()));
+        ImageDto noImage = imageService.create(ImageDto.builder().name("no_image.png").image(new MultipartFileFromDateBase("no_image.png", IMAGE_DTO_BYTES)).build());
+        setNoImageId(noImage.getId());
+    }
+
     @Test
     void findImageById_thenFindImage() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/images/{id}", EXISTING_IMAGE_DTO_ID)
+        MvcResult mvcResult = mockMvc.perform(get("/images/{id}", getNoImageId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
         String json = mvcResult.getResponse().getContentAsString();
-        ImageDto imageByService = imageService.findById(EXISTING_IMAGE_DTO_ID);
+        ImageDto imageByService = imageService.findById(getNoImageId());
         assertThat(json).contains(buildJsonString("id", imageByService.getId()));
         assertThat(json).contains(buildJsonString("name", imageByService.getName()));
     }
@@ -104,9 +113,9 @@ class ImageControllerTest {
 
     @Test
     void findAllImages_thenFindThreeImages() throws Exception {
-        ImageDto imageDto1 = ImageDto.builder().id(1L).name("FirstImage").image(new MultipartFileFromDateBase(IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
-        ImageDto imageDto2 = ImageDto.builder().id(2L).name("SecondImage").image(new MultipartFileFromDateBase(IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
-        ImageDto imageDto3 = ImageDto.builder().id(3L).name("ThirdImage").image(new MultipartFileFromDateBase(IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto1 = ImageDto.builder().id(2L).name("FirstImage").image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto2 = ImageDto.builder().id(3L).name("SecondImage").image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto3 = ImageDto.builder().id(4L).name("ThirdImage").image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
         imageService.create(imageDto1);
         imageService.create(imageDto2);
         imageService.create(imageDto3);
@@ -119,19 +128,15 @@ class ImageControllerTest {
 
         String json = mvcResult.getResponse().getContentAsString();
 
-        assertThat(new ObjectMapper().readValue(json, List.class)).hasSize(3);
-        assertThat(json).contains(buildJsonString("id", imageDto1.getId()));
+        assertThat(new ObjectMapper().readValue(json, List.class)).hasSize(4);
+        assertThat(json).contains(buildJsonString("name", "no_image.png"));
         assertThat(json).contains(buildJsonString("name", imageDto1.getName()));
-        assertThat(json).contains(buildJsonString("id", imageDto2.getId()));
         assertThat(json).contains(buildJsonString("name", imageDto2.getName()));
-        assertThat(json).contains(buildJsonString("id", imageDto3.getId()));
         assertThat(json).contains(buildJsonString("name", imageDto3.getName()));
     }
 
     @Test
-    void findAllImages_thenEmptyList() throws Exception {
-        imageService.deleteById(EXISTING_IMAGE_DTO_ID);
-
+    void findAllImages_thenOnlyNoImage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/images")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -140,10 +145,11 @@ class ImageControllerTest {
 
         String json = mvcResult.getResponse().getContentAsString();
 
-        assertThat(new ObjectMapper().readValue(json, List.class)).hasSize(0);
+        assertThat(new ObjectMapper().readValue(json, List.class)).hasSize(1);
+        assertThat(json).contains(buildJsonString("name", "no_image.png"));
     }
 
-    @Test
+/*    @Test
     void createImage() {
     }
 
@@ -157,5 +163,5 @@ class ImageControllerTest {
 
     @Test
     void isUniqueImage() {
-    }
+    }*/
 }

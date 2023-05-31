@@ -101,17 +101,17 @@ class BufferServiceImplTest {
 
     @Test
     void findImageByName_thenFindImage() {
-        when(containerState.isBufferContain(IMAGE_DTO_NAME)).thenReturn(true);
+        when(containerState.isBufferContain(EXISTING_IMAGE_DTO_NAME)).thenReturn(true);
         Optional<File> file = Optional.of(new File(BUFFERED_FILE_NAME));
-        when(bufferManager.findFileByName(IMAGE_DTO_NAME)).thenReturn(file);
+        when(bufferManager.findFileByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(file);
         when(bufferManager.getBytesByFile(file.get())).thenReturn(IMAGE_DTO_BYTES);
 
-        Optional<ImageDto> image = bufferService.findImageByName(IMAGE_DTO_NAME);
+        Optional<ImageDto> image = bufferService.findImageByName(EXISTING_IMAGE_DTO_NAME);
 
         then(containerState).should()
-                .isBufferContain(IMAGE_DTO_NAME);
+                .isBufferContain(EXISTING_IMAGE_DTO_NAME);
         then(bufferManager).should()
-                .findFileByName(IMAGE_DTO_NAME);
+                .findFileByName(EXISTING_IMAGE_DTO_NAME);
         then(bufferManager).should()
                 .getBytesByFile(file.get());
         assertThat(image).isPresent();
@@ -120,17 +120,17 @@ class BufferServiceImplTest {
 
     @Test
     void findImageByName_thenNotFind() {
-        when(containerState.isBufferContain(IMAGE_DTO_NAME)).thenReturn(false);
+        when(containerState.isBufferContain(EXISTING_IMAGE_DTO_NAME)).thenReturn(false);
         Optional<File> file = Optional.of(new File(BUFFERED_FILE_NAME));
 
-        Optional<ImageDto> image = bufferService.findImageByName(IMAGE_DTO_NAME);
+        Optional<ImageDto> image = bufferService.findImageByName(EXISTING_IMAGE_DTO_NAME);
 
         then(containerState)
                 .should()
-                .isBufferContain(IMAGE_DTO_NAME);
+                .isBufferContain(EXISTING_IMAGE_DTO_NAME);
         then(bufferManager)
                 .should(never())
-                .findFileByName(IMAGE_DTO_NAME);
+                .findFileByName(EXISTING_IMAGE_DTO_NAME);
         then(bufferManager)
                 .should(never())
                 .getBytesByFile(file.get());
@@ -143,38 +143,38 @@ class BufferServiceImplTest {
         File mockFile = mock(File.class);
         Optional<File> file = Optional.of(mockFile);
 
-        when(bufferManager.findFileByName(IMAGE_DTO_NAME)).thenReturn(file);
+        when(bufferManager.findFileByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(file);
         when(mockFile.exists()).thenReturn(true);
         when(mockFile.delete()).thenReturn(true);
-        doNothing().when(containerState).removeByName(IMAGE_DTO_NAME);
+        doNothing().when(containerState).removeByName(EXISTING_IMAGE_DTO_NAME);
 
-        bufferService.deleteImageByName(IMAGE_DTO_NAME);
+        bufferService.deleteImageByName(EXISTING_IMAGE_DTO_NAME);
 
         then(bufferManager)
                 .should()
-                .findFileByName(IMAGE_DTO_NAME);
+                .findFileByName(EXISTING_IMAGE_DTO_NAME);
 
         verify(file.get(), times(1)).exists();
         verify(file.get(), times(1)).delete();
 
         then(containerState)
                 .should()
-                .removeByName(IMAGE_DTO_NAME);
+                .removeByName(EXISTING_IMAGE_DTO_NAME);
     }
 
     @Test
     void deleteImageByName_thenNotDelete() {
         Optional<File> file = Optional.empty();
-        when(bufferManager.findFileByName(IMAGE_DTO_NAME)).thenReturn(file);
+        when(bufferManager.findFileByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(file);
 
-        bufferService.deleteImageByName(IMAGE_DTO_NAME);
+        bufferService.deleteImageByName(EXISTING_IMAGE_DTO_NAME);
 
         then(bufferManager)
                 .should()
-                .findFileByName(IMAGE_DTO_NAME);
+                .findFileByName(EXISTING_IMAGE_DTO_NAME);
         then(containerState)
                 .should(never())
-                .removeByName(IMAGE_DTO_NAME);
+                .removeByName(EXISTING_IMAGE_DTO_NAME);
     }
 
     @Test

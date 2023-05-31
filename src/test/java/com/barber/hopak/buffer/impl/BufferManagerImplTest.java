@@ -68,7 +68,7 @@ class BufferManagerImplTest {
         ImageDto imageDto = mock(ImageDto.class);
         MultipartFile imageMock = mock(MultipartFileFromDateBase.class);
         when(imageDto.getId()).thenReturn(EXISTING_IMAGE_DTO_ID);
-        when(imageDto.getName()).thenReturn(IMAGE_DTO_NAME);
+        when(imageDto.getName()).thenReturn(EXISTING_IMAGE_DTO_NAME);
         when(imageDto.getImage()).thenReturn(imageMock);
         IOException ioException = mock(IOException.class);
         String exceptionText = "anyText";
@@ -143,13 +143,12 @@ class BufferManagerImplTest {
         File file = fillTestFile(getImageDto());
         byte[] bytesByFile = bufferManager.getBytesByFile(file);
         assertThat(IMAGE_DTO_BYTES).isEqualTo(bytesByFile);
-        boolean isDeleted = deleteTestFile(getBufferedFileName());
+        boolean isDeleted = deleteTestFile(file.getName());
         assertThat(isDeleted).isTrue();
     }
 
     @Test
     void getBytesByFile_thenThrowImageCantBeConvertedException() {
-        createTestFile();
         File file = mock(File.class);
         when(file.exists()).thenReturn(false);
 
@@ -157,6 +156,5 @@ class BufferManagerImplTest {
                 .isInstanceOf(ImageCantBeConvertedForBufferException.class)
                 .hasMessage("Image can't be converted from the txt file to byte[]");
 
-        deleteTestFile(BufferUtils.BUFFERED_FILE_NAME);
     }
 }

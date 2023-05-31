@@ -213,7 +213,7 @@ class ImageServiceImplTest {
     @Test
     void create_thenImageNotUniqueException() {
         ImageDto imageDto = getImageDto();
-        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(2L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
+        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(3L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
 
         assertThatThrownBy(() -> imageService.create(imageDto))
                 .isInstanceOf(EntityExistsException.class)
@@ -230,7 +230,9 @@ class ImageServiceImplTest {
     @Test
     void update_thenSuccessfulUpdate() {
         ImageDto imageDto = getImageDto();
-        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(2L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
+
+
+        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(3L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
         when(imageRepository.save(any())).thenReturn(getImageDto().toEntity());
         doNothing().when(bufferService).save(imageDto);
 
@@ -310,7 +312,7 @@ class ImageServiceImplTest {
     @Test
     void isUnique_thenNotUniqueById() {
         ImageDto imageDto = getImageDto();
-        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(2L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
+        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(3L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
 
         boolean unique = imageService.isUnique(imageDto);
 

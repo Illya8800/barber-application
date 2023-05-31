@@ -17,11 +17,12 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static com.barber.hopak.util.ImageUtil.*;
+import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
 
 public class BufferUtils {
     public static final String UNEXISTING_FILE_NAME = " ";
     public static final String EXISTING_FILE_NAME = "testFile.png";
-    public static final Long EXISTING_FILE_ID = 1L;
+    public static final Long EXISTING_FILE_ID = 2L;
     public static final Long UNEXISTING_FILE_ID = -1L;
     public static final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
     private static final String TARGET_FOLDER_PATH;
@@ -45,7 +46,7 @@ public class BufferUtils {
 
     public static void createTestFile() {
         try {
-            final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
+            final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_IMAGE_DTO_NAME, DOT_TXT);
             boolean isCreated = new File(getBufferFolderPath(), BUFFERED_FILE_NAME).createNewFile();
             if (!isCreated) throw new RuntimeException("Test image file can't be created");
         } catch (IOException e) {
