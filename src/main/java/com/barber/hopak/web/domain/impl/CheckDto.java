@@ -1,6 +1,10 @@
 package com.barber.hopak.web.domain.impl;
 
-import com.barber.hopak.model.impl.*;
+import com.barber.hopak.model.impl.Barber;
+import com.barber.hopak.model.impl.Check;
+import com.barber.hopak.model.impl.Client;
+import com.barber.hopak.model.impl.Haircut;
+import com.barber.hopak.model.impl.Payment;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.Valid;
 import lombok.Builder;

@@ -7,7 +7,9 @@ import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.*;
+import static com.barber.hopak.constrain.message.DtoConstraintMessage.PAYMENT_DISCOUNT_SHOULD_BE_POSITIVE_VALUE_UP_TO_100;
+import static com.barber.hopak.constrain.message.DtoConstraintMessage.PAYMENT_PRICE_SHOULD_BE_IN_RANGE_BETWEEN_0_AND_2147483647;
+import static com.barber.hopak.constrain.message.DtoConstraintMessage.PAYMENT_TYPE_IS_UNKNOWN;
 
 @Builder
 public class PaymentDto implements DTO<Payment> {

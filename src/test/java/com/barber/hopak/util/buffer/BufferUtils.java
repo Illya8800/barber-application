@@ -16,7 +16,10 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.barber.hopak.util.ImageUtil.*;
+import static com.barber.hopak.util.ImageUtil.BUFFER_FOLDER_NAME;
+import static com.barber.hopak.util.ImageUtil.DOT_TXT;
+import static com.barber.hopak.util.ImageUtil.FOLDER_SEPARATOR;
+import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
 import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
 
 public class BufferUtils {

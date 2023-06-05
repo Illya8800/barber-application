@@ -6,15 +6,19 @@ import com.barber.hopak.web.domain.impl.ImageDto;
 
 import java.util.List;
 
-import static com.barber.hopak.util.ImageUtil.*;
-import static com.barber.hopak.util.buffer.BufferUtils.*;
+import static com.barber.hopak.util.ImageUtil.DOT_TXT;
+import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
+import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_ID;
+import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_NAME;
+import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_ID;
+import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_NAME;
 
 public class ImageUtils {
     public static final Long EXISTING_IMAGE_DTO_ID = EXISTING_FILE_ID;
 
     private static Long NO_IMAGE_ID = 1L;
     public static final Long UNEXISTING_IMAGE_DTO_ID = UNEXISTING_FILE_ID;
-    public static final byte[] IMAGE_DTO_BYTES = {0};
+    public static final byte[] IMAGE_DTO_BYTES = {0, 1, 2, 3};
     public static final String EXISTING_IMAGE_DTO_NAME = EXISTING_FILE_NAME;
     public static final String UNEXISTING_IMAGE_DTO_NAME = UNEXISTING_FILE_NAME;
 

@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain;
+package com.barber.hopak.constrain.image;
 
 import com.barber.hopak.exception.image.ImageNotFoundException;
 import com.barber.hopak.service.ImageService;
@@ -14,7 +14,9 @@ public class UniqueImageNameValidator implements ConstraintValidator<UniqueImage
     @Override
     public boolean isValid(ImageDto value, ConstraintValidatorContext context) {
         try {
-            ImageDto imageDtoByDb = imageService.findByName(value.getImage().getOriginalFilename());
+            String originalFilename = value.getImage().getOriginalFilename();
+            String imageName = originalFilename == null ? "" : originalFilename.trim();
+            ImageDto imageDtoByDb = imageService.findByName(imageName);
             return imageDtoByDb.getId().equals(value.getId());
         } catch (ImageNotFoundException e) {
             return true;

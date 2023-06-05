@@ -1,8 +1,9 @@
 package com.barber.hopak.web.domain.impl;
 
 import com.barber.hopak.constrain.FileSize;
-import com.barber.hopak.constrain.ImageExtensionsName;
-import com.barber.hopak.constrain.UniqueImageName;
+import com.barber.hopak.constrain.image.ImageExtensionsName;
+import com.barber.hopak.constrain.image.OriginalFileNameNotBlank;
+import com.barber.hopak.constrain.image.UniqueImageName;
 import com.barber.hopak.converter.ImageConverter;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.web.domain.DTO;
@@ -14,15 +15,16 @@ import org.springframework.web.multipart.MultipartFile;
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_FILE_IS_NOT_SELECTED;
 
 @Builder
-@UniqueImageName(message = "Image Should be Unique")
+@UniqueImageName
 @Data
 public class ImageDto implements DTO<Image> {
 
     private Long id;
     private String name;
     @NotNull(message = IMAGE_FILE_IS_NOT_SELECTED)
+    @OriginalFileNameNotBlank
     @ImageExtensionsName
-    @FileSize(message = "dwdwd")
+    @FileSize
     private MultipartFile image;
 
     @Override

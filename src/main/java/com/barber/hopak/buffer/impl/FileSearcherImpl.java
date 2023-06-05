@@ -13,7 +13,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static com.barber.hopak.util.ImageUtil.*;
+import static com.barber.hopak.util.ImageUtil.BUFFER_FOLDER_NAME;
+import static com.barber.hopak.util.ImageUtil.DOT_TXT;
+import static com.barber.hopak.util.ImageUtil.FOLDER_SEPARATOR;
+import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
 
 @Component
 @Log4j2

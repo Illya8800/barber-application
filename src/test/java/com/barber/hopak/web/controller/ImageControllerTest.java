@@ -2,7 +2,6 @@ package com.barber.hopak.web.controller;
 
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFromDateBase;
 import com.barber.hopak.service.ImageService;
-import com.barber.hopak.util.ImageUtil;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.util.buffer.BufferUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
@@ -13,16 +12,31 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
-import static com.barber.hopak.exception.handler.AbstractGlobalException.getRequestUrlAndMethod;
-import static com.barber.hopak.util.ImageUtils.*;
+import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_NAME_SHOULD_BE_UNIQUE;
+import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT;
+import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_TYPE_UNKNOWN;
+import static com.barber.hopak.util.GlobalBindExceptionErrorMessagesVerifier.verifyExpectedErrorMessages;
+import static com.barber.hopak.util.ImageUtil.NO_IMAGE;
+import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageUtils.IMAGE_DTO_BYTES;
+import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageUtils.getImageDto;
+import static com.barber.hopak.util.ImageUtils.getNoImageId;
+import static com.barber.hopak.util.ImageUtils.setNoImageId;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,17 +50,17 @@ class ImageControllerTest {
     @Autowired
     private ImageService<ImageDto, Long> imageService;
 
-    @AfterAll
-    static void destroyBuffer() {
-        BufferUtils.destroyBuffer();
-    }
-
     @BeforeEach
     void clearDbState() {
         List<ImageDto> allImages = imageService.findAllImages();
         allImages.forEach(image -> imageService.deleteById(image.getId()));
-        ImageDto noImage = imageService.create(ImageDto.builder().name("no_image.png").image(new MultipartFileFromDateBase("no_image.png", IMAGE_DTO_BYTES)).build());
+        ImageDto noImage = imageService.create(ImageDto.builder().name(NO_IMAGE).image(new MultipartFileFromDateBase(NO_IMAGE, IMAGE_DTO_BYTES)).build());
         setNoImageId(noImage.getId());
+    }
+
+    @AfterAll
+    static void destroyBuffer() {
+        BufferUtils.destroyBuffer();
     }
 
     @Test
@@ -65,30 +79,21 @@ class ImageControllerTest {
 
     @Test
     void findImageById_thenCaughtByGlobalImageExceptionHandler() throws Exception {
-
         MvcResult mvcResult = mockMvc.perform(get("/images/{id}", UNEXISTING_IMAGE_DTO_ID)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
                 .andReturn();
         String json = mvcResult.getResponse().getContentAsString();
 
-        assertThat(json).isEqualTo("Image wasn't found;" + getRequestUrlAndMethod(mvcResult.getRequest()));
-    }
-
-    private String buildJsonString(String field, Long value) {
-        return StringUtils3C.join("\"", field, "\":", value.toString(), ",");
-    }
-
-    private String buildJsonString(String field, String value) {
-        return StringUtils3C.join("\"", field, "\":\"", value, "\",");
+        assertThat(json).contains(buildJsonString("name", NO_IMAGE));
     }
 
     @Test
     void findImageByImageName_thenFindImage() throws Exception {
-        ImageDto imageByService = imageService.findByName(ImageUtil.NO_IMAGE);
+        ImageDto imageByService = imageService.findByName(NO_IMAGE);
 
-        MvcResult mvcResult = mockMvc.perform(get("/images/name/{imageName}", ImageUtil.NO_IMAGE)
+        MvcResult mvcResult = mockMvc.perform(get("/images/name/{imageName}", NO_IMAGE)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -104,11 +109,11 @@ class ImageControllerTest {
         MvcResult mvcResult = mockMvc.perform(get("/images/name/{imageName}", UNEXISTING_IMAGE_DTO_NAME)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
                 .andReturn();
         String json = mvcResult.getResponse().getContentAsString();
 
-        assertThat(json).isEqualTo("Image wasn't found;" + getRequestUrlAndMethod(mvcResult.getRequest()));
+        assertThat(json).contains(buildJsonString("name", NO_IMAGE));
     }
 
     @Test
@@ -129,7 +134,7 @@ class ImageControllerTest {
         String json = mvcResult.getResponse().getContentAsString();
 
         assertThat(new ObjectMapper().readValue(json, List.class)).hasSize(4);
-        assertThat(json).contains(buildJsonString("name", "no_image.png"));
+        assertThat(json).contains(buildJsonString("name", NO_IMAGE));
         assertThat(json).contains(buildJsonString("name", imageDto1.getName()));
         assertThat(json).contains(buildJsonString("name", imageDto2.getName()));
         assertThat(json).contains(buildJsonString("name", imageDto3.getName()));
@@ -146,22 +151,190 @@ class ImageControllerTest {
         String json = mvcResult.getResponse().getContentAsString();
 
         assertThat(new ObjectMapper().readValue(json, List.class)).hasSize(1);
-        assertThat(json).contains(buildJsonString("name", "no_image.png"));
-    }
-
-/*    @Test
-    void createImage() {
+        assertThat(json).contains(buildJsonString("name", NO_IMAGE));
     }
 
     @Test
-    void updateImage() {
+    void createImage_thenCreate() throws Exception {
+        ImageDto imageDto = getImageDto();
+        imageDto.setId(3L);
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                imageDto.getName(),
+                imageDto.getName(),
+                "image/png",
+                imageDto.getImage().getBytes()
+        );
+
+        imageDto.setImage(multipartFile);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, "/images")
+                        .file(multipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                        .flashAttr("imageDto", imageDto))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andReturn();
     }
 
     @Test
-    void deleteImage() {
+    void createImage_thenThrowBindException() throws Exception {
+        ImageDto imageDto = ImageDto.builder().name(UNEXISTING_IMAGE_DTO_NAME).image(new MultipartFileFromDateBase(UNEXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                imageDto.getName(),
+                imageDto.getName(),
+                "image/png",
+                imageDto.getImage().getBytes()
+        );
+
+        imageDto.setImage(multipartFile);
+
+        MvcResult mvcResult = mockMvc.perform(multipart(HttpMethod.POST, "/images")
+                        .file(multipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                        .flashAttr("imageDto", imageDto))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        verifyExpectedErrorMessages(mvcResult, "imageDto", IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT, IMAGE_TYPE_UNKNOWN);
     }
 
     @Test
-    void isUniqueImage() {
-    }*/
+    void createImage_thenThrowBindExceptionByDuplicateImageName() throws Exception {
+        ImageDto imageDto = ImageDto.builder().name(EXISTING_IMAGE_DTO_NAME).image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        imageService.create(imageDto);
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                imageDto.getName(),
+                imageDto.getName(),
+                "image/png",
+                imageDto.getImage().getBytes()
+        );
+
+        imageDto.setImage(multipartFile);
+
+
+        MvcResult mvcResult = mockMvc.perform(multipart(HttpMethod.POST, "/images")
+                        .file(multipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                        .flashAttr("imageDto", imageDto))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+        verifyExpectedErrorMessages(mvcResult, "imageDto", IMAGE_NAME_SHOULD_BE_UNIQUE);
+    }
+
+    @Test
+    void updateImage_thenUpdate() throws Exception {
+        final ImageDto imageDto1 = imageService.create(getImageDto());
+
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                imageDto1.getName(),
+                imageDto1.getName(),
+                "image/png",
+                new byte[]{0, 0, 0}
+        );
+        imageDto1.setImage(multipartFile);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/images")
+                        .file(multipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                        .flashAttr("imageDto", imageDto1))
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andReturn();
+    }
+
+    @Test
+    void updateImage_thenThrowBindExceptionByIllegalOriginalFileNameAndExtension() throws Exception {
+        ImageDto imageDto = ImageDto.builder().name(UNEXISTING_IMAGE_DTO_NAME).image(new MultipartFileFromDateBase(UNEXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                imageDto.getName(),
+                imageDto.getName(),
+                "image/png",
+                imageDto.getImage().getBytes()
+        );
+
+        imageDto.setImage(multipartFile);
+
+        MvcResult mvcResult = mockMvc.perform(multipart(HttpMethod.PATCH, "/images")
+                        .file(multipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                        .flashAttr("imageDto", imageDto))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        verifyExpectedErrorMessages(mvcResult, "imageDto", IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT, IMAGE_TYPE_UNKNOWN);
+    }
+
+    @Test
+    void deleteImage_thenDelete() throws Exception {
+        mockMvc.perform(delete("/images/{id}", getNoImageId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andReturn();
+    }
+
+    @Test
+    void deleteImage_thenCaughtByEmptyResultDataAccessException() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(delete("/images/{id}", UNEXISTING_IMAGE_DTO_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        assertThat(contentAsString).isEqualTo("Entity with this id doesn't exist");
+    }
+
+    @Test
+    void isUniqueImage_thenTrueAsNewEntity() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/images/unique?id=" + UNEXISTING_IMAGE_DTO_ID + "&name=" + UNEXISTING_IMAGE_DTO_NAME)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        assertThat(contentAsString).isEqualTo("true");
+    }
+
+    @Test
+    void isUniqueImage_thenTrueAsUpdate() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/images/unique?id=" + getNoImageId() + "&name=" + NO_IMAGE)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        assertThat(contentAsString).isEqualTo("true");
+    }
+
+    @Test
+    void isUniqueImage_thenFalse() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/images/unique?id=" + UNEXISTING_IMAGE_DTO_ID + "&name=" + NO_IMAGE)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+
+        assertThat(contentAsString).isEqualTo("false");
+    }
+
+
+    private String buildJsonString(String field, Long value) {
+        return StringUtils3C.join("\"", field, "\":", value.toString(), ",");
+    }
+
+    private String buildJsonString(String field, String value) {
+        return StringUtils3C.join("\"", field, "\":\"", value, "\",");
+    }
 }

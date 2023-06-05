@@ -8,7 +8,6 @@ import com.barber.hopak.repository.ImageRepository;
 import com.barber.hopak.service.ImageService;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.web.domain.impl.ImageDto;
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -68,9 +67,6 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     @Override
     public ImageDto create(ImageDto imageDto) {
         log.info("Inserting new image with name = {} in DB ", imageDto.getName());
-        if (!isUnique(imageDto)) {
-            throw new EntityExistsException(StringUtils3C.join("Image with name ", imageDto.getName(), " exists"));
-        }
         ImageDto savedImage = imageRepository.save(imageDto.toEntity()).toDto();
         bufferService.save(savedImage);
         return savedImage;
@@ -79,13 +75,9 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     @Override
     public ImageDto update(ImageDto imageDto) {
         log.info("Updating image with name = {} in DB ", imageDto.getName());
-        if (!isUnique(imageDto)) {
-            ImageDto updatedImage = imageRepository.save(imageDto.toEntity()).toDto();
-            bufferService.save(updatedImage);
-            return updatedImage;
-        } else {
-            throw new ImageNotFoundException(StringUtils3C.join("Image with name ", imageDto.getName(), " isn't found"));
-        }
+        ImageDto updatedImage = imageRepository.save(imageDto.toEntity()).toDto();
+        bufferService.save(updatedImage);
+        return updatedImage;
     }
 
     @Override
@@ -97,9 +89,9 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public boolean isUnique(ImageDto imageDto) {
-        log.info("Checking imageName = {} on unique", imageDto.getName());
-        return imageRepository.findByName(imageDto.getName()).map(value -> value.getId().equals(imageDto.getId())).orElse(true);
+    public boolean isUnique(Long id, String name) {
+        log.info("Checking imageName = {} on unique", name);
+        return imageRepository.findByName(name).map(value -> value.getId().equals(id)).orElse(true);
     }
 
     @Override

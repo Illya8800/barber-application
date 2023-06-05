@@ -8,7 +8,6 @@ import com.barber.hopak.repository.ImageRepository;
 import com.barber.hopak.util.ImageUtils;
 import com.barber.hopak.util.buffer.BufferUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
-import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,12 +20,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-import static com.barber.hopak.util.ImageUtils.*;
+import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageUtils.getImageDto;
+import static com.barber.hopak.util.ImageUtils.getImageList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ImageServiceImplTest {
@@ -194,75 +201,38 @@ class ImageServiceImplTest {
     @Test
     void create_thenSuccessfulCreate() {
         ImageDto imageDto = getImageDto();
-        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.empty());
         when(imageRepository.save(any())).thenReturn(getImageDto().toEntity());
         doNothing().when(bufferService).save(imageDto);
 
         ImageDto savedImageDto = imageService.create(imageDto);
 
         then(imageRepository)
-                .should()
-                .findByName(imageDto.getName());
+                .should(times(1))
+                .save(any());
         then(bufferService)
                 .should()
                 .save(any());
 
         assertThat(savedImageDto).isEqualTo(imageDto);
-    }
-
-    @Test
-    void create_thenImageNotUniqueException() {
-        ImageDto imageDto = getImageDto();
-        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(3L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
-
-        assertThatThrownBy(() -> imageService.create(imageDto))
-                .isInstanceOf(EntityExistsException.class)
-                .hasMessage("Image with name " + imageDto.getName() + " exists");
-
-        then(imageRepository)
-                .should()
-                .findByName(imageDto.getName());
-        then(bufferService)
-                .should(never())
-                .save(any());
     }
 
     @Test
     void update_thenSuccessfulUpdate() {
         ImageDto imageDto = getImageDto();
 
-
-        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(3L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
         when(imageRepository.save(any())).thenReturn(getImageDto().toEntity());
         doNothing().when(bufferService).save(imageDto);
 
         ImageDto savedImageDto = imageService.update(imageDto);
 
         then(imageRepository)
-                .should()
-                .findByName(imageDto.getName());
+                .should(times(1))
+                .save(any());
         then(bufferService)
                 .should()
                 .save(any());
 
         assertThat(savedImageDto).isEqualTo(imageDto);
-    }
-
-    @Test
-    void update_thenNotUpdate() {
-        ImageDto imageDto = getImageDto();
-        when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> imageService.update(imageDto))
-                .isInstanceOf(ImageNotFoundException.class)
-                .hasMessage("Image with name " + imageDto.getName() + " isn't found");
-
-        then(imageRepository)
-                .should()
-                .findByName(imageDto.getName());
-        then(bufferService)
-                .should(never())
-                .save(any());
     }
 
     @Test
@@ -286,7 +256,7 @@ class ImageServiceImplTest {
         ImageDto imageDto = getImageDto();
         when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.empty());
 
-        boolean unique = imageService.isUnique(imageDto);
+        boolean unique = imageService.isUnique(imageDto.getId(), imageDto.getName());
 
         then(imageRepository)
                 .should()
@@ -300,7 +270,7 @@ class ImageServiceImplTest {
         ImageDto imageDto = getImageDto();
         when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(imageDto.toEntity()));
 
-        boolean unique = imageService.isUnique(imageDto);
+        boolean unique = imageService.isUnique(imageDto.getId(), imageDto.getName());
 
         then(imageRepository)
                 .should()
@@ -314,7 +284,7 @@ class ImageServiceImplTest {
         ImageDto imageDto = getImageDto();
         when(imageRepository.findByName(imageDto.getName())).thenReturn(Optional.of(ImageDto.builder().id(3L).name("anotherName").image(imageDto.getImage()).build().toEntity()));
 
-        boolean unique = imageService.isUnique(imageDto);
+        boolean unique = imageService.isUnique(imageDto.getId(), imageDto.getName());
 
         then(imageRepository)
                 .should()

@@ -17,7 +17,7 @@ public interface ImageService<Entity, ID> {
 
     void deleteById(ID id);
 
-    boolean isUnique(Entity imageDto);
+    boolean isUnique(ID id, String name);
 
     void setImageNameByOriginalFileName(ImageDto imageDto);
 

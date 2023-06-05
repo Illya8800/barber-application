@@ -3,6 +3,7 @@ package com.barber.hopak.model.enumeration;
 import com.barber.hopak.exception.image.inh.ImageExtensionsNotFoundException;
 import com.barber.hopak.util.StringUtils3C;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,13 @@ public enum ImageExtensions {
 
     public static Map<String, String> getExtensions() {
         return Map.copyOf(extensions);
+    }
+
+    public static Integer largestExtensionLengthWithDot() {
+        return getExtensions().values().stream()
+                .max(Comparator.comparingInt(String::length))
+                .map(String::length)
+                .orElseThrow(() -> new RuntimeException("Can't find any image extensions in enumeration. You should fill it in ImageExtension.java"));
     }
 
     private static String joinDotBeforeExtension(String extension) {

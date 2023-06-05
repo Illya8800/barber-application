@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain;
+package com.barber.hopak.constrain.image;
 
 import com.barber.hopak.service.ImageService;
 import com.barber.hopak.web.domain.impl.ImageDto;
