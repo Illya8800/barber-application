@@ -12,7 +12,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -28,15 +27,7 @@ public class BufferUtils {
     public static final Long EXISTING_FILE_ID = 2L;
     public static final Long UNEXISTING_FILE_ID = -1L;
     public static final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
-    private static final String TARGET_FOLDER_PATH;
-
-    static {
-        try {
-            TARGET_FOLDER_PATH = new File(BufferUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private static final String TARGET_FOLDER_PATH = "/home/user/IdeaProjects/barber-application";
 
     public static String getBufferFolderPath() {
         return StringUtils3C.join(TARGET_FOLDER_PATH, FOLDER_SEPARATOR, BUFFER_FOLDER_NAME);

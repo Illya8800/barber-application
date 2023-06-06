@@ -34,7 +34,7 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
      *                 It will save in the BASIC_BUFFER_PATH.
      *                 File will get the next name "id-imageName.png.txt". Example: 1-no-image.png.txt
      * @return file with the image's bytes
-     * @throws ImageCantBeConvertedForBufferException If image can't be saved
+     * @throws SaveImageException If image can't be saved
      */
     @Override
     public File save(ImageDto imageDto) {
