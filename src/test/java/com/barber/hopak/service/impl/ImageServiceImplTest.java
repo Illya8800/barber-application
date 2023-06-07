@@ -8,17 +8,17 @@ import com.barber.hopak.repository.ImageRepository;
 import com.barber.hopak.util.ImageUtils;
 import com.barber.hopak.util.buffer.BufferUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_ID;
 import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
@@ -37,6 +37,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ImageServiceImplTest {
+    private final BufferUtils bufferUtils;
     @Mock
     private BufferService<ImageDto> bufferService;
     @Mock
@@ -45,9 +46,14 @@ class ImageServiceImplTest {
     @InjectMocks
     private ImageServiceImpl imageService;
 
-    @AfterAll
-    static void destroyBuffer() {
-        BufferUtils.destroyBuffer();
+    @Autowired
+    ImageServiceImplTest(BufferUtils bufferUtils) {
+        this.bufferUtils = bufferUtils;
+    }
+
+    @AfterEach
+    void destroyBuffer() {
+        bufferUtils.destroyBuffer();
     }
 
     @Test
@@ -164,7 +170,7 @@ class ImageServiceImplTest {
 
     @Test
     void findAllImages_thenFindNotEmptyList() {
-        List<ImageDto> imageListMock = StreamSupport.stream(getImageList().spliterator(), false).map(Image::toDto).toList();
+        List<ImageDto> imageListMock = getImageList().stream().map(Image::toDto).toList();
 
         when(imageRepository.findAll()).thenReturn(getImageList());
         doNothing().when(bufferService).save(any());

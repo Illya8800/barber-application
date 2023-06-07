@@ -36,7 +36,7 @@ public class ImageUtils {
         NO_IMAGE_ID = noImageId;
     }
 
-    public static Iterable<Image> getImageList() {
+    public static List<Image> getImageList() {
         String imageName2 = "Second ImageName";
         String imageName3 = "Third ImageName";
         String imageName4 = "Forth ImageName";

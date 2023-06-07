@@ -7,11 +7,12 @@ import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFr
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.util.buffer.BufferUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,9 +29,6 @@ import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_ID;
 import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_NAME;
 import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_ID;
 import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_NAME;
-import static com.barber.hopak.util.buffer.BufferUtils.createTestFile;
-import static com.barber.hopak.util.buffer.BufferUtils.deleteTestFile;
-import static com.barber.hopak.util.buffer.BufferUtils.fillTestFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
@@ -40,26 +38,31 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class BufferManagerImplTest {
-
+    private final BufferUtils bufferUtils;
     @Mock
     private FileSearcher fileSearcher;
     @InjectMocks
     private BufferManagerImpl bufferManager;
 
-    @BeforeAll
-    static void initBuffer() {
-        BufferUtils.initBuffer();
+    @Autowired
+    BufferManagerImplTest(BufferUtils bufferUtils) {
+        this.bufferUtils = bufferUtils;
     }
 
-    @AfterAll
-    static void destroyBuffer() {
-        BufferUtils.destroyBuffer();
+    @BeforeEach
+    void initBuffer() {
+        bufferUtils.initBuffer();
+    }
+
+    @AfterEach
+    void destroyBuffer() {
+        bufferUtils.destroyBuffer();
     }
 
     @Test
     void save_thenSaveFile() {
         ImageDto imageDto = getImageDto();
-        when(fileSearcher.getBufferPath()).thenReturn(BufferUtils.getBufferFolderPath());
+        when(fileSearcher.getBufferPath()).thenReturn(bufferUtils.getBufferFolderPath());
 
         File file = bufferManager.save(imageDto);
 
@@ -67,7 +70,7 @@ class BufferManagerImplTest {
 
         String BUFFERED_FILE_NAME = StringUtils3C.join(imageDto.getId(), ID_SEPARATOR, imageDto.getName(), DOT_TXT);
         assertThat(file.getName()).isEqualTo(BUFFERED_FILE_NAME);
-        boolean isDeleted = deleteTestFile(getBufferedFileName());
+        boolean isDeleted = bufferUtils.deleteTestFile(getBufferedFileName());
         assertThat(isDeleted).isTrue();
     }
 
@@ -147,11 +150,11 @@ class BufferManagerImplTest {
 
     @Test
     void getBytesByFile_thenGetBytes() {
-        createTestFile();
-        File file = fillTestFile(getImageDto());
+        bufferUtils.createTestFile();
+        File file = bufferUtils.fillTestFile(getImageDto());
         byte[] bytesByFile = bufferManager.getBytesByFile(file);
         assertThat(IMAGE_DTO_BYTES).isEqualTo(bytesByFile);
-        boolean isDeleted = deleteTestFile(file.getName());
+        boolean isDeleted = bufferUtils.deleteTestFile(file.getName());
         assertThat(isDeleted).isTrue();
     }
 

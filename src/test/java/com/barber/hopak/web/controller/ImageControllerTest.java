@@ -6,7 +6,7 @@ import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.util.buffer.BufferUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,18 +49,21 @@ class ImageControllerTest {
 
     @Autowired
     private ImageService<ImageDto, Long> imageService;
+    @Autowired
+    private BufferUtils bufferUtils;
 
     @BeforeEach
     void clearDbState() {
+        bufferUtils.initBuffer();
         List<ImageDto> allImages = imageService.findAllImages();
         allImages.forEach(image -> imageService.deleteById(image.getId()));
         ImageDto noImage = imageService.create(ImageDto.builder().name(NO_IMAGE).image(new MultipartFileFromDateBase(NO_IMAGE, IMAGE_DTO_BYTES)).build());
         setNoImageId(noImage.getId());
     }
 
-    @AfterAll
-    static void destroyBuffer() {
-        BufferUtils.destroyBuffer();
+    @AfterEach
+    void destroyBuffer() {
+        bufferUtils.destroyBuffer();
     }
 
     @Test

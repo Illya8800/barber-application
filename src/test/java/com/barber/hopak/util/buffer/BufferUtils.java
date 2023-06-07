@@ -1,5 +1,6 @@
 package com.barber.hopak.util.buffer;
 
+import com.barber.hopak.config.BufferPathConfig;
 import com.barber.hopak.exception.buffer.BufferCantBeDeleteException;
 import com.barber.hopak.exception.buffer.BufferedFileCantBeDeleteException;
 import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
@@ -7,6 +8,9 @@ import com.barber.hopak.exception.buffer.ImagesBufferNotFountException;
 import com.barber.hopak.util.ArraysC;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.web.domain.impl.ImageDto;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,24 +25,28 @@ import static com.barber.hopak.util.ImageUtil.FOLDER_SEPARATOR;
 import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
 import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
 
+
+@Component
+@RequiredArgsConstructor
 public class BufferUtils {
+    private final BufferPathConfig bufferPathConfig;
     public static final String UNEXISTING_FILE_NAME = " ";
     public static final String EXISTING_FILE_NAME = "testFile.png";
     public static final Long EXISTING_FILE_ID = 2L;
     public static final Long UNEXISTING_FILE_ID = -1L;
     public static final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
-    private static final String TARGET_FOLDER_PATH = "/home/user/IdeaProjects/barber-application";
+    private String BUFFER_FOLDER_PATH;
 
-    public static String getBufferFolderPath() {
-        return StringUtils3C.join(TARGET_FOLDER_PATH, FOLDER_SEPARATOR, BUFFER_FOLDER_NAME);
+    @PostConstruct
+    void init() {
+        BUFFER_FOLDER_PATH = bufferPathConfig.getPath();
     }
 
-    public static void createTestPackage() {
-        boolean mkdir = new File(getBufferFolderPath()).mkdir();
-        if (!mkdir) throw new ImagesBufferNotFountException("Images buffer doesn't created");
+    public String getBufferFolderPath() {
+        return StringUtils3C.join(BUFFER_FOLDER_PATH, FOLDER_SEPARATOR, BUFFER_FOLDER_NAME);
     }
 
-    public static void createTestFile() {
+    public void createTestFile() {
         try {
             final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_IMAGE_DTO_NAME, DOT_TXT);
             boolean isCreated = new File(getBufferFolderPath(), BUFFERED_FILE_NAME).createNewFile();
@@ -48,12 +56,12 @@ public class BufferUtils {
         }
     }
 
-    public static boolean deleteTestFile(String bufferedFileName) {
+    public boolean deleteTestFile(String bufferedFileName) {
         return new File(getBufferFolderPath(), bufferedFileName).delete();
     }
 
 
-    public static File fillTestFile(ImageDto imageDto) {
+    public File fillTestFile(ImageDto imageDto) {
         final String BUFFERED_FILE_NAME = StringUtils3C.join(EXISTING_FILE_ID, ID_SEPARATOR, EXISTING_FILE_NAME, DOT_TXT);
         File file = new File(getBufferFolderPath(), BUFFERED_FILE_NAME);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -65,11 +73,17 @@ public class BufferUtils {
 
     }
 
-    public static void initBuffer() {
+    public void initBuffer() {
         createTestPackage();
     }
 
-    public static void destroyBuffer() {
+    private void createTestPackage() {
+        File file = new File(getBufferFolderPath());
+        boolean mkdir = file.mkdir();
+        if (!mkdir && !file.exists()) throw new ImagesBufferNotFountException("Images buffer doesn't created");
+    }
+
+    public void destroyBuffer() {
         final File bufferFolder = new File(getBufferFolderPath());
         if (!bufferFolder.exists()) return;
         boolean deleted = bufferFolder.delete();
@@ -82,7 +96,5 @@ public class BufferUtils {
             deleted = bufferFolder.delete();
             if (!deleted) throw new BufferCantBeDeleteException("Buffer doesn't deleted");
         }
-
-
     }
 }

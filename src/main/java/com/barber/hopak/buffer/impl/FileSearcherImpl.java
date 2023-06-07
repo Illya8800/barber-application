@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -27,20 +26,26 @@ public class FileSearcherImpl implements FileSearcher {
     private String BASIC_BUFFER_PATH;
 
     @PostConstruct
-    void init(){
+    void init() {
         BASIC_BUFFER_PATH = createBufferPackage();
     }
 
     @Override
     public Optional<File> getFileByName(String imageName) {
         final String FILE_NAME_REGEX = StringUtils3C.join("^\\d{1,19}", ID_SEPARATOR, imageName, DOT_TXT, "$");
-        return Arrays.stream(Objects.requireNonNull(new File(BASIC_BUFFER_PATH).listFiles())).filter(filterByFileNameRegex(FILE_NAME_REGEX)).findFirst();
+        File[] files = new File(BASIC_BUFFER_PATH).listFiles();
+        if (files != null)
+            return Arrays.stream(files).filter(filterByFileNameRegex(FILE_NAME_REGEX)).findFirst();
+        return Optional.empty();
     }
 
     @Override
     public Optional<File> getFileById(Long id) {
         final String FILE_NAME_REGEX = StringUtils3C.join(id, ID_SEPARATOR);
-        return Arrays.stream(Objects.requireNonNull(new File(BASIC_BUFFER_PATH).listFiles())).filter(filterById(FILE_NAME_REGEX)).findFirst();
+        File[] files = new File(BASIC_BUFFER_PATH).listFiles();
+        if (files != null)
+            return Arrays.stream(files).filter(filterById(FILE_NAME_REGEX)).findFirst();
+        return Optional.empty();
     }
 
     @Override

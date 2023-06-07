@@ -8,9 +8,7 @@ import static com.barber.hopak.util.ImageUtil.DOT_TXT;
 import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 class BufferContainerStateTest {
-
     private BufferContainerState bufferContainerState;
-
     @BeforeEach
     void initState(){
         bufferContainerState = new BufferContainerState();
