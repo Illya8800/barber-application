@@ -6,7 +6,12 @@ import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.HAIRCUT_DURATION_SHOULD_BE_IN_RANGE_BETWEEN_0_AND_32767;
@@ -14,6 +19,11 @@ import static com.barber.hopak.constrain.message.DtoConstraintMessage.HAIRCUT_NA
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.HAIRCUT_PRICE_SHOULD_BE_IN_RANGE_BETWEEN_0_AND_2147483647;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class HaircutDto implements DTO<Haircut> {
     private Long id;
     @Length(min = 1, max = 30, message = HAIRCUT_NAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER)

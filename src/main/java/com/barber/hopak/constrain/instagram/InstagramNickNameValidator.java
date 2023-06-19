@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain;
+package com.barber.hopak.constrain.instagram;
 
 import com.barber.hopak.service.api.InstagramApiService;
 import jakarta.validation.ConstraintValidator;

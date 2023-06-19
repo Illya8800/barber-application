@@ -17,6 +17,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @Table(name = "barber")
@@ -28,24 +31,25 @@ public class Barber implements com.barber.hopak.model.Entity<BarberDto> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, length = 30)
-    private String firstname;
+    private String barberName;
     @Column(nullable = false, length = 30)
     private String instagram;
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "enum('BARBER','TRAINEE_BARBER')", nullable = false)
-    private BarberRank rank;
+    @Column(columnDefinition = "enum('BARBER_APPRENTICE','BARBER_TRAINEE','JUNIOR_BARBER','BARBER','TOP_BARBER','BARBER_SENIOR','CHEF_BARBER')", nullable = false)
+    private BarberRank barberRank;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "avatar_id")
+    @LazyToOne(LazyToOneOption.PROXY)
     private Image avatar;
 
     @Override
     public BarberDto toDto() {
         return BarberDto.builder()
                 .id(this.id)
-                .firstname(this.firstname)
+                .barberName(this.barberName)
                 .instagram(this.instagram)
-                .rank(this.rank)
-                .avatar(this.avatar)
+                .barberRank(this.barberRank)
+                .avatar(Hibernate.isInitialized(this.avatar) ? this.avatar.toDto() : null)
                 .build();
     }
 }

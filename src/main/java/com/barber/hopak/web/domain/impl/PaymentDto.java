@@ -5,13 +5,23 @@ import com.barber.hopak.model.enumeration.PaymentType;
 import com.barber.hopak.model.impl.Payment;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.PAYMENT_DISCOUNT_SHOULD_BE_POSITIVE_VALUE_UP_TO_100;
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.PAYMENT_PRICE_SHOULD_BE_IN_RANGE_BETWEEN_0_AND_2147483647;
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.PAYMENT_TYPE_IS_UNKNOWN;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class PaymentDto implements DTO<Payment> {
     private Long id;
     @Size(message = PAYMENT_PRICE_SHOULD_BE_IN_RANGE_BETWEEN_0_AND_2147483647)

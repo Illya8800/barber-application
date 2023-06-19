@@ -7,7 +7,12 @@ import com.barber.hopak.model.impl.Haircut;
 import com.barber.hopak.model.impl.HaircutOrder;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
@@ -16,6 +21,11 @@ import static com.barber.hopak.constrain.message.DtoConstraintMessage.HAIRCUT_OR
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.HAIRCUT_ORDER_DESCRIPTION_SHOULD_BE_IN_RANGE_BETWEEN_0_AND_255_CHARACTER;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class HaircutOrderDto implements DTO<HaircutOrder> {
     private Long id;
     @Valid

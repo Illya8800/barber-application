@@ -8,11 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ImageRepository extends CrudRepository<Image, Long> {
-    Optional<Image> findById(Long id);
-
     Optional<Image> findByName(String imageName);
-
-    <S extends Image> S save(S image);
-
-    void deleteById(Long id);
 }

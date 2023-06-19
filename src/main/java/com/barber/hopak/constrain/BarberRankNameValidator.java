@@ -7,6 +7,6 @@ import jakarta.validation.ConstraintValidatorContext;
 public class BarberRankNameValidator implements ConstraintValidator<BarberRankName, BarberRank> {
     @Override
     public boolean isValid(BarberRank value, ConstraintValidatorContext context) {
-        return false;
+        return BarberRank.isValidRank(value);
     }
 }

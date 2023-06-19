@@ -175,7 +175,7 @@ class ImageServiceImplTest {
         when(imageRepository.findAll()).thenReturn(getImageList());
         doNothing().when(bufferService).save(any());
 
-        List<ImageDto> allImages = imageService.findAllImages();
+        List<ImageDto> allImages = imageService.findAll();
 
         then(imageRepository)
                 .should()
@@ -192,7 +192,7 @@ class ImageServiceImplTest {
         when(imageRepository.findAll()).thenReturn(Collections.emptyList());
         doNothing().when(bufferService).save(any());
 
-        List<ImageDto> allImages = imageService.findAllImages();
+        List<ImageDto> allImages = imageService.findAll();
 
         then(imageRepository)
                 .should()

@@ -7,6 +7,7 @@ import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
 import com.barber.hopak.exception.image.inh.SaveImageException;
 import com.barber.hopak.util.ArraysC;
 import com.barber.hopak.web.domain.impl.ImageDto;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ArrayUtils;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,11 @@ import static com.barber.hopak.util.ImageUtil.CONVERTER_SPLIT_REGEX;
 @RequiredArgsConstructor
 public class BufferManagerImpl implements BufferManager<File, Long> {
     private final FileSearcher fileSearcher;
+    @PreDestroy
+    private void destroyBuffer() {
+        log.info("Destroying buffer");
+        clearBuffer();
+    }
 
     /**
      * @param imageDto should contain id, imageName and the image
@@ -83,5 +90,15 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
 
     private byte[] getByteArrayFromString(StringBuilder sb) {
         return ArrayUtils.toPrimitive(java.util.Arrays.stream(sb.toString().split(CONVERTER_SPLIT_REGEX)).map(Byte::parseByte).toArray(Byte[]::new));
+    }
+
+    private void clearBuffer() {
+        log.info("Clearing the buffer");
+        File file = new File(fileSearcher.getBufferPath());
+        File[] files = file.listFiles();
+        if (files != null) {
+            log.info("Found {} file(s)", files.length);
+            Arrays.stream(files).forEach(File::delete);
+        }
     }
 }

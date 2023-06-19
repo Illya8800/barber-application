@@ -6,7 +6,12 @@ import com.barber.hopak.model.impl.User;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
@@ -19,6 +24,11 @@ import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_ROLES
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_SECOND_NAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class UserDto implements DTO<User> {
     private Long id;
     @NotBlank(message = FIELD_SHOULD_NOT_CONSIST_ONLY_FROM_SPACE)

@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain;
+package com.barber.hopak.constrain.image;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

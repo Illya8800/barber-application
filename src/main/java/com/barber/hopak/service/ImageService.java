@@ -1,25 +1,11 @@
 package com.barber.hopak.service;
 
-import com.barber.hopak.web.domain.impl.ImageDto;
-
 import java.util.List;
 
-public interface ImageService<Entity, ID> {
-    Entity findById(ID id);
-
+public interface ImageService<Entity, ID> extends BaseService<Entity, ID> {
     Entity findByName(String imageName);
-
-    List<Entity> findAllImages();
-
-    Entity create(Entity image);
-
-    Entity update(Entity image);
-
-    void deleteById(ID id);
-
+    List<Entity> findAll();
     boolean isUnique(ID id, String name);
-
-    void setImageNameByOriginalFileName(ImageDto imageDto);
-
+    void setImageNameByOriginalFileName(Entity imageDto);
     boolean isExtensionValid(String fileName);
 }

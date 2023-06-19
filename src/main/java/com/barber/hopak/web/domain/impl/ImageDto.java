@@ -1,6 +1,6 @@
 package com.barber.hopak.web.domain.impl;
 
-import com.barber.hopak.constrain.FileSize;
+import com.barber.hopak.constrain.image.FileSize;
 import com.barber.hopak.constrain.image.ImageExtensionsName;
 import com.barber.hopak.constrain.image.OriginalFileNameNotBlank;
 import com.barber.hopak.constrain.image.UniqueImageName;
@@ -8,15 +8,23 @@ import com.barber.hopak.converter.ImageConverter;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_FILE_IS_NOT_SELECTED;
 
 @Builder
 @UniqueImageName
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ImageDto implements DTO<Image> {
 
     private Long id;

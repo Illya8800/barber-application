@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -11,6 +11,81 @@
     </label>
     <input type="file" name="image">
     <button type="submit">Upload</button>
+</form>
+
+</br>
+
+<form action="http://localhost:8080/barber" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <label>id
+            <input type="text" name="id">
+        </label>
+        <label>name
+            <input type="text" name="name">
+        </label>
+        <label>instagram
+            <input type="text" name="instagram">
+        </label>
+        <label>rank
+            <input type="text" name="rank">
+        </label>
+        <label> avatarId
+            <input type="text" name="avatarId">
+        </label>
+
+<!--        <input type="file" name="image">-->
+
+        <button type="submit">Upload</button>
+    </fieldset>
+</form>
+
+
+
+<form action="http://localhost:8080/barber" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <label>id
+            <input type="text" name="id">
+        </label>
+        <label>name
+            <input type="text" name="name">
+        </label>
+        <label>instagram
+            <input type="text" name="instagram">
+        </label>
+        <label>rank
+            <input type="text" name="rank" value="TRAINEE_BARBER">
+        </label>
+
+        <input type="file" name="image">
+<!--        <label>avatarId-->
+<!--            <input type="text" name="avatarId">-->
+<!--        </label>-->
+
+<!--        <input type="file" name="avatar">-->
+
+        <button type="submit">Upload</button>
+    </fieldset>
+</form>
+
+
+
+
+<form method="POST" action="http://localhost:8080/barbers" enctype="multipart/form-data">
+    <label for="barberId">Barber ID:</label>
+    <input type="text" id="barberId" name="id" value=""><br><br>
+
+    <label for="barberName">Barber Name:</label>
+    <input type="text" id="barberName" name="barberName" value="Vasya"><br><br>
+
+    <label for="barberInstagram">Barber Instagram:</label>
+    <input type="text" id="barberInstagram" name="instagram" value="j_p4nika"><br><br>
+
+    <label for="barberRank">Barber Rank:</label>
+    <input type="text" id="barberRank" name="barberRank" value="BARBER_APPRENTICE"><br><br>
+
+    <input type="file" name="image">
+
+    <input type="submit" value="Submit">
 </form>
 </body>
 </html>

@@ -4,12 +4,22 @@ import com.barber.hopak.constrain.UniquePhoneNumber;
 import com.barber.hopak.model.impl.Check;
 import com.barber.hopak.model.impl.Client;
 import com.barber.hopak.web.domain.DTO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ClientDto implements DTO<Client> {
     private Long id;
     private List<Check> checks;

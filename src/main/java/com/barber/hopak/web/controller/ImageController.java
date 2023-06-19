@@ -41,7 +41,7 @@ public class ImageController {
     @GetMapping
     public ResponseEntity<List<ImageDto>> findAllImages() {
         log.info("Controller processing the GET \"findAllImages\" mapping");
-        return new ResponseEntity<>(imageService.findAllImages(), HttpStatus.OK);
+        return new ResponseEntity<>(imageService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping

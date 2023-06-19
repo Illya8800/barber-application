@@ -32,7 +32,7 @@ public enum ImageExtensions {
         return Map.copyOf(extensions);
     }
 
-    public static Integer largestExtensionLengthWithDot() {
+    public static Integer largesLengthExtensionLengthWithDot() {
         return getExtensions().values().stream()
                 .max(Comparator.comparingInt(String::length))
                 .map(String::length)

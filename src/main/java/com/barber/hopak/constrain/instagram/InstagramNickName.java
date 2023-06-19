@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain;
+package com.barber.hopak.constrain.instagram;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -8,19 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_FILE_SIZE_IS_NOT;
-
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FileSizeValidator.class)
-public @interface FileSize {
-    int minBytes() default 1;
-
-    int maxBytes() default 16777215;
-
-    String message() default IMAGE_FILE_SIZE_IS_NOT;
-
+@Constraint(validatedBy = InstagramNickNameValidator.class)
+public @interface InstagramNickName {
+    String message() default "Instagram nickname is not correct";
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 }

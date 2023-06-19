@@ -55,7 +55,7 @@ class ImageControllerTest {
     @BeforeEach
     void clearDbState() {
         bufferUtils.initBuffer();
-        List<ImageDto> allImages = imageService.findAllImages();
+        List<ImageDto> allImages = imageService.findAll();
         allImages.forEach(image -> imageService.deleteById(image.getId()));
         ImageDto noImage = imageService.create(ImageDto.builder().name(NO_IMAGE).image(new MultipartFileFromDateBase(NO_IMAGE, IMAGE_DTO_BYTES)).build());
         setNoImageId(noImage.getId());

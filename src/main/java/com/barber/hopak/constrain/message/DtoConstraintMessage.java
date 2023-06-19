@@ -16,7 +16,7 @@ public class DtoConstraintMessage {
 
 
 
-    public static final String IMAGE_NAME_SHOULD_BE_UNIQUE = "This image name isn't exist";
+    public static final String IMAGE_NAME_SHOULD_BE_UNIQUE = "This image name is not unique";
     public static final String IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT = "This file name isn't correct";
     public static final String IMAGE_TYPE_UNKNOWN = "This extension isn't support";
     public static final String IMAGE_FILE_IS_NOT_SELECTED = "Photo is not selected";

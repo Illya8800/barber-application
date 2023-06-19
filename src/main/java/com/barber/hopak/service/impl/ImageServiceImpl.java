@@ -56,7 +56,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     }
 
     @Override
-    public List<ImageDto> findAllImages() {
+    public List<ImageDto> findAll() {
         log.info("Finding all images in DB");
         return StreamSupport.stream(imageRepository.findAll().spliterator(), false)
                 .map(Image::toDto)

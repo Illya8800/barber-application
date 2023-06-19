@@ -2,6 +2,7 @@ package com.barber.hopak.service.api;
 
 import com.barber.hopak.config.InstagramCredentialsConfig;
 import com.barber.hopak.exception.instagram.InstagramCredentialException;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -18,17 +19,23 @@ import java.io.IOException;
 public class InstagramApiService {
     public static final String OK = "ok";
     private final InstagramCredentialsConfig instagramCredentials;
+    private  Instagram4j myAccount;
+
+    @PostConstruct
+    private void init(){
+        myAccount = loginMyAccount();
+    }
+
+
 
     public boolean isUserExist(String username) {
         log.info("Searching instagram account");
-        Instagram4j myAccount = loginMyAccount();
-        InstagramSearchUsernameResult foundAccount;
         try {
-            foundAccount = myAccount.sendRequest(new InstagramSearchUsernameRequest(username));
+            InstagramSearchUsernameResult foundAccount = myAccount.sendRequest(new InstagramSearchUsernameRequest(username));
+            return foundAccount.getStatus().equals(OK);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return foundAccount.getStatus().equals(OK);
     }
 
     private Instagram4j loginMyAccount() {

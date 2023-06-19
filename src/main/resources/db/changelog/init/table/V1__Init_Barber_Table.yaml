@@ -18,7 +18,7 @@ databaseChangeLog:
                   name: "avatar_id"
                   type: bigint
               - column:
-                  name: "firstname"
+                  name: "barber_name"
                   type: varchar(30)
                   constraints:
                     nullable: false
@@ -28,7 +28,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: "rank"
-                  type: enum('BARBER','TRAINEE_BARBER')
+                  name: "barber_rank"
+                  type: enum('BARBER_APPRENTICE','BARBER_TRAINEE','JUNIOR_BARBER','BARBER','TOP_BARBER','BARBER_SENIOR','CHEF_BARBER')
                   constraints:
                     nullable: false
