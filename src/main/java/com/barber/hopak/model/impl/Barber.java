@@ -37,8 +37,10 @@ public class Barber implements com.barber.hopak.model.Entity<BarberDto> {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "enum('BARBER_APPRENTICE','BARBER_TRAINEE','JUNIOR_BARBER','BARBER','TOP_BARBER','BARBER_SENIOR','CHEF_BARBER')", nullable = false)
     private BarberRank barberRank;
+    @Column(name = "avatar_id")
+    private Long avatarId;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "avatar_id")
+    @JoinColumn(name = "avatar_id", insertable = false, updatable = false)
     @LazyToOne(LazyToOneOption.PROXY)
     private Image avatar;
 
@@ -49,6 +51,7 @@ public class Barber implements com.barber.hopak.model.Entity<BarberDto> {
                 .barberName(this.barberName)
                 .instagram(this.instagram)
                 .barberRank(this.barberRank)
+                .avatarId(this.avatarId)
                 .avatar(Hibernate.isInitialized(this.avatar) ? this.avatar.toDto() : null)
                 .build();
     }

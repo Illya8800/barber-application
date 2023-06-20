@@ -9,6 +9,4 @@ import java.util.Optional;
 
 @Repository
 public interface BarberRepository extends JpaRepository<Barber, Long> {
-    @Query("SELECT b FROM Barber b JOIN FETCH b.avatar WHERE b.id = ?1")
-    Optional<Barber> findById(Long id);
 }

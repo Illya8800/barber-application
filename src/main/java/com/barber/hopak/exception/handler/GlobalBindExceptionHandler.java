@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,7 +36,7 @@ public class GlobalBindExceptionHandler extends AbstractGlobalException<Map<Stri
         log.error("Object: {}", Objects.requireNonNull(e.getBindingResult().getTarget()).toString());
     }
 
-    private Map<String, List<String>> getErrorFieldsAndMessages(BindingResult bindingResult) {
+/*    private Map<String, List<String>> getErrorFieldsAndMessages(BindingResult bindingResult) {
         HashMap<String, List<String>> fieldErrors = new HashMap<>();
         List<String> errorMessage = new ArrayList<>();
         String currErrField = "";
@@ -53,6 +54,19 @@ public class GlobalBindExceptionHandler extends AbstractGlobalException<Map<Stri
             }
         }
 
+
+        return fieldErrors;
+    }*/
+
+    private Map<String, List<String>> getErrorFieldsAndMessages(BindingResult bindingResult) {
+        Map<String, List<String>> fieldErrors = new HashMap<>();
+
+        for (ObjectError error : bindingResult.getAllErrors()) {
+            String fieldName = error instanceof FieldError ? ((FieldError) error).getField() : error.getObjectName();
+            String errorMessage = error.getDefaultMessage();
+
+            fieldErrors.computeIfAbsent(fieldName, key -> new ArrayList<>()).add(errorMessage);
+        }
 
         return fieldErrors;
     }

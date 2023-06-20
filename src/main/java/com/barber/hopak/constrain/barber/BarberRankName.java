@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain;
+package com.barber.hopak.constrain.barber;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

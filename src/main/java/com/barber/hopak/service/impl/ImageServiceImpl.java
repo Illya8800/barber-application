@@ -56,6 +56,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ImageDto> findAll() {
         log.info("Finding all images in DB");
         return StreamSupport.stream(imageRepository.findAll().spliterator(), false)

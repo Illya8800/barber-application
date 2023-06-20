@@ -39,7 +39,7 @@ public class InstagramApiService {
     }
 
     private Instagram4j loginMyAccount() {
-        log.info("Login instagram account");
+/*        log.info("Login instagram account");
         Instagram4j instagram = login(instagramCredentials.getUsername(), instagramCredentials.getPassword());
         try {
             instagram.login();
@@ -48,7 +48,8 @@ public class InstagramApiService {
         } catch (IOException e) {
             log.error("Login in account wasn't successful. Check your credentials in application properties");
             throw new InstagramCredentialException(e);
-        }
+        }*/
+        return null;
     }
 
     private Instagram4j login(String username, String password) {

@@ -1,9 +1,26 @@
 package com.barber.hopak.constrain.message;
 
 public class DtoConstraintMessage {
-    public static final String FIELD_SHOULD_NOT_CONSIST_ONLY_FROM_SPACE = "Поле має містити щось окрім пробілів";
-    public static final String BARBER_FIRSTNAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER = "Довжина ім'я має бути між 1 і 30 символами";
-    public static final String BARBER_INSTAGRAM_SHOULD_BE_CORRECT = "Нік в Instagram неправильний";
+
+    public static final String IMAGE_NAME_SHOULD_BE_UNIQUE = "This image name is not unique";
+    public static final String IMAGE_FILE_IS_NOT_SELECTED = "Photo is not selected";
+    public static final String IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT = "This file name isn't correct";
+    public static final String IMAGE_TYPE_UNKNOWN = "This extension isn't support";
+    public static final String IMAGE_FILE_SIZE_IS_NOT = "This file hadn't a good size. Should be less than 16 mb";
+
+
+
+
+    public static final String FIELD_SHOULD_NOT_BE_NULL = "This shouldn't be null";
+    public static final String BARBER_FIRSTNAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER = "The name's length should be between 1 and 30 characters";
+    public static final String BARBER_INSTAGRAM_SHOULD_BE_CORRECT = "The Instagram's nickname isn't exist";
+    public static final String BARBER_RANK_SHOULD_BE_CORRECT = "This rank is not exist";
+
+
+
+
+
+
     public static final String HAIRCUT_NAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER = "Довжина ім'я має бути між 1 і 30 символами";
     public static final String HAIRCUT_AVATAR_SHOULD_BE_LESS_THEN_16MB = "Розмір файлу має бути меньшим за 16 мб";
     public static final String HAIRCUT_PRICE_SHOULD_BE_IN_RANGE_BETWEEN_0_AND_2147483647 = "Ціна за послугу має бути в діапазоні між: 0 і 2147483647";
@@ -16,11 +33,6 @@ public class DtoConstraintMessage {
 
 
 
-    public static final String IMAGE_NAME_SHOULD_BE_UNIQUE = "This image name is not unique";
-    public static final String IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT = "This file name isn't correct";
-    public static final String IMAGE_TYPE_UNKNOWN = "This extension isn't support";
-    public static final String IMAGE_FILE_IS_NOT_SELECTED = "Photo is not selected";
-    public static final String IMAGE_FILE_SIZE_IS_NOT = "This file hadn't a good size. Should be less than 16 mb";
 
 
 

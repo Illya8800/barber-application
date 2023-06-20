@@ -1,11 +1,14 @@
 package com.barber.hopak.service.impl;
 
+import com.barber.hopak.buffer.BufferService;
 import com.barber.hopak.exception.BarberNotFoundException;
 import com.barber.hopak.model.impl.Barber;
 import com.barber.hopak.repository.BarberRepository;
 import com.barber.hopak.service.BarberService;
+import com.barber.hopak.service.ImageService;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.web.domain.impl.BarberDto;
+import com.barber.hopak.web.domain.impl.ImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -20,16 +23,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     private final BarberRepository barberRepository;
+    private final ImageService<ImageDto, Long> imageService;
 
     @Override
     @Transactional(readOnly = true)
     public BarberDto findById(Long id) {
         log.info("Finding an barber with id = {} in DB", id);
         return barberRepository.findById(id)
-                .orElseThrow(() -> new BarberNotFoundException(StringUtils3C.join("Barber with id ", id, " not found"))).toDto();
+                .map(Barber::toDto)
+                .map(barberDto -> {
+                    barberDto.setAvatar(imageService.findById(barberDto.getAvatarId()));
+                    return barberDto;
+                })
+                .orElseThrow(() -> new BarberNotFoundException(StringUtils3C.join("Barber with id ", id, " not found")));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BarberDto> findAll() {
         log.info("Finding all barbers in DB");
         return barberRepository.findAll().stream()
@@ -40,18 +50,23 @@ public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     @Override
     public BarberDto create(BarberDto barberDto) {
         log.info("Inserting new barber with name = {} in DB ", barberDto.getBarberName());
-        return barberRepository.save(barberDto.toEntity()).toDto();
+        BarberDto savedBarberDto = barberRepository.save(barberDto.toEntity()).toDto();
+        imageService.create(savedBarberDto.getAvatar());
+        return savedBarberDto;
     }
 
     @Override
     public BarberDto update(BarberDto barberDto) {
         log.info("Updating barber with name = {} in DB ", barberDto.getBarberName());
-        return barberRepository.save(barberDto.toEntity()).toDto();
+        BarberDto updatedBarberDto = barberRepository.save(barberDto.toEntity()).toDto();
+        imageService.update(updatedBarberDto.getAvatar());
+        return updatedBarberDto;
     }
 
     @Override
     public void deleteById(Long id) {
         log.info("Deleting a barber with id = {} from DB", id);
         barberRepository.deleteById(id);
+        imageService.deleteById(id);
     }
 }

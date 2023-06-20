@@ -1,6 +1,7 @@
 package com.barber.hopak.model.enumeration;
 
 import com.barber.hopak.exception.RankNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ public enum BarberRank {
     }
 
     public static boolean isValidRank(BarberRank barberRank) {
-        if (barberRank == null) throw new RankNotFoundException("Empty rank name");
+        if (barberRank == null || StringUtils.isEmpty(barberRank.name())) throw new RankNotFoundException("Empty rank name");
         return ranks.containsKey(barberRank.name());
     }
 }

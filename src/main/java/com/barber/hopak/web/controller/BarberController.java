@@ -36,7 +36,7 @@ public class BarberController {
     }
     @GetMapping()
     public ResponseEntity<List<BarberDto>> findAllBarbers() {
-        log.info("Controller processing the GET \"findBarberById\" mapping");
+        log.info("Controller processing the GET \"findAllBarbers\" mapping");
         return new ResponseEntity<>(barberService.findAll(), HttpStatus.OK);
     }
 

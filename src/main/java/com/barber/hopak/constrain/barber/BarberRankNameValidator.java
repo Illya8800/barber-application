@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain;
+package com.barber.hopak.constrain.barber;
 
 import com.barber.hopak.model.enumeration.BarberRank;
 import jakarta.validation.ConstraintValidator;
