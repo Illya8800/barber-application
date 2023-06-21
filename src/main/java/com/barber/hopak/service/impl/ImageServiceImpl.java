@@ -30,7 +30,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     private final ImageRepository imageRepository;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public ImageDto findById(Long id) {
         log.info("Finding an image with id = {} in DB", id);
         return bufferService.findImageById(id)
@@ -43,7 +43,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public ImageDto findByName(String imageName) {
         log.info("Finding an image with name = {} in DB", imageName);
         return bufferService.findImageByName(imageName)
@@ -56,7 +56,7 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<ImageDto> findAll() {
         log.info("Finding all images in DB");
         return StreamSupport.stream(imageRepository.findAll().spliterator(), false)
@@ -89,21 +89,23 @@ public class ImageServiceImpl implements ImageService<ImageDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public boolean isUnique(Long id, String name) {
-        log.info("Checking imageName = {} on unique", name);
+        log.info("Checking image name = {} on unique", name);
         return imageRepository.findByName(name).map(value -> value.getId().equals(id)).orElse(true);
     }
 
     @Override
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public void setImageNameByOriginalFileName(ImageDto imageDto) {
+        log.info("Setting image name by original file name");
         imageDto.setName(imageDto.getImage().getOriginalFilename());
     }
 
     @Override
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public boolean isExtensionValid(String fileName) {
+        log.info("Checking is extension valid");
         Optional<Map.Entry<String, String>> first = ImageExtensions.getExtensions().entrySet()
                 .stream()
                 .filter(entry -> Objects.requireNonNull(fileName).endsWith(entry.getValue()))

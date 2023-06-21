@@ -11,6 +11,7 @@ import com.barber.hopak.web.domain.impl.ImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     private final ImageService<ImageDto, Long> imageService;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public BarberDto findById(Long id) {
         log.info("Finding an barber with id = {} in DB", id);
         return barberRepository.findById(id)
@@ -38,7 +39,7 @@ public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<BarberDto> findAll() {
         log.info("Finding all barbers in DB");
         return barberRepository.findAll().stream()

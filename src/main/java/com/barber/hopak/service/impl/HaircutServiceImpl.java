@@ -11,6 +11,7 @@ import com.barber.hopak.web.domain.impl.ImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
     private final ImageService<ImageDto, Long> imageService;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public HaircutDto findById(Long id) {
         log.info("Finding an haircut with id = {} in DB", id);
         return haircutRepository.findById(id)
@@ -38,6 +39,7 @@ public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public HaircutDto findByName(String name) {
         log.info("Finding an haircut with name = {} in DB", name);
         return haircutRepository.findByName(name)
@@ -50,13 +52,7 @@ public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
     }
 
     @Override
-    public boolean isUnique(Long id, String name) {
-        log.info("Checking haircutName = {} on unique", name);
-        return haircutRepository.findByName(name).map(value -> value.getId().equals(id)).orElse(true);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<HaircutDto> findAll() {
         log.info("Finding all haircuts in DB");
         return haircutRepository.findAll().stream()
@@ -85,5 +81,12 @@ public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
         log.info("Deleting a haircut with id = {} from DB", id);
         haircutRepository.deleteById(id);
         imageService.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public boolean isUnique(Long id, String name) {
+        log.info("Checking haircut name = {} on unique", name);
+        return haircutRepository.findByName(name).map(value -> value.getId().equals(id)).orElse(true);
     }
 }

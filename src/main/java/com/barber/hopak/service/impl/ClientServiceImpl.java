@@ -9,6 +9,7 @@ import com.barber.hopak.web.domain.impl.ClientDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.stream.StreamSupport;
 public class ClientServiceImpl implements ClientService<ClientDto, Long> {
     private final ClientRepository clientRepository;
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public ClientDto findById(Long id) {
         log.info("Finding an client with id = {} in DB", id);
         return clientRepository.findById(id)
@@ -30,7 +31,7 @@ public class ClientServiceImpl implements ClientService<ClientDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public ClientDto findByPhoneNumber(String phoneNumber) {
         log.info("Finding an client with phone number = {} in DB", phoneNumber);
         return clientRepository.findByPhoneNumber(phoneNumber)
@@ -38,14 +39,7 @@ public class ClientServiceImpl implements ClientService<ClientDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public boolean isUnique(Long id, String phoneNumber) {
-        log.info("Checking phone number = {} on unique", phoneNumber);
-        return clientRepository.findByPhoneNumber(phoneNumber).map(value -> value.getId().equals(id)).orElse(true);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<ClientDto> findAll() {
         log.info("Finding all clients in DB");
         return StreamSupport.stream(clientRepository.findAll().spliterator(), false)
@@ -69,5 +63,12 @@ public class ClientServiceImpl implements ClientService<ClientDto, Long> {
     public void deleteById(Long id) {
         log.info("Deleting a client with id = {} from DB", id);
         clientRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public boolean isUnique(Long id, String phoneNumber) {
+        log.info("Checking phone number = {} on unique", phoneNumber);
+        return clientRepository.findByPhoneNumber(phoneNumber).map(value -> value.getId().equals(id)).orElse(true);
     }
 }

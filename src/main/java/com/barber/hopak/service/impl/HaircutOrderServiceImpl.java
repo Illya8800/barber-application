@@ -9,6 +9,7 @@ import com.barber.hopak.web.domain.impl.HaircutOrderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class HaircutOrderServiceImpl implements HaircutOrderService<HaircutOrder
     private final HaircutOrderRepository haircutOrderRepository;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public HaircutOrderDto findById(Long id) {
         log.info("Finding an haircut order with id = {} in DB", id);
         return haircutOrderRepository.findById(id)
@@ -30,7 +31,7 @@ public class HaircutOrderServiceImpl implements HaircutOrderService<HaircutOrder
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<HaircutOrderDto> findAll() {
         log.info("Finding all haircut orders in DB");
         return haircutOrderRepository.findAll().stream()

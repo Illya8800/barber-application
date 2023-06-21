@@ -26,8 +26,6 @@ public class InstagramApiService {
         myAccount = loginMyAccount();
     }
 
-
-
     public boolean isUserExist(String username) {
         log.info("Searching instagram account");
         try {
@@ -43,7 +41,6 @@ public class InstagramApiService {
         Instagram4j instagram = login(instagramCredentials.getUsername(), instagramCredentials.getPassword());
         try {
             instagram.login();
-            log.info("Login in account was successful");
             return instagram;
         } catch (IOException e) {
             log.error("Login in account wasn't successful. Check your credentials in application properties");

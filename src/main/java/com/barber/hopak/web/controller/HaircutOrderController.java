@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/haircuts/orders")
+@RequestMapping("/orders")
 @RequiredArgsConstructor
 @Log4j2
 public class HaircutOrderController {

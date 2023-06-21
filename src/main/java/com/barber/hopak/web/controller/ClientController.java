@@ -65,8 +65,8 @@ public class ClientController {
     }
 
     @GetMapping("/unique")
-    public ResponseEntity<Boolean> isUniqueImage(@RequestParam(name = "id") Long id, @RequestParam(name = "name") String name) {
-        log.info("Controller processing the GET \"isUniqueImage\" mapping");
+    public ResponseEntity<Boolean> isUniqueClient(@RequestParam(name = "id") Long id, @RequestParam(name = "name") String name) {
+        log.info("Controller processing the GET \"isUniqueClient\" mapping");
         return new ResponseEntity<>(clientService.isUnique(id, name), HttpStatus.OK);
     }
 }

@@ -74,8 +74,8 @@ public class HaircutController {
     }
 
     @GetMapping("/unique")
-    public ResponseEntity<Boolean> isUniqueImage(@RequestParam(name = "id") Long id, @RequestParam(name = "name") String name) {
-        log.info("Controller processing the GET \"isUniqueImage\" mapping");
+    public ResponseEntity<Boolean> isUniqueHaircut(@RequestParam(name = "id") Long id, @RequestParam(name = "name") String name) {
+        log.info("Controller processing the GET \"isUniqueHaircut\" mapping");
         return new ResponseEntity<>(haircutService.isUnique(id, name), HttpStatus.OK);
     }
 }

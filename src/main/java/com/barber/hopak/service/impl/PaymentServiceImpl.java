@@ -9,6 +9,7 @@ import com.barber.hopak.web.domain.impl.PaymentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class PaymentServiceImpl implements PaymentService<PaymentDto, Long> {
     private final PaymentRepository paymentRepository;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public PaymentDto findById(Long id) {
         log.info("Finding an barber with id = {} in DB", id);
         return paymentRepository.findById(id)
@@ -30,7 +31,7 @@ public class PaymentServiceImpl implements PaymentService<PaymentDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<PaymentDto> findAll() {
         log.info("Finding all payments in DB");
         return paymentRepository.findAll().stream()
@@ -40,13 +41,13 @@ public class PaymentServiceImpl implements PaymentService<PaymentDto, Long> {
 
     @Override
     public PaymentDto create(PaymentDto paymentDto) {
-        log.info("Inserting new payment with name = {} in DB ", paymentDto.getId());
+        log.info("Inserting new payment with id = {} in DB ", paymentDto.getId());
         return paymentRepository.save(paymentDto.toEntity()).toDto();
     }
 
     @Override
     public PaymentDto update(PaymentDto paymentDto) {
-        log.info("Updating payment with name = {} in DB ", paymentDto.getId());
+        log.info("Updating payment with id = {} in DB ", paymentDto.getId());
         return paymentRepository.save(paymentDto.toEntity()).toDto();
     }
 

@@ -9,6 +9,7 @@ import com.barber.hopak.web.domain.impl.CheckDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class CheckServiceImpl implements CheckService<CheckDto, Long> {
     private final CheckRepository checkRepository;
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public CheckDto findById(Long id) {
         log.info("Finding an check with id = {} in DB", id);
         return checkRepository.findById(id)
@@ -29,7 +30,7 @@ public class CheckServiceImpl implements CheckService<CheckDto, Long> {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<CheckDto> findAll() {
         log.info("Finding all checks in DB");
         return checkRepository.findAll().stream()
