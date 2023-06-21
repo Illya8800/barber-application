@@ -16,15 +16,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.IMAGE_FILE_IS_NOT_SELECTED;
+import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_FILE_IS_NOT_SELECTED;
+import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_SHOULD_NOT_BE_NULL;
 
 @Builder
-@UniqueImageName
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
+@UniqueImageName
+@NotNull(message = IMAGE_SHOULD_NOT_BE_NULL)
 public class ImageDto implements DTO<Image> {
 
     private Long id;
@@ -44,3 +46,6 @@ public class ImageDto implements DTO<Image> {
         );
     }
 }
+
+
+

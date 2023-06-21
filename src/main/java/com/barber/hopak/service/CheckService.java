@@ -2,6 +2,6 @@ package com.barber.hopak.service;
 
 import java.util.List;
 
-public interface BarberService<Entity, ID> extends BaseService<Entity, ID> {
+public interface CheckService<Entity, ID> extends BaseService<Entity, ID> {
     List<Entity> findAll();
 }

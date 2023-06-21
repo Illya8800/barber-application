@@ -25,12 +25,19 @@ public class HaircutOrder implements com.barber.hopak.model.Entity<HaircutOrderD
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id")
-    private Client client;
     private String description;
     @Column(nullable = false)
     private LocalDateTime dateTime;
+    @Column(name = "client_id", nullable = false)
+    private Long clientId;
+    @Column(name = "haircut_id", nullable = false)
+    private Long haircutId;
+    @Column(name = "barber_id", nullable = false)
+    private Long barberId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", insertable = false, updatable = false)
+    private Client client;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "haircut_id", insertable = false, updatable = false)
     private Haircut haircut;
@@ -42,9 +49,12 @@ public class HaircutOrder implements com.barber.hopak.model.Entity<HaircutOrderD
     public HaircutOrderDto toDto() {
         return HaircutOrderDto.builder()
                 .id(this.id)
-                .client(this.client)
                 .description(this.description)
                 .dateTime(this.dateTime)
+                .clientId(this.clientId)
+                .haircutId(this.haircutId)
+                .barberId(this.barberId)
+                .client(this.client)
                 .haircut(this.haircut)
                 .barber(this.barber)
                 .build();

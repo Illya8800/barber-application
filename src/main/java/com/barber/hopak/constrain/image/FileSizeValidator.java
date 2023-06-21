@@ -5,12 +5,19 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.barber.hopak.util.ImageUtil.MAX_IMAGE_SIZE;
-
 @RequiredArgsConstructor
 public class FileSizeValidator implements ConstraintValidator<FileSize, MultipartFile> {
+    private int maxBytes;
+    private int minBytes;
+
+    @Override
+    public void initialize(FileSize constraintAnnotation) {
+        maxBytes = constraintAnnotation.maxBytes();
+        minBytes = constraintAnnotation.minBytes();
+    }
+
     @Override
     public boolean isValid(MultipartFile value, ConstraintValidatorContext context) {
-        return value.getSize() <= MAX_IMAGE_SIZE;
+        return value.getSize() >= minBytes && value.getSize() <= maxBytes;
     }
 }

@@ -1,6 +1,5 @@
 package com.barber.hopak.service.impl;
 
-import com.barber.hopak.buffer.BufferService;
 import com.barber.hopak.exception.BarberNotFoundException;
 import com.barber.hopak.model.impl.Barber;
 import com.barber.hopak.repository.BarberRepository;

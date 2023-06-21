@@ -1,5 +1,4 @@
-package com.barber.hopak.constrain.image;
-
+package com.barber.hopak.constrain.client;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -9,15 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_NAME_SHOULD_BE_UNIQUE;
-
-@Target({ElementType.TYPE})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueImageNameValidator.class)
-public @interface UniqueImageName {
-    String message() default IMAGE_NAME_SHOULD_BE_UNIQUE;
-
+@Constraint(validatedBy = PhoneNumberValidator.class)
+public @interface PhoneNumber {
+    String message() default "Phone number is not correct";
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 }

@@ -1,5 +1,6 @@
 package com.barber.hopak.web.domain.impl;
 
+import com.barber.hopak.constrain.DtoConstraintMessage;
 import com.barber.hopak.constrain.RoleEnumName;
 import com.barber.hopak.model.impl.Role;
 import com.barber.hopak.model.impl.User;
@@ -17,12 +18,12 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
 
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.FIELD_SHOULD_NOT_BE_NULL;
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_FIRSTNAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30;
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_PASSWORD_SHOULD_BE_GREATER_THEN_4_CHARACTER;
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_ROLES_SHOULD_CONSIST_ONLY_PREPARED_ROLES;
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_ROLES_SHOULD_NOT_BE_EMPTY;
-import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_SECOND_NAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30;
+import static com.barber.hopak.constrain.DtoConstraintMessage.FIELD_SHOULD_NOT_BE_NULL;
+import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER;
+import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE;
+import static com.barber.hopak.constrain.DtoConstraintMessage.USER_PASSWORD_SHOULD_BE_GREATER_THEN_4_CHARACTER;
+import static com.barber.hopak.constrain.DtoConstraintMessage.USER_ROLES_SHOULD_CONSIST_ONLY_PREPARED_ROLES;
+import static com.barber.hopak.constrain.DtoConstraintMessage.USER_ROLES_SHOULD_NOT_BE_EMPTY;
 
 @Builder
 @AllArgsConstructor
@@ -32,13 +33,13 @@ import static com.barber.hopak.constrain.message.DtoConstraintMessage.USER_SECON
 @EqualsAndHashCode
 public class UserDto implements DTO<User> {
     private Long id;
-    @NotBlank(message = FIELD_SHOULD_NOT_BE_NULL)
-    @Length(min = 1, max = 30, message = USER_FIRSTNAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30)
+    @NotBlank(message = STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE)
+    @Length(min = 1, max = 30, message = STRING_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER)
     private String firstname;
-    @NotBlank(message = FIELD_SHOULD_NOT_BE_NULL)
-    @Length(min = 1, max = 30, message = USER_SECOND_NAME_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30)
+    @NotBlank(message = STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE)
+    @Length(min = 1, max = 30, message = DtoConstraintMessage.STRING_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER)
     private String lastname;
-    @NotBlank(message = FIELD_SHOULD_NOT_BE_NULL)
+    @NotBlank(message = STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE)
     @Length(min = 4, max = 255, message = USER_PASSWORD_SHOULD_BE_GREATER_THEN_4_CHARACTER)
     private String password;
     @NotNull(message = FIELD_SHOULD_NOT_BE_NULL)

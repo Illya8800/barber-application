@@ -2,6 +2,7 @@ package com.barber.hopak.model.impl;
 
 import com.barber.hopak.web.domain.impl.CheckDto;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,8 +30,17 @@ public class Check implements com.barber.hopak.model.Entity<CheckDto> {
     private Long id;
     @CreationTimestamp
     private LocalDateTime dateTime;
+    @Column(name = "payment_id", nullable = false)
+    private Long paymentId;
+    @Column(name = "haircut_id", nullable = false)
+    private Long haircutId;
+    @Column(name = "barber_id", nullable = false)
+    private Long barberId;
+    @Column(name = "client_id", nullable = false)
+    private Long clientId;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id")
+    @JoinColumn(name = "payment_id", insertable = false, updatable = false)
     private Payment payment;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "haircut_id", insertable = false, updatable = false)
@@ -47,6 +57,10 @@ public class Check implements com.barber.hopak.model.Entity<CheckDto> {
         return CheckDto.builder()
                 .id(this.id)
                 .dateTime(this.dateTime)
+                .paymentId(this.paymentId)
+                .haircutId(this.haircutId)
+                .barberId(this.barberId)
+                .clientId(this.clientId)
                 .payment(this.payment)
                 .haircut(this.haircut)
                 .barber(this.barber)

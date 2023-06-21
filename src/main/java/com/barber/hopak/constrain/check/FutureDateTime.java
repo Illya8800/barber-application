@@ -1,4 +1,4 @@
-package com.barber.hopak.constrain.payment;
+package com.barber.hopak.constrain.check;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -10,8 +10,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DiscountInPercentValidator.class)
-public @interface DiscountInPercent {
-    String message() default "This discount isn't correct";
+@Constraint(validatedBy = FutureDateTimeValidator.class)
+public @interface FutureDateTime {
+    String message() default "Date should be in the future";
     Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};}
+    Class<? extends Payload>[] payload() default {};
+}
