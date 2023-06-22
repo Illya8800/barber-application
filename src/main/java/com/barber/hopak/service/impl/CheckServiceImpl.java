@@ -1,6 +1,6 @@
 package com.barber.hopak.service.impl;
 
-import com.barber.hopak.exception.check.CheckNotFoundException;
+import com.barber.hopak.exception.entity.check.CheckNotFoundException;
 import com.barber.hopak.model.impl.Check;
 import com.barber.hopak.repository.CheckRepository;
 import com.barber.hopak.service.CheckService;

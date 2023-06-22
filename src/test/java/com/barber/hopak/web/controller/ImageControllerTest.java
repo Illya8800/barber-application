@@ -1,9 +1,10 @@
 package com.barber.hopak.web.controller;
 
-import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFromDateBase;
+import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
 import com.barber.hopak.service.ImageService;
+import com.barber.hopak.util.ImageTestUtils;
 import com.barber.hopak.util.StringUtils3C;
-import com.barber.hopak.util.buffer.BufferUtils;
+import com.barber.hopak.util.buffer.BufferTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -25,14 +26,12 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_NAME_SHOULD_
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT;
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_TYPE_UNKNOWN;
 import static com.barber.hopak.util.GlobalBindExceptionErrorMessagesVerifier.verifyExpectedErrorMessages;
+import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageTestUtils.IMAGE_DTO_BYTES;
+import static com.barber.hopak.util.ImageTestUtils.UNEXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.ImageTestUtils.UNEXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageTestUtils.getImageDto;
 import static com.barber.hopak.util.ImageUtil.NO_IMAGE;
-import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageUtils.IMAGE_DTO_BYTES;
-import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_ID;
-import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageUtils.getImageDto;
-import static com.barber.hopak.util.ImageUtils.getNoImageId;
-import static com.barber.hopak.util.ImageUtils.setNoImageId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,39 +42,43 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class ImageControllerTest {
+    private final ImageTestUtils imageTestUtils;
+    private final MockMvc mockMvc;
+    private final ImageService<ImageDto, Long> imageService;
+    private final BufferTestUtils bufferTestUtils;
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ImageService<ImageDto, Long> imageService;
-    @Autowired
-    private BufferUtils bufferUtils;
+    ImageControllerTest(ImageTestUtils imageTestUtils, MockMvc mockMvc, ImageService<ImageDto, Long> imageService, BufferTestUtils bufferTestUtils) {
+        this.imageTestUtils = imageTestUtils;
+        this.mockMvc = mockMvc;
+        this.imageService = imageService;
+        this.bufferTestUtils = bufferTestUtils;
+    }
 
     @BeforeEach
     void clearDbState() {
-        bufferUtils.initBuffer();
+        bufferTestUtils.initBuffer();
         List<ImageDto> allImages = imageService.findAll();
         allImages.forEach(image -> imageService.deleteById(image.getId()));
-        ImageDto noImage = imageService.create(ImageDto.builder().name(NO_IMAGE).image(new MultipartFileFromDateBase(NO_IMAGE, IMAGE_DTO_BYTES)).build());
-        setNoImageId(noImage.getId());
+        ImageDto noImage = imageService.create(ImageDto.builder().name(NO_IMAGE).image(new MultipartFileWithoutPath(NO_IMAGE, IMAGE_DTO_BYTES)).build());
+        imageTestUtils.setNoImageId(noImage.getId());
     }
 
     @AfterEach
     void destroyBuffer() {
-        bufferUtils.destroyBuffer();
+        bufferTestUtils.destroyBuffer();
     }
 
     @Test
     void findImageById_thenFindImage() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/images/{id}", getNoImageId())
+        MvcResult mvcResult = mockMvc.perform(get("/images/{id}", imageTestUtils.getNoImageId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
         String json = mvcResult.getResponse().getContentAsString();
-        ImageDto imageByService = imageService.findById(getNoImageId());
+        ImageDto imageByService = imageService.findById(imageTestUtils.getNoImageId());
         assertThat(json).contains(buildJsonString("id", imageByService.getId()));
         assertThat(json).contains(buildJsonString("name", imageByService.getName()));
     }
@@ -121,9 +124,9 @@ class ImageControllerTest {
 
     @Test
     void findAllImages_thenFindThreeImages() throws Exception {
-        ImageDto imageDto1 = ImageDto.builder().id(2L).name("FirstImage").image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
-        ImageDto imageDto2 = ImageDto.builder().id(3L).name("SecondImage").image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
-        ImageDto imageDto3 = ImageDto.builder().id(4L).name("ThirdImage").image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto1 = ImageDto.builder().id(2L).name("FirstImage").image(new MultipartFileWithoutPath(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto2 = ImageDto.builder().id(3L).name("SecondImage").image(new MultipartFileWithoutPath(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto3 = ImageDto.builder().id(4L).name("ThirdImage").image(new MultipartFileWithoutPath(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
         imageService.create(imageDto1);
         imageService.create(imageDto2);
         imageService.create(imageDto3);
@@ -181,7 +184,7 @@ class ImageControllerTest {
 
     @Test
     void createImage_thenThrowBindException() throws Exception {
-        ImageDto imageDto = ImageDto.builder().name(UNEXISTING_IMAGE_DTO_NAME).image(new MultipartFileFromDateBase(UNEXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto = ImageDto.builder().name(UNEXISTING_IMAGE_DTO_NAME).image(new MultipartFileWithoutPath(UNEXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
 
         MockMultipartFile multipartFile = new MockMultipartFile(
                 imageDto.getName(),
@@ -200,12 +203,12 @@ class ImageControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn();
 
-        verifyExpectedErrorMessages(mvcResult, "imageDto", IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT, IMAGE_TYPE_UNKNOWN);
+        verifyExpectedErrorMessages(mvcResult, "image", IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT, IMAGE_TYPE_UNKNOWN);
     }
 
     @Test
     void createImage_thenThrowBindExceptionByDuplicateImageName() throws Exception {
-        ImageDto imageDto = ImageDto.builder().name(EXISTING_IMAGE_DTO_NAME).image(new MultipartFileFromDateBase(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto = ImageDto.builder().name(EXISTING_IMAGE_DTO_NAME).image(new MultipartFileWithoutPath(EXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
         imageService.create(imageDto);
         MockMultipartFile multipartFile = new MockMultipartFile(
                 imageDto.getName(),
@@ -215,7 +218,6 @@ class ImageControllerTest {
         );
 
         imageDto.setImage(multipartFile);
-
 
         MvcResult mvcResult = mockMvc.perform(multipart(HttpMethod.POST, "/images")
                         .file(multipartFile)
@@ -250,7 +252,7 @@ class ImageControllerTest {
 
     @Test
     void updateImage_thenThrowBindExceptionByIllegalOriginalFileNameAndExtension() throws Exception {
-        ImageDto imageDto = ImageDto.builder().name(UNEXISTING_IMAGE_DTO_NAME).image(new MultipartFileFromDateBase(UNEXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
+        ImageDto imageDto = ImageDto.builder().name(UNEXISTING_IMAGE_DTO_NAME).image(new MultipartFileWithoutPath(UNEXISTING_IMAGE_DTO_NAME, IMAGE_DTO_BYTES)).build();
 
         MockMultipartFile multipartFile = new MockMultipartFile(
                 imageDto.getName(),
@@ -269,12 +271,12 @@ class ImageControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn();
 
-        verifyExpectedErrorMessages(mvcResult, "imageDto", IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT, IMAGE_TYPE_UNKNOWN);
+        verifyExpectedErrorMessages(mvcResult, "image", IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT, IMAGE_TYPE_UNKNOWN);
     }
 
     @Test
     void deleteImage_thenDelete() throws Exception {
-        mockMvc.perform(delete("/images/{id}", getNoImageId())
+        mockMvc.perform(delete("/images/{id}", imageTestUtils.getNoImageId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent())
@@ -308,7 +310,7 @@ class ImageControllerTest {
 
     @Test
     void isUniqueImage_thenTrueAsUpdate() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/images/unique?id=" + getNoImageId() + "&name=" + NO_IMAGE)
+        MvcResult mvcResult = mockMvc.perform(get("/images/unique?id=" + imageTestUtils.getNoImageId() + "&name=" + NO_IMAGE)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

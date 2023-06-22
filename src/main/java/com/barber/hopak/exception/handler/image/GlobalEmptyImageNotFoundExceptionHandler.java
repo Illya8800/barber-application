@@ -1,5 +1,6 @@
-package com.barber.hopak.exception.handler;
+package com.barber.hopak.exception.handler.image;
 
+import com.barber.hopak.exception.handler.AbstractGlobalException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @RequiredArgsConstructor
 @Log4j2
-public class GlobalEmptyImageNotFoundExceptionHandler extends AbstractGlobalException<String, EmptyResultDataAccessException>{
+public class GlobalEmptyImageNotFoundExceptionHandler extends AbstractGlobalException<String, EmptyResultDataAccessException> {
 
     @Override
     @ExceptionHandler(EmptyResultDataAccessException.class)

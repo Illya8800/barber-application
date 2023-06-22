@@ -1,6 +1,6 @@
 package com.barber.hopak.service.impl;
 
-import com.barber.hopak.exception.haircut.HaircutNotFoundException;
+import com.barber.hopak.exception.entity.haircut.HaircutNotFoundException;
 import com.barber.hopak.model.impl.Haircut;
 import com.barber.hopak.repository.HaircutRepository;
 import com.barber.hopak.service.HaircutService;

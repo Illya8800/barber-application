@@ -11,11 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.File;
 import java.util.Optional;
 
-import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_ID;
-import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageUtils.IMAGE_DTO_BYTES;
-import static com.barber.hopak.util.ImageUtils.getImageDto;
-import static com.barber.hopak.util.buffer.BufferUtils.BUFFERED_FILE_NAME;
+import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageTestUtils.IMAGE_DTO_BYTES;
+import static com.barber.hopak.util.ImageTestUtils.getImageDto;
+import static com.barber.hopak.util.buffer.BufferTestUtils.BUFFERED_FILE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doNothing;

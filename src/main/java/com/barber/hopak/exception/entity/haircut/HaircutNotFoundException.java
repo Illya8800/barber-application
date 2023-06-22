@@ -1,4 +1,4 @@
-package com.barber.hopak.exception.haircut;
+package com.barber.hopak.exception.entity.haircut;
 
 import jakarta.persistence.EntityNotFoundException;
 

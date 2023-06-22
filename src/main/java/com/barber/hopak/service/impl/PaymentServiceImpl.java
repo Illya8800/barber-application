@@ -1,6 +1,6 @@
 package com.barber.hopak.service.impl;
 
-import com.barber.hopak.exception.payment.PaymentNotFoundException;
+import com.barber.hopak.exception.entity.payment.PaymentNotFoundException;
 import com.barber.hopak.model.impl.Payment;
 import com.barber.hopak.repository.PaymentRepository;
 import com.barber.hopak.service.PaymentService;

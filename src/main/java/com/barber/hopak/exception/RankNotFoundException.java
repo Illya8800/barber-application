@@ -1,6 +1,8 @@
 package com.barber.hopak.exception;
 
-public class RankNotFoundException extends BarberException {
+import jakarta.persistence.EntityNotFoundException;
+
+public class RankNotFoundException extends EntityNotFoundException {
     public RankNotFoundException(String s) {
         super(s);
     }

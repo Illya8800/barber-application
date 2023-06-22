@@ -3,8 +3,10 @@ package com.barber.hopak.buffer.impl;
 import com.barber.hopak.buffer.BufferManager;
 import com.barber.hopak.buffer.BufferedFileName;
 import com.barber.hopak.buffer.FileSearcher;
+import com.barber.hopak.exception.buffer.BufferCantBeDeletedException;
+import com.barber.hopak.exception.buffer.BufferedFileCantBeDeletedException;
 import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
-import com.barber.hopak.exception.image.inh.SaveImageException;
+import com.barber.hopak.exception.entity.image.inh.SaveImageException;
 import com.barber.hopak.util.ArraysC;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import jakarta.annotation.PreDestroy;
@@ -30,6 +32,7 @@ import static com.barber.hopak.util.ImageUtil.CONVERTER_SPLIT_REGEX;
 @RequiredArgsConstructor
 public class BufferManagerImpl implements BufferManager<File, Long> {
     private final FileSearcher fileSearcher;
+
     @PreDestroy
     private void destroyBuffer() {
         log.info("Destroying buffer");
@@ -93,12 +96,26 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
     }
 
     private void clearBuffer() {
-        log.info("Clearing the buffer");
-        File file = new File(fileSearcher.getBufferPath());
-        File[] files = file.listFiles();
+        log.info("Deleting the bufferFolder");
+        File bufferFolder = new File(fileSearcher.getBufferPath());
+        if (bufferFolder.exists()) deleteFiles(bufferFolder);
+    }
+
+    private void deleteFiles(File bufferFolder) {
+        log.info("Deleting a files in bufferFolder");
+        File[] files = bufferFolder.listFiles();
         if (files != null) {
-            log.info("Found {} file(s)", files.length);
-            Arrays.stream(files).forEach(File::delete);
+            log.info("Found {} file(s) in buffer folder", files.length);
+            Arrays.stream(files)
+                    .forEach(file -> dropFile(bufferFolder, file.getName()));
         }
+        boolean deleted = bufferFolder.delete();
+        if (!deleted) throw new BufferCantBeDeletedException("Buffer doesn't deleted");
+    }
+
+    private void dropFile(File bufferFolder, String fileName) {
+        boolean isFileDeleted = new File(bufferFolder, fileName).delete();
+        if (!isFileDeleted)
+            throw new BufferedFileCantBeDeletedException("Buffered file can't be deleted");
     }
 }

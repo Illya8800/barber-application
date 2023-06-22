@@ -1,6 +1,6 @@
 package com.barber.hopak.service.impl;
 
-import com.barber.hopak.exception.client.ClientNotFoundException;
+import com.barber.hopak.exception.entity.client.ClientNotFoundException;
 import com.barber.hopak.model.impl.Client;
 import com.barber.hopak.repository.ClientRepository;
 import com.barber.hopak.service.ClientService;

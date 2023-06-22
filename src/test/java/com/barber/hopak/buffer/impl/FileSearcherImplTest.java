@@ -1,6 +1,6 @@
 package com.barber.hopak.buffer.impl;
 
-import com.barber.hopak.util.buffer.BufferUtils;
+import com.barber.hopak.util.buffer.BufferTestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,51 +16,51 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FileSearcherImplTest {
 
     private final FileSearcherImpl fileSearcher;
-    private final BufferUtils bufferUtils;
+    private final BufferTestUtils bufferTestUtils;
 
     @Autowired
-    FileSearcherImplTest(FileSearcherImpl fileSearcher, BufferUtils bufferUtils) {
+    FileSearcherImplTest(FileSearcherImpl fileSearcher, BufferTestUtils bufferTestUtils) {
         this.fileSearcher = fileSearcher;
-        this.bufferUtils = bufferUtils;
+        this.bufferTestUtils = bufferTestUtils;
     }
 
     @BeforeEach
     void initBuffer() {
-        bufferUtils.initBuffer();
+        bufferTestUtils.initBuffer();
     }
 
     @AfterEach
     void destroyBuffer() {
-        bufferUtils.destroyBuffer();
+        bufferTestUtils.destroyBuffer();
     }
 
     @Test
     void getFileByName_thenFind() {
-        bufferUtils.createTestFile();
-        Optional<File> fileByName = fileSearcher.getFileByName(BufferUtils.EXISTING_FILE_NAME);
+        bufferTestUtils.createTestFile();
+        Optional<File> fileByName = fileSearcher.getFileByName(BufferTestUtils.EXISTING_FILE_NAME);
         assertThat(fileByName).isPresent();
-        boolean isFileDeleted = bufferUtils.deleteTestFile(fileByName.get().getName());
+        boolean isFileDeleted = bufferTestUtils.deleteTestFile(fileByName.get().getName());
         assertThat(isFileDeleted).isTrue();
     }
 
     @Test
     void getFileByName_thenFileNotFound() {
-        Optional<File> fileByName = fileSearcher.getFileByName(BufferUtils.UNEXISTING_FILE_NAME);
+        Optional<File> fileByName = fileSearcher.getFileByName(BufferTestUtils.UNEXISTING_FILE_NAME);
         assertThat(fileByName).isEmpty();
     }
 
     @Test
     void getFileById_thenFind() {
-        bufferUtils.createTestFile();
-        Optional<File> fileById = fileSearcher.getFileById(BufferUtils.EXISTING_FILE_ID);
+        bufferTestUtils.createTestFile();
+        Optional<File> fileById = fileSearcher.getFileById(BufferTestUtils.EXISTING_FILE_ID);
         assertThat(fileById).isPresent();
-        boolean isFileDeleted = bufferUtils.deleteTestFile(fileById.get().getName());
+        boolean isFileDeleted = bufferTestUtils.deleteTestFile(fileById.get().getName());
         assertThat(isFileDeleted).isTrue();
     }
 
     @Test
     void getFileById_thenFileNotFound() {
-        Optional<File> fileById = fileSearcher.getFileById(BufferUtils.UNEXISTING_FILE_ID);
+        Optional<File> fileById = fileSearcher.getFileById(BufferTestUtils.UNEXISTING_FILE_ID);
         assertThat(fileById).isEmpty();
     }
 

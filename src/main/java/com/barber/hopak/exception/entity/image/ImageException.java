@@ -1,4 +1,4 @@
-package com.barber.hopak.exception.image;
+package com.barber.hopak.exception.entity.image;
 
 public abstract class ImageException extends RuntimeException{
     public ImageException(String message) {

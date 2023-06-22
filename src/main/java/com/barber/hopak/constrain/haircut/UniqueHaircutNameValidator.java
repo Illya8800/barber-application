@@ -1,6 +1,6 @@
 package com.barber.hopak.constrain.haircut;
 
-import com.barber.hopak.exception.haircut.HaircutNotFoundException;
+import com.barber.hopak.exception.entity.haircut.HaircutNotFoundException;
 import com.barber.hopak.service.HaircutService;
 import com.barber.hopak.web.domain.impl.HaircutDto;
 import jakarta.validation.ConstraintValidator;

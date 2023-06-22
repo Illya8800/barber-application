@@ -1,7 +1,7 @@
 package com.barber.hopak.service.impl;
 
 import com.barber.hopak.buffer.BufferService;
-import com.barber.hopak.exception.image.ImageNotFoundException;
+import com.barber.hopak.exception.entity.image.ImageNotFoundException;
 import com.barber.hopak.model.enumeration.ImageExtensions;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.repository.ImageRepository;

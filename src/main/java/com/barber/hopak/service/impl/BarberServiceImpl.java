@@ -1,6 +1,6 @@
 package com.barber.hopak.service.impl;
 
-import com.barber.hopak.exception.BarberNotFoundException;
+import com.barber.hopak.exception.entity.barber.BarberNotFoundException;
 import com.barber.hopak.model.impl.Barber;
 import com.barber.hopak.repository.BarberRepository;
 import com.barber.hopak.service.BarberService;

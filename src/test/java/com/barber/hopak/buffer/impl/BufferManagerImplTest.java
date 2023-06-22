@@ -2,10 +2,11 @@ package com.barber.hopak.buffer.impl;
 
 import com.barber.hopak.buffer.FileSearcher;
 import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
-import com.barber.hopak.exception.image.inh.SaveImageException;
-import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFromDateBase;
+import com.barber.hopak.exception.entity.image.inh.SaveImageException;
+import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
+import com.barber.hopak.util.ImageTestUtils;
 import com.barber.hopak.util.StringUtils3C;
-import com.barber.hopak.util.buffer.BufferUtils;
+import com.barber.hopak.util.buffer.BufferTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,15 +21,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.barber.hopak.util.ImageTestUtils.IMAGE_DTO_BYTES;
+import static com.barber.hopak.util.ImageTestUtils.getImageDto;
 import static com.barber.hopak.util.ImageUtil.DOT_TXT;
 import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
-import static com.barber.hopak.util.ImageUtils.IMAGE_DTO_BYTES;
-import static com.barber.hopak.util.ImageUtils.getBufferedFileName;
-import static com.barber.hopak.util.ImageUtils.getImageDto;
-import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_ID;
-import static com.barber.hopak.util.buffer.BufferUtils.EXISTING_FILE_NAME;
-import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_ID;
-import static com.barber.hopak.util.buffer.BufferUtils.UNEXISTING_FILE_NAME;
+import static com.barber.hopak.util.buffer.BufferTestUtils.EXISTING_FILE_ID;
+import static com.barber.hopak.util.buffer.BufferTestUtils.EXISTING_FILE_NAME;
+import static com.barber.hopak.util.buffer.BufferTestUtils.UNEXISTING_FILE_ID;
+import static com.barber.hopak.util.buffer.BufferTestUtils.UNEXISTING_FILE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
@@ -38,31 +38,33 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class BufferManagerImplTest {
-    private final BufferUtils bufferUtils;
+    private final BufferTestUtils bufferTestUtils;
+    private final ImageTestUtils imageTestUtils;
     @Mock
     private FileSearcher fileSearcher;
     @InjectMocks
     private BufferManagerImpl bufferManager;
 
     @Autowired
-    BufferManagerImplTest(BufferUtils bufferUtils) {
-        this.bufferUtils = bufferUtils;
+    BufferManagerImplTest(BufferTestUtils bufferTestUtils, ImageTestUtils imageTestUtils) {
+        this.bufferTestUtils = bufferTestUtils;
+        this.imageTestUtils = imageTestUtils;
     }
 
     @BeforeEach
     void initBuffer() {
-        bufferUtils.initBuffer();
+        bufferTestUtils.initBuffer();
     }
 
     @AfterEach
     void destroyBuffer() {
-        bufferUtils.destroyBuffer();
+        bufferTestUtils.destroyBuffer();
     }
 
     @Test
     void save_thenSaveFile() {
         ImageDto imageDto = getImageDto();
-        when(fileSearcher.getBufferPath()).thenReturn(bufferUtils.getBufferFolderPath());
+        when(fileSearcher.getBufferPath()).thenReturn(bufferTestUtils.getBufferFolderPath());
 
         File file = bufferManager.save(imageDto);
 
@@ -70,14 +72,14 @@ class BufferManagerImplTest {
 
         String BUFFERED_FILE_NAME = StringUtils3C.join(imageDto.getId(), ID_SEPARATOR, imageDto.getName(), DOT_TXT);
         assertThat(file.getName()).isEqualTo(BUFFERED_FILE_NAME);
-        boolean isDeleted = bufferUtils.deleteTestFile(getBufferedFileName());
+        boolean isDeleted = bufferTestUtils.deleteTestFile(imageTestUtils.getBufferedFileName());
         assertThat(isDeleted).isTrue();
     }
 
     @Test
     void save_thenThrow() throws IOException {
         ImageDto imageDto = mock(ImageDto.class);
-        MultipartFile imageMock = mock(MultipartFileFromDateBase.class);
+        MultipartFile imageMock = mock(MultipartFileWithoutPath.class);
         when(imageDto.getId()).thenReturn(EXISTING_FILE_ID);
         when(imageDto.getName()).thenReturn(EXISTING_FILE_NAME);
         when(imageDto.getImage()).thenReturn(imageMock);
@@ -93,7 +95,7 @@ class BufferManagerImplTest {
     @Test
     void findFileById_thenFind() {
         when(fileSearcher.getFileById(EXISTING_FILE_ID))
-                .thenReturn(Optional.of(new File(getBufferedFileName())));
+                .thenReturn(Optional.of(new File(imageTestUtils.getBufferedFileName())));
 
         Optional<File> file = bufferManager.findFileById(EXISTING_FILE_ID);
 
@@ -102,7 +104,7 @@ class BufferManagerImplTest {
                 .getFileById(EXISTING_FILE_ID);
 
         assertThat(file).isPresent();
-        assertThat(file.get().getName()).isEqualTo(getBufferedFileName());
+        assertThat(file.get().getName()).isEqualTo(imageTestUtils.getBufferedFileName());
     }
 
     @Test
@@ -122,7 +124,7 @@ class BufferManagerImplTest {
     @Test
     void findFileByName_thenFind() {
         when(fileSearcher.getFileByName(EXISTING_FILE_NAME))
-                .thenReturn(Optional.of(new File(getBufferedFileName())));
+                .thenReturn(Optional.of(new File(imageTestUtils.getBufferedFileName())));
 
         Optional<File> file = bufferManager.findFileByName(EXISTING_FILE_NAME);
 
@@ -131,7 +133,7 @@ class BufferManagerImplTest {
                 .getFileByName(EXISTING_FILE_NAME);
 
         assertThat(file).isPresent();
-        assertThat(file.get().getName()).isEqualTo(getBufferedFileName());
+        assertThat(file.get().getName()).isEqualTo(imageTestUtils.getBufferedFileName());
     }
 
     @Test
@@ -150,11 +152,11 @@ class BufferManagerImplTest {
 
     @Test
     void getBytesByFile_thenGetBytes() {
-        bufferUtils.createTestFile();
-        File file = bufferUtils.fillTestFile(getImageDto());
+        bufferTestUtils.createTestFile();
+        File file = bufferTestUtils.fillTestFile(getImageDto());
         byte[] bytesByFile = bufferManager.getBytesByFile(file);
         assertThat(IMAGE_DTO_BYTES).isEqualTo(bytesByFile);
-        boolean isDeleted = bufferUtils.deleteTestFile(file.getName());
+        boolean isDeleted = bufferTestUtils.deleteTestFile(file.getName());
         assertThat(isDeleted).isTrue();
     }
 

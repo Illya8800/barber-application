@@ -1,4 +1,4 @@
-package com.barber.hopak.exception;
+package com.barber.hopak.exception.entity.barber;
 
 import jakarta.persistence.EntityNotFoundException;
 

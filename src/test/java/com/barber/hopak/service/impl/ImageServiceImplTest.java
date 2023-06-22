@@ -1,12 +1,12 @@
 package com.barber.hopak.service.impl;
 
 import com.barber.hopak.buffer.BufferService;
-import com.barber.hopak.exception.image.ImageNotFoundException;
+import com.barber.hopak.exception.entity.image.ImageNotFoundException;
 import com.barber.hopak.model.enumeration.ImageExtensions;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.repository.ImageRepository;
-import com.barber.hopak.util.ImageUtils;
-import com.barber.hopak.util.buffer.BufferUtils;
+import com.barber.hopak.util.ImageTestUtils;
+import com.barber.hopak.util.buffer.BufferTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_ID;
-import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_ID;
-import static com.barber.hopak.util.ImageUtils.UNEXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageUtils.getImageDto;
-import static com.barber.hopak.util.ImageUtils.getImageList;
+import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageTestUtils.UNEXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.ImageTestUtils.UNEXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.ImageTestUtils.getImageDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,7 +36,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ImageServiceImplTest {
-    private final BufferUtils bufferUtils;
+    private final BufferTestUtils bufferTestUtils;
+    private final ImageTestUtils imageTestUtils;
     @Mock
     private BufferService<ImageDto> bufferService;
     @Mock
@@ -47,18 +47,19 @@ class ImageServiceImplTest {
     private ImageServiceImpl imageService;
 
     @Autowired
-    ImageServiceImplTest(BufferUtils bufferUtils) {
-        this.bufferUtils = bufferUtils;
+    ImageServiceImplTest(BufferTestUtils bufferTestUtils, ImageTestUtils imageTestUtils) {
+        this.bufferTestUtils = bufferTestUtils;
+        this.imageTestUtils = imageTestUtils;
     }
 
     @AfterEach
     void destroyBuffer() {
-        bufferUtils.destroyBuffer();
+        bufferTestUtils.destroyBuffer();
     }
 
     @Test
     void findById_thenFindInBuffer() {
-        ImageDto imageDto = ImageUtils.getImageDto();
+        ImageDto imageDto = ImageTestUtils.getImageDto();
         when(bufferService.findImageById(EXISTING_IMAGE_DTO_ID)).thenReturn(Optional.of(imageDto));
 
         imageService.findById(EXISTING_IMAGE_DTO_ID);
@@ -73,7 +74,7 @@ class ImageServiceImplTest {
 
     @Test
     void findById_thenNotFindInBufferButFindInDateBase() {
-        ImageDto imageDto = ImageUtils.getImageDto();
+        ImageDto imageDto = ImageTestUtils.getImageDto();
         when(bufferService.findImageById(EXISTING_IMAGE_DTO_ID)).thenReturn(Optional.empty());
         when(imageRepository.findById(EXISTING_IMAGE_DTO_ID)).thenReturn(Optional.of(imageDto.toEntity()));
 
@@ -114,7 +115,7 @@ class ImageServiceImplTest {
 
     @Test
     void findByName_thenFindInBuffer() {
-        ImageDto imageDto = ImageUtils.getImageDto();
+        ImageDto imageDto = ImageTestUtils.getImageDto();
         when(bufferService.findImageByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(Optional.of(imageDto));
 
         imageService.findByName(EXISTING_IMAGE_DTO_NAME);
@@ -129,7 +130,7 @@ class ImageServiceImplTest {
 
     @Test
     void findByName_thenNotFindInBufferButFindInDateBase() {
-        ImageDto imageDto = ImageUtils.getImageDto();
+        ImageDto imageDto = ImageTestUtils.getImageDto();
         when(bufferService.findImageByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(Optional.empty());
         when(imageRepository.findByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(Optional.of(imageDto.toEntity()));
 
@@ -170,9 +171,9 @@ class ImageServiceImplTest {
 
     @Test
     void findAllImages_thenFindNotEmptyList() {
-        List<ImageDto> imageListMock = getImageList().stream().map(Image::toDto).toList();
+        List<ImageDto> imageListMock = imageTestUtils.getImageList().stream().map(Image::toDto).toList();
 
-        when(imageRepository.findAll()).thenReturn(getImageList());
+        when(imageRepository.findAll()).thenReturn(imageTestUtils.getImageList());
         doNothing().when(bufferService).save(any());
 
         List<ImageDto> allImages = imageService.findAll();

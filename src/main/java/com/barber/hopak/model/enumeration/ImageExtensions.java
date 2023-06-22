@@ -1,6 +1,6 @@
 package com.barber.hopak.model.enumeration;
 
-import com.barber.hopak.exception.image.inh.ImageExtensionsNotFoundException;
+import com.barber.hopak.exception.entity.image.inh.ImageExtensionsNotFoundException;
 import com.barber.hopak.util.StringUtils3C;
 
 import java.util.Comparator;

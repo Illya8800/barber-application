@@ -1,6 +1,7 @@
-package com.barber.hopak.exception.handler;
+package com.barber.hopak.exception.handler.buffer;
 
 import com.barber.hopak.exception.buffer.BufferException;
+import com.barber.hopak.exception.handler.AbstractGlobalException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;

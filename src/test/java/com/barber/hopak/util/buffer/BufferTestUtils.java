@@ -1,8 +1,8 @@
 package com.barber.hopak.util.buffer;
 
 import com.barber.hopak.config.BufferPathConfig;
-import com.barber.hopak.exception.buffer.BufferCantBeDeleteException;
-import com.barber.hopak.exception.buffer.BufferedFileCantBeDeleteException;
+import com.barber.hopak.exception.buffer.BufferCantBeDeletedException;
+import com.barber.hopak.exception.buffer.BufferedFileCantBeDeletedException;
 import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
 import com.barber.hopak.exception.buffer.ImagesBufferNotFountException;
 import com.barber.hopak.util.ArraysC;
@@ -19,16 +19,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
 import static com.barber.hopak.util.ImageUtil.BUFFER_FOLDER_NAME;
 import static com.barber.hopak.util.ImageUtil.DOT_TXT;
 import static com.barber.hopak.util.ImageUtil.FOLDER_SEPARATOR;
 import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
-import static com.barber.hopak.util.ImageUtils.EXISTING_IMAGE_DTO_NAME;
 
 
 @Component
 @RequiredArgsConstructor
-public class BufferUtils {
+public class BufferTestUtils {
     private final BufferPathConfig bufferPathConfig;
     public static final String UNEXISTING_FILE_NAME = " ";
     public static final String EXISTING_FILE_NAME = "testFile.png";
@@ -91,10 +91,10 @@ public class BufferUtils {
             Arrays.stream(Objects.requireNonNull(bufferFolder.listFiles())).forEach(file -> {
                 String fileName = file.getName();
                 boolean isFileDeleted = new File(bufferFolder, fileName).delete();
-                if (!isFileDeleted) throw new BufferedFileCantBeDeleteException("Buffered file can't be deleted");
+                if (!isFileDeleted) throw new BufferedFileCantBeDeletedException("Buffered file can't be deleted");
             });
             deleted = bufferFolder.delete();
-            if (!deleted) throw new BufferCantBeDeleteException("Buffer doesn't deleted");
+            if (!deleted) throw new BufferCantBeDeletedException("Buffer doesn't deleted");
         }
     }
 }

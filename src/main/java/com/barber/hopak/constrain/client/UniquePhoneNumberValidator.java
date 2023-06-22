@@ -1,6 +1,6 @@
 package com.barber.hopak.constrain.client;
 
-import com.barber.hopak.exception.client.ClientNotFoundException;
+import com.barber.hopak.exception.entity.client.ClientNotFoundException;
 import com.barber.hopak.service.ClientService;
 import com.barber.hopak.web.domain.impl.ClientDto;
 import jakarta.validation.ConstraintValidator;

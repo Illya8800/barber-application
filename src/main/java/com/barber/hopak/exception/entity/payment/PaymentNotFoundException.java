@@ -1,4 +1,4 @@
-package com.barber.hopak.exception.payment;
+package com.barber.hopak.exception.entity.payment;
 
 import jakarta.persistence.EntityNotFoundException;
 

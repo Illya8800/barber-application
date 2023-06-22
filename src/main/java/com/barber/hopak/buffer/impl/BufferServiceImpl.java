@@ -4,7 +4,7 @@ import com.barber.hopak.buffer.BufferContainerState;
 import com.barber.hopak.buffer.BufferManager;
 import com.barber.hopak.buffer.BufferService;
 import com.barber.hopak.buffer.BufferedFileName;
-import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileFromDateBase;
+import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -74,6 +74,6 @@ public class BufferServiceImpl implements BufferService<ImageDto> {
                 ImageDto.builder()
                         .id(bufferedFileName.getId())
                         .name(bufferedFileName.getImageName())
-                        .image(new MultipartFileFromDateBase(bufferedFileName.getImageName(), bufferManager.getBytesByFile(file))).build());
+                        .image(new MultipartFileWithoutPath(bufferedFileName.getImageName(), bufferManager.getBytesByFile(file))).build());
     }
 }
