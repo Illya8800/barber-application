@@ -60,10 +60,10 @@ public class BarberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteBarberById(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteBarberById(@ModelAttribute("barberDto") @Valid BarberDto barberDto) {
         log.info("Controller processing the DELETE \"deleteBarberById\" mapping");
-        barberService.deleteById(id);
+        barberService.delete(barberDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

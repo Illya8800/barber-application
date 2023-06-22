@@ -47,7 +47,7 @@ public class BarberDto implements DTO<Barber> {
                 this.instagram,
                 this.barberRank,
                 this.avatarId,
-                this.avatar.toEntity()
+                this.avatar == null ? null : this.avatar.toEntity()
         );
     }
 }

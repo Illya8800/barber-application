@@ -52,7 +52,7 @@ public class Barber implements com.barber.hopak.model.Entity<BarberDto> {
                 .instagram(this.instagram)
                 .barberRank(this.barberRank)
                 .avatarId(this.avatarId)
-                .avatar(Hibernate.isInitialized(this.avatar) ? this.avatar.toDto() : null)
+                .avatar(this.avatar!= null && Hibernate.isInitialized(this.avatar) ? this.avatar.toDto() : null)
                 .build();
     }
 }

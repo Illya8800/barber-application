@@ -44,7 +44,7 @@ public class Haircut implements com.barber.hopak.model.Entity<HaircutDto> {
                 .price(this.price)
                 .duration(this.duration)
                 .avatarId(this.avatarId)
-                .avatar(this.avatar.toDto())
+                .avatar(this.avatar == null ? null : this.avatar.toDto())
                 .build();
     }
 }

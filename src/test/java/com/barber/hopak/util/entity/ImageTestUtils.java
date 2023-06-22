@@ -1,7 +1,8 @@
-package com.barber.hopak.util;
+package com.barber.hopak.util.entity;
 
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
+import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +18,13 @@ import static com.barber.hopak.util.buffer.BufferTestUtils.UNEXISTING_FILE_NAME;
 @Component
 public class ImageTestUtils {
     public static final Long EXISTING_IMAGE_DTO_ID = EXISTING_FILE_ID;
-
     private static Long NO_IMAGE_ID = 1L;
     public static final Long UNEXISTING_IMAGE_DTO_ID = UNEXISTING_FILE_ID;
     public static final byte[] IMAGE_DTO_BYTES = {0, 1, 2, 3};
     public static final String EXISTING_IMAGE_DTO_NAME = EXISTING_FILE_NAME;
     public static final String UNEXISTING_IMAGE_DTO_NAME = UNEXISTING_FILE_NAME;
 
-    public static ImageDto getImageDto() {
+    public ImageDto getImageDto() {
         return ImageDto.builder()
                 .id(EXISTING_IMAGE_DTO_ID)
                 .name(EXISTING_IMAGE_DTO_NAME)

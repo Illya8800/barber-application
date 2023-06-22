@@ -18,7 +18,6 @@ import org.hibernate.validator.constraints.Length;
 import static com.barber.hopak.constrain.DtoConstraintMessage.FIELD_SHOULD_NOT_BE_NULL;
 import static com.barber.hopak.constrain.DtoConstraintMessage.HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_32767;
 import static com.barber.hopak.constrain.DtoConstraintMessage.INTEGER_MAX_VALUE_CONSTRAIN_TEXT;
-import static com.barber.hopak.constrain.DtoConstraintMessage.LONG_MAX_VALUE_CONSTRAIN_TEXT;
 import static com.barber.hopak.constrain.DtoConstraintMessage.MIN_VALUE_SHOULD_BE_MORE_THEN_0;
 import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER;
 import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE;
@@ -43,11 +42,7 @@ public class HaircutDto implements DTO<Haircut> {
     @Max(value = Short.MAX_VALUE, message = HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_32767)
     @Min(value = 1, message = MIN_VALUE_SHOULD_BE_MORE_THEN_0)
     private Short duration;
-    @NotNull(message = FIELD_SHOULD_NOT_BE_NULL)
-    @Max(value = Long.MAX_VALUE, message = LONG_MAX_VALUE_CONSTRAIN_TEXT)
-    @Min(value = 1, message = MIN_VALUE_SHOULD_BE_MORE_THEN_0)
     private Long avatarId;
-
     private ImageDto avatar;
 
 
@@ -59,7 +54,7 @@ public class HaircutDto implements DTO<Haircut> {
                 this.price,
                 this.duration,
                 this.avatarId,
-                this.avatar.toEntity()
+                this.avatar == null ? null : this.avatar.toEntity()
         );
     }
 }

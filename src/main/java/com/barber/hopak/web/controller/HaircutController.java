@@ -66,10 +66,10 @@ public class HaircutController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteHaircutById(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteHaircutById(@ModelAttribute("haircutDto") @Valid HaircutDto haircutDto) {
         log.info("Controller processing the DELETE \"deleteHaircutById\" mapping");
-        haircutService.deleteById(id);
+        haircutService.delete(haircutDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

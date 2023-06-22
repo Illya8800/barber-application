@@ -2,9 +2,9 @@ package com.barber.hopak.web.controller;
 
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
 import com.barber.hopak.service.ImageService;
-import com.barber.hopak.util.ImageTestUtils;
 import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.util.buffer.BufferTestUtils;
+import com.barber.hopak.util.entity.ImageTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -26,12 +26,11 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_NAME_SHOULD_
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT;
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_TYPE_UNKNOWN;
 import static com.barber.hopak.util.GlobalBindExceptionErrorMessagesVerifier.verifyExpectedErrorMessages;
-import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageTestUtils.IMAGE_DTO_BYTES;
-import static com.barber.hopak.util.ImageTestUtils.UNEXISTING_IMAGE_DTO_ID;
-import static com.barber.hopak.util.ImageTestUtils.UNEXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageTestUtils.getImageDto;
 import static com.barber.hopak.util.ImageUtil.NO_IMAGE;
+import static com.barber.hopak.util.entity.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.entity.ImageTestUtils.IMAGE_DTO_BYTES;
+import static com.barber.hopak.util.entity.ImageTestUtils.UNEXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.entity.ImageTestUtils.UNEXISTING_IMAGE_DTO_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -162,7 +161,7 @@ class ImageControllerTest {
 
     @Test
     void createImage_thenCreate() throws Exception {
-        ImageDto imageDto = getImageDto();
+        ImageDto imageDto = imageTestUtils.getImageDto();
         imageDto.setId(3L);
         MockMultipartFile multipartFile = new MockMultipartFile(
                 imageDto.getName(),
@@ -231,7 +230,7 @@ class ImageControllerTest {
 
     @Test
     void updateImage_thenUpdate() throws Exception {
-        final ImageDto imageDto1 = imageService.create(getImageDto());
+        final ImageDto imageDto1 = imageService.create(imageTestUtils.getImageDto());
 
         MockMultipartFile multipartFile = new MockMultipartFile(
                 imageDto1.getName(),

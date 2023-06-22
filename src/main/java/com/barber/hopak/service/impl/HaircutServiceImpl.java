@@ -77,10 +77,10 @@ public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
     }
 
     @Override
-    public void deleteById(Long id) {
-        log.info("Deleting a haircut with id = {} from DB", id);
-        haircutRepository.deleteById(id);
-        imageService.deleteById(id);
+    public void delete(HaircutDto haircutDto) {
+        log.info("Deleting a haircut with id = {} from DB", haircutDto.getId());
+        haircutRepository.deleteById(haircutDto.getId());
+        imageService.deleteById(haircutDto.getAvatarId());
     }
 
     @Override

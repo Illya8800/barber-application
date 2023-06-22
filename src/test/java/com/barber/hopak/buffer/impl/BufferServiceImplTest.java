@@ -2,20 +2,21 @@ package com.barber.hopak.buffer.impl;
 
 import com.barber.hopak.buffer.BufferContainerState;
 import com.barber.hopak.buffer.BufferManager;
+import com.barber.hopak.util.entity.ImageTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.util.Optional;
 
-import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_ID;
-import static com.barber.hopak.util.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
-import static com.barber.hopak.util.ImageTestUtils.IMAGE_DTO_BYTES;
-import static com.barber.hopak.util.ImageTestUtils.getImageDto;
 import static com.barber.hopak.util.buffer.BufferTestUtils.BUFFERED_FILE_NAME;
+import static com.barber.hopak.util.entity.ImageTestUtils.EXISTING_IMAGE_DTO_ID;
+import static com.barber.hopak.util.entity.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
+import static com.barber.hopak.util.entity.ImageTestUtils.IMAGE_DTO_BYTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doNothing;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class BufferServiceImplTest {
+    private final ImageTestUtils imageTestUtils;
     @Mock
     private BufferManager<File, Long> bufferManager;
     @Mock
@@ -34,11 +36,16 @@ class BufferServiceImplTest {
     @InjectMocks
     BufferServiceImpl bufferService;
 
+    @Autowired
+    BufferServiceImplTest(ImageTestUtils imageTestUtils) {
+        this.imageTestUtils = imageTestUtils;
+    }
+
     @Test
     void save_thenSaveImage() {
-        ImageDto imageDto = getImageDto();
-        File file = mock(File.class);
-        when(bufferManager.save(imageDto)).thenReturn(file);
+        ImageDto imageDto = imageTestUtils.getImageDto();
+        File fileMock = mock(File.class);
+        when(bufferManager.save(imageDto)).thenReturn(fileMock);
         when(containerState.isBufferContain(imageDto.getName())).thenReturn(false);
 
 
@@ -49,13 +56,13 @@ class BufferServiceImplTest {
                 .save(imageDto);
         then(containerState)
                 .should()
-                .add(file.getName());
+                .add(fileMock.getName());
     }
 
     @Test
     void save_thenNotSaveImage() {
-        ImageDto imageDto = getImageDto();
-        File file = mock(File.class);
+        ImageDto imageDto = imageTestUtils.getImageDto();
+        File fileMock = mock(File.class);
         when(containerState.isBufferContain(imageDto.getName())).thenReturn(true);
 
         bufferService.save(imageDto);
@@ -65,7 +72,7 @@ class BufferServiceImplTest {
                 .save(imageDto);
         then(containerState)
                 .should(never())
-                .add(file.getName());
+                .add(fileMock.getName());
     }
 
     @Test
@@ -84,7 +91,7 @@ class BufferServiceImplTest {
         then(bufferManager).should()
                 .getBytesByFile(file.get());
         assertThat(image).isPresent();
-        assertThat(image.get()).isEqualTo(getImageDto());
+        assertThat(image.get()).isEqualTo(imageTestUtils.getImageDto());
     }
 
     @Test
@@ -123,7 +130,7 @@ class BufferServiceImplTest {
         then(bufferManager).should()
                 .getBytesByFile(file.get());
         assertThat(image).isPresent();
-        assertThat(image.get()).isEqualTo(getImageDto());
+        assertThat(image.get()).isEqualTo(imageTestUtils.getImageDto());
     }
 
     @Test
@@ -148,12 +155,12 @@ class BufferServiceImplTest {
 
     @Test
     void deleteImageByName_thenDelete() {
-        File mockFile = mock(File.class);
-        Optional<File> file = Optional.of(mockFile);
+        File fileMock = mock(File.class);
+        Optional<File> file = Optional.of(fileMock);
 
         when(bufferManager.findFileByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(file);
-        when(mockFile.exists()).thenReturn(true);
-        when(mockFile.delete()).thenReturn(true);
+        when(fileMock.exists()).thenReturn(true);
+        when(fileMock.delete()).thenReturn(true);
         doNothing().when(containerState).removeByName(EXISTING_IMAGE_DTO_NAME);
 
         bufferService.deleteImageByName(EXISTING_IMAGE_DTO_NAME);
@@ -187,12 +194,12 @@ class BufferServiceImplTest {
 
     @Test
     void deleteImageById_thenDelete() {
-        File mockFile = mock(File.class);
-        Optional<File> file = Optional.of(mockFile);
+        File fileMock = mock(File.class);
+        Optional<File> file = Optional.of(fileMock);
 
         when(bufferManager.findFileById(EXISTING_IMAGE_DTO_ID)).thenReturn(file);
-        when(mockFile.exists()).thenReturn(true);
-        when(mockFile.delete()).thenReturn(true);
+        when(fileMock.exists()).thenReturn(true);
+        when(fileMock.delete()).thenReturn(true);
         doNothing().when(containerState).removeById(EXISTING_IMAGE_DTO_ID);
 
         bufferService.deleteImageById(EXISTING_IMAGE_DTO_ID);
