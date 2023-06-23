@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +23,6 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Client implements com.barber.hopak.model.Entity<ClientDto> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
