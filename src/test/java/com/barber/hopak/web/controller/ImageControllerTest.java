@@ -2,7 +2,6 @@ package com.barber.hopak.web.controller;
 
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
 import com.barber.hopak.service.ImageService;
-import com.barber.hopak.util.StringUtils3C;
 import com.barber.hopak.util.buffer.BufferTestUtils;
 import com.barber.hopak.util.entity.ImageTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
@@ -25,8 +24,10 @@ import java.util.List;
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_NAME_SHOULD_BE_UNIQUE;
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_ORIGINAL_FILE_NAME_SHOULD_BE_CORRECT;
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_TYPE_UNKNOWN;
+import static com.barber.hopak.exception.handler.GlobalHandlerBodyMessagesContainer.GLOBAL_HANDLER_DELETE_UNEXISTING_ENTITY_EXCEPTION_TEXT;
 import static com.barber.hopak.util.GlobalBindExceptionErrorMessagesVerifier.verifyExpectedErrorMessages;
 import static com.barber.hopak.util.ImageUtil.NO_IMAGE;
+import static com.barber.hopak.util.JsonPart.buildJsonString;
 import static com.barber.hopak.util.entity.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
 import static com.barber.hopak.util.entity.ImageTestUtils.IMAGE_DTO_BYTES;
 import static com.barber.hopak.util.entity.ImageTestUtils.UNEXISTING_IMAGE_DTO_ID;
@@ -291,7 +292,7 @@ class ImageControllerTest {
                 .andReturn();
 
         String contentAsString = mvcResult.getResponse().getContentAsString();
-        assertThat(contentAsString).isEqualTo("Entity with this id doesn't exist");
+        assertThat(contentAsString).isEqualTo(GLOBAL_HANDLER_DELETE_UNEXISTING_ENTITY_EXCEPTION_TEXT);
     }
 
     @Test
@@ -331,14 +332,5 @@ class ImageControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
 
         assertThat(contentAsString).isEqualTo("false");
-    }
-
-
-    private String buildJsonString(String field, Long value) {
-        return StringUtils3C.join("\"", field, "\":", value.toString(), ",");
-    }
-
-    private String buildJsonString(String field, String value) {
-        return StringUtils3C.join("\"", field, "\":\"", value, "\",");
     }
 }

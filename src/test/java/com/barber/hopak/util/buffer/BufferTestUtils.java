@@ -25,7 +25,6 @@ import static com.barber.hopak.util.ImageUtil.FOLDER_SEPARATOR;
 import static com.barber.hopak.util.ImageUtil.ID_SEPARATOR;
 import static com.barber.hopak.util.entity.ImageTestUtils.EXISTING_IMAGE_DTO_NAME;
 
-
 @Component
 @RequiredArgsConstructor
 public class BufferTestUtils {

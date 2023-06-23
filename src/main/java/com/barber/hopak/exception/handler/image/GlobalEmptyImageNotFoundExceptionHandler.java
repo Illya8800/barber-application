@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import static com.barber.hopak.exception.handler.GlobalHandlerBodyMessagesContainer.GLOBAL_HANDLER_DELETE_UNEXISTING_ENTITY_EXCEPTION_TEXT;
+
 @ControllerAdvice
 @RequiredArgsConstructor
 @Log4j2
@@ -20,6 +22,6 @@ public class GlobalEmptyImageNotFoundExceptionHandler extends AbstractGlobalExce
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handleException(HttpServletRequest req, HttpServletResponse resp, EmptyResultDataAccessException e) {
         logErrorData(req, resp, e);
-        return new ResponseEntity<>("Entity with this id doesn't exist", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(GLOBAL_HANDLER_DELETE_UNEXISTING_ENTITY_EXCEPTION_TEXT, HttpStatus.NO_CONTENT);
     }
 }
