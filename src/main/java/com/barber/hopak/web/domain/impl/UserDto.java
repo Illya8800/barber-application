@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +29,6 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.USER_ROLES_SHOULD_
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 public class UserDto implements DTO<User> {
     private Long id;
     @NotBlank(message = STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE)

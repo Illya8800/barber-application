@@ -29,7 +29,7 @@ public class DtoConstraintMessage {
 
     /*HAIRCUT*/
     public static final String HAIRCUT_NAME_SHOULD_BE_UNIQUE = "This haircut name should be unique";
-    public static final String HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_32767 = "The haircut duration should be less then 32767 minutes";
+    public static final String HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_1440 = "The haircut duration should be less then 1440 minutes (24 hours)";
     /*END*/
 
     /*HAIRCUT_ORDER*/

@@ -13,17 +13,22 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "check")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Check implements com.barber.hopak.model.Entity<CheckDto> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,11 +66,44 @@ public class Check implements com.barber.hopak.model.Entity<CheckDto> {
                 .haircutId(this.haircutId)
                 .barberId(this.barberId)
                 .clientId(this.clientId)
-                .payment(this.payment)
-                .haircut(this.haircut)
-                .barber(this.barber)
-                .client(this.client)
+                .payment(this.payment == null ? null : this.payment.toDto())
+                .haircut(this.haircut == null ? null : this.haircut.toDto())
+                .barber(this.barber == null ? null : this.barber.toDto())
+                .client(this.client == null ? null : this.client.toDto())
                 .build();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Check check = (Check) o;
+
+        if (!Objects.equals(id, check.id)) return false;
+        if (!Objects.equals(dateTime, check.dateTime)) return false;
+        if (!Objects.equals(paymentId, check.paymentId)) return false;
+        if (!Objects.equals(haircutId, check.haircutId)) return false;
+        if (!Objects.equals(barberId, check.barberId)) return false;
+        if (!Objects.equals(clientId, check.clientId)) return false;
+        if (!Objects.equals(payment, check.payment)) return false;
+        if (!Objects.equals(haircut, check.haircut)) return false;
+        if (!Objects.equals(barber, check.barber)) return false;
+        return Objects.equals(client, check.client);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (dateTime != null ? dateTime.hashCode() : 0);
+        result = 31 * result + (paymentId != null ? paymentId.hashCode() : 0);
+        result = 31 * result + (haircutId != null ? haircutId.hashCode() : 0);
+        result = 31 * result + (barberId != null ? barberId.hashCode() : 0);
+        result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
+        result = 31 * result + (payment != null ? payment.hashCode() : 0);
+        result = 31 * result + (haircut != null ? haircut.hashCode() : 0);
+        result = 31 * result + (barber != null ? barber.hashCode() : 0);
+        result = 31 * result + (client != null ? client.hashCode() : 0);
+        return result;
+    }
 }

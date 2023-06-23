@@ -15,15 +15,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "barber")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Barber implements com.barber.hopak.model.Entity<BarberDto> {
@@ -54,5 +58,31 @@ public class Barber implements com.barber.hopak.model.Entity<BarberDto> {
                 .avatarId(this.avatarId)
                 .avatar(this.avatar!= null && Hibernate.isInitialized(this.avatar) ? this.avatar.toDto() : null)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Barber barber = (Barber) o;
+
+        if (!Objects.equals(id, barber.id)) return false;
+        if (!Objects.equals(barberName, barber.barberName)) return false;
+        if (!Objects.equals(instagram, barber.instagram)) return false;
+        if (barberRank != barber.barberRank) return false;
+        if (!Objects.equals(avatarId, barber.avatarId)) return false;
+        return Objects.equals(avatar, barber.avatar);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (barberName != null ? barberName.hashCode() : 0);
+        result = 31 * result + (instagram != null ? instagram.hashCode() : 0);
+        result = 31 * result + (barberRank != null ? barberRank.hashCode() : 0);
+        result = 31 * result + (avatarId != null ? avatarId.hashCode() : 0);
+        result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
+        return result;
     }
 }

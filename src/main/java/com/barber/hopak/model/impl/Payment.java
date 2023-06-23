@@ -11,14 +11,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "payment")
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Payment implements com.barber.hopak.model.Entity<PaymentDto> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +45,29 @@ public class Payment implements com.barber.hopak.model.Entity<PaymentDto> {
                 .finalPrice(this.finalPrice)
                 .paymentType(this.paymentType)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Payment payment = (Payment) o;
+
+        if (!Objects.equals(id, payment.id)) return false;
+        if (!Objects.equals(price, payment.price)) return false;
+        if (!Objects.equals(discount, payment.discount)) return false;
+        if (!Objects.equals(finalPrice, payment.finalPrice)) return false;
+        return paymentType == payment.paymentType;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (discount != null ? discount.hashCode() : 0);
+        result = 31 * result + (finalPrice != null ? finalPrice.hashCode() : 0);
+        result = 31 * result + (paymentType != null ? paymentType.hashCode() : 0);
+        return result;
     }
 }

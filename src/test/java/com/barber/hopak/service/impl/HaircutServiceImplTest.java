@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.barber.hopak.util.entity.HaircutTestUtils.HAIRCUT_ID;
+import static com.barber.hopak.util.entity.HaircutTestUtils.EXISTING_HAIRCUT_ID;
 import static com.barber.hopak.util.entity.HaircutTestUtils.HAIRCUT_NAME;
 import static com.barber.hopak.util.entity.HaircutTestUtils.UNEXISTING_HAIRCUT_ID;
 import static com.barber.hopak.util.entity.HaircutTestUtils.UNEXISTING_HAIRCUT_NAME;
@@ -58,18 +58,18 @@ class HaircutServiceImplTest {
         haircutDto.setAvatarId(imageDto.getId());
         Haircut haircutMock = mock(Haircut.class);
 
-        when(haircutRepository.findById(HAIRCUT_ID))
+        when(haircutRepository.findById(EXISTING_HAIRCUT_ID))
                 .thenReturn(Optional.of(haircutMock));
         when(haircutMock.toDto())
                 .thenReturn(haircutDto);
         when(imageService.findById(imageDto.getId()))
                 .thenReturn(imageDto);
 
-        HaircutDto testedHaircut = haircutService.findById(HAIRCUT_ID);
+        HaircutDto testedHaircut = haircutService.findById(EXISTING_HAIRCUT_ID);
 
         then(haircutRepository)
                 .should(times(1))
-                .findById(HAIRCUT_ID);
+                .findById(EXISTING_HAIRCUT_ID);
         then(haircutMock)
                 .should(times(1))
                 .toDto();
@@ -285,7 +285,7 @@ class HaircutServiceImplTest {
     @Test
     void isUnique_thenNotUniqueById() {
         HaircutDto haircutDto = haircutTestUtils.getHaircutDto();
-        when(haircutRepository.findByName(haircutDto.getName())).thenReturn(Optional.of(HaircutDto.builder().id(3L).name("ANY NAME").price(150).duration((short) 90).avatarId(imageTestUtils.getNoImageId()).build().toEntity()));
+        when(haircutRepository.findByName(haircutDto.getName())).thenReturn(Optional.of(HaircutDto.builder().id(3L).name("ANY NAME").price(150).duration(90).avatarId(imageTestUtils.getNoImageId()).build().toEntity()));
 
         boolean unique = haircutService.isUnique(haircutDto.getId(), haircutDto.getName());
 

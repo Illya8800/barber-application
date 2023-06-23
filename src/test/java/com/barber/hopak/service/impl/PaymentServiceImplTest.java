@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.barber.hopak.util.entity.PaymentTestUtils.PAYMENT_ID;
+import static com.barber.hopak.util.entity.PaymentTestUtils.EXISTING_PAYMENT_ID;
 import static com.barber.hopak.util.entity.PaymentTestUtils.UNEXISTING_PAYMENT_ID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -43,16 +43,15 @@ class PaymentServiceImplTest {
     @Test
     void findById_thenReturnPayment() {
         PaymentDto paymentDto = paymentTestUtils.getPaymentDto();
-        when(paymentRepository.findById(PAYMENT_ID))
+        when(paymentRepository.findById(EXISTING_PAYMENT_ID))
                 .thenReturn(Optional.of(paymentDto.toEntity()));
 
-        paymentService.findById(PAYMENT_ID);
+        paymentService.findById(EXISTING_PAYMENT_ID);
 
         then(paymentRepository)
                 .should(times(1))
-                .findById(PAYMENT_ID);
+                .findById(EXISTING_PAYMENT_ID);
     }
-
 
     @Test
     void findById_thenThrowPaymentNotFoundException() {
@@ -81,7 +80,7 @@ class PaymentServiceImplTest {
                 .should(times(1))
                 .findAll();
 
-        assertThat(all).isEqualTo(paymentDtoList);
+        assertThat(all.stream().map(PaymentDto::toEntity).toList()).isEqualTo(paymentDtoList.stream().map(PaymentDto::toEntity).toList());
     }
 
     @Test
@@ -140,12 +139,12 @@ class PaymentServiceImplTest {
 
     @Test
     void deleteById() {
-        doNothing().when(paymentRepository).deleteById(PAYMENT_ID);
+        doNothing().when(paymentRepository).deleteById(EXISTING_PAYMENT_ID);
 
-        paymentService.deleteById(PAYMENT_ID);
+        paymentService.deleteById(EXISTING_PAYMENT_ID);
 
         then(paymentRepository)
                 .should(times(1))
-                .deleteById(PAYMENT_ID);
+                .deleteById(EXISTING_PAYMENT_ID);
     }
 }

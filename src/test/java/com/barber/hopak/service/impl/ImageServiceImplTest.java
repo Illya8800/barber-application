@@ -30,6 +30,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -74,9 +75,11 @@ class ImageServiceImplTest {
 
     @Test
     void findById_thenNotFindInBufferButFindInDateBase() {
-        ImageDto imageDto = imageTestUtils.getImageDto();
+        Image image = mock(Image.class);
+        ImageDto imageDto = mock(ImageDto.class);
         when(bufferService.findImageById(EXISTING_IMAGE_DTO_ID)).thenReturn(Optional.empty());
-        when(imageRepository.findById(EXISTING_IMAGE_DTO_ID)).thenReturn(Optional.of(imageDto.toEntity()));
+        when(imageRepository.findById(EXISTING_IMAGE_DTO_ID)).thenReturn(Optional.of(image));
+        when(image.toDto()).thenReturn(imageDto);
 
         imageService.findById(EXISTING_IMAGE_DTO_ID);
 
@@ -86,7 +89,9 @@ class ImageServiceImplTest {
         then(imageRepository)
                 .should(times(1))
                 .findById(EXISTING_IMAGE_DTO_ID);
-
+        then(image)
+                .should(times(2))
+                .toDto();
         then(bufferService)
                 .should(times(1))
                 .save(imageDto);
@@ -130,9 +135,11 @@ class ImageServiceImplTest {
 
     @Test
     void findByName_thenNotFindInBufferButFindInDateBase() {
-        ImageDto imageDto = imageTestUtils.getImageDto();
+        Image image = mock(Image.class);
+        ImageDto imageDto = mock(ImageDto.class);
         when(bufferService.findImageByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(Optional.empty());
-        when(imageRepository.findByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(Optional.of(imageDto.toEntity()));
+        when(imageRepository.findByName(EXISTING_IMAGE_DTO_NAME)).thenReturn(Optional.of(image));
+        when(image.toDto()).thenReturn(imageDto);
 
         imageService.findByName(EXISTING_IMAGE_DTO_NAME);
 
@@ -142,7 +149,9 @@ class ImageServiceImplTest {
         then(imageRepository)
                 .should(times(1))
                 .findByName(EXISTING_IMAGE_DTO_NAME);
-
+        then(image)
+                .should(times(2))
+                .toDto();
         then(bufferService)
                 .should(times(1))
                 .save(imageDto);
@@ -185,7 +194,7 @@ class ImageServiceImplTest {
                 .should(times(imageListMock.size()))
                 .save(any());
 
-        assertThat(allImages).isEqualTo(imageListMock);
+        assertThat(allImages.stream().map(ImageDto::toEntity).toList()).isEqualTo(imageListMock.stream().map(ImageDto::toEntity).toList());
     }
 
     @Test
@@ -220,7 +229,7 @@ class ImageServiceImplTest {
                 .should(times(1))
                 .save(any());
 
-        assertThat(savedImageDto).isEqualTo(imageDto);
+        assertThat(savedImageDto.toEntity()).isEqualTo(imageDto.toEntity());
     }
 
     @Test
@@ -239,7 +248,7 @@ class ImageServiceImplTest {
                 .should(times(1))
                 .save(any());
 
-        assertThat(savedImageDto).isEqualTo(imageDto);
+        assertThat(savedImageDto.toEntity()).isEqualTo(imageDto.toEntity());
     }
 
     @Test
@@ -319,6 +328,7 @@ class ImageServiceImplTest {
             assertThat(extensionValid).isTrue();
         });
     }
+
     @Test
     void isExtensionValid_thenNotCorrectExtensions() {
         String basicName = "basicImageName";

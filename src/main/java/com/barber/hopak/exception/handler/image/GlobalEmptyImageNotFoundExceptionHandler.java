@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RequiredArgsConstructor
 @Log4j2
 public class GlobalEmptyImageNotFoundExceptionHandler extends AbstractGlobalException<String, EmptyResultDataAccessException> {
-
+/**deleteById(UNEXISTING_ID)*/
     @Override
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handleException(HttpServletRequest req, HttpServletResponse resp, EmptyResultDataAccessException e) {

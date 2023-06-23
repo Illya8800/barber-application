@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.barber.hopak.util.entity.BarberTestUtils.BARBER_ID;
+import static com.barber.hopak.util.entity.BarberTestUtils.EXISTING_BARBER_ID;
 import static com.barber.hopak.util.entity.BarberTestUtils.UNEXISTING_BARBER_ID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -55,7 +55,7 @@ class BarberServiceImplTest {
         ImageDto imageDto = imageTestUtils.getImageDto();
 
 
-        when(barberRepository.findById(BARBER_ID))
+        when(barberRepository.findById(EXISTING_BARBER_ID))
                 .thenReturn(Optional.of(barberMock));
         when(barberMock.toDto())
                 .thenReturn(barberDto);
@@ -63,12 +63,12 @@ class BarberServiceImplTest {
                 .thenReturn(imageDto);
 
 
-        BarberDto testedBarber = barberService.findById(BARBER_ID);
+        BarberDto testedBarber = barberService.findById(EXISTING_BARBER_ID);
 
 
         then(barberRepository)
                 .should(times(1))
-                .findById(BARBER_ID);
+                .findById(EXISTING_BARBER_ID);
         then(barberMock)
                 .should(times(1))
                 .toDto();

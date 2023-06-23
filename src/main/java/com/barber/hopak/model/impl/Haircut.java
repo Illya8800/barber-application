@@ -12,12 +12,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "haircut")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Haircut implements com.barber.hopak.model.Entity<HaircutDto> {
@@ -29,7 +33,7 @@ public class Haircut implements com.barber.hopak.model.Entity<HaircutDto> {
     @Column(nullable = false)
     private Integer price;
     @Column(nullable = false)
-    private Short duration;
+    private Integer duration;
     @Column(name = "avatar_id")
     private Long avatarId;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -46,5 +50,31 @@ public class Haircut implements com.barber.hopak.model.Entity<HaircutDto> {
                 .avatarId(this.avatarId)
                 .avatar(this.avatar == null ? null : this.avatar.toDto())
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Haircut haircut = (Haircut) o;
+
+        if (!Objects.equals(id, haircut.id)) return false;
+        if (!Objects.equals(name, haircut.name)) return false;
+        if (!Objects.equals(price, haircut.price)) return false;
+        if (!Objects.equals(duration, haircut.duration)) return false;
+        if (!Objects.equals(avatarId, haircut.avatarId)) return false;
+        return Objects.equals(avatar, haircut.avatar);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        result = 31 * result + (avatarId != null ? avatarId.hashCode() : 0);
+        result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
+        return result;
     }
 }

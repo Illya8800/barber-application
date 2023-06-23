@@ -3,13 +3,11 @@ package com.barber.hopak.web.domain.impl;
 import com.barber.hopak.constrain.DtoConstraintMessage;
 import com.barber.hopak.constrain.client.PhoneNumber;
 import com.barber.hopak.constrain.client.UniquePhoneNumber;
-import com.barber.hopak.model.impl.Check;
 import com.barber.hopak.model.impl.Client;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +24,6 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_NOT_
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @UniquePhoneNumber
 public class ClientDto implements DTO<Client> {
     private Long id;
@@ -39,7 +36,8 @@ public class ClientDto implements DTO<Client> {
     @NotBlank(message = STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE)
     @PhoneNumber(message = CLIENT_PHONE_NUMBER_SHOULD_BE_MATCH_WITH_REGEX)
     private String phoneNumber;
-    private List<Check> checks;
+    private List<CheckDto> checks;
+
     @Override
     public Client toEntity() {
         return new Client(
@@ -47,7 +45,7 @@ public class ClientDto implements DTO<Client> {
                 this.firstname,
                 this.lastname,
                 this.phoneNumber,
-                this.checks
+                this.checks == null ? null : this.checks.stream().map(CheckDto::toEntity).toList()
         );
     }
 }

@@ -1,18 +1,13 @@
 package com.barber.hopak.web.domain.impl;
 
 import com.barber.hopak.constrain.check.FutureDateTime;
-import com.barber.hopak.model.impl.Barber;
 import com.barber.hopak.model.impl.Check;
-import com.barber.hopak.model.impl.Client;
-import com.barber.hopak.model.impl.Haircut;
-import com.barber.hopak.model.impl.Payment;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +24,6 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.MIN_VALUE_SHOULD_B
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 public class CheckDto implements DTO<Check> {
     private Long id;
     @NotNull(message = FIELD_SHOULD_NOT_BE_NULL)
@@ -46,10 +40,10 @@ public class CheckDto implements DTO<Check> {
     private Long barberId;
     private Long clientId;
 
-    private Payment payment;
-    private Haircut haircut;
-    private Barber barber;
-    private Client client;
+    private PaymentDto payment;
+    private HaircutDto haircut;
+    private BarberDto barber;
+    private ClientDto client;
 
     @Override
     public Check toEntity() {
@@ -60,10 +54,10 @@ public class CheckDto implements DTO<Check> {
                 this.haircutId,
                 this.barberId,
                 this.clientId,
-                this.payment,
-                this.haircut,
-                this.barber,
-                this.client
+                this.payment == null ? null : this.payment.toEntity(),
+                this.haircut == null ? null : this.haircut.toEntity(),
+                this.barber == null ? null : this.barber.toEntity(),
+                this.client == null ? null : this.client.toEntity()
         );
     }
 }

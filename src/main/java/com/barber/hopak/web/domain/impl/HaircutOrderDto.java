@@ -1,9 +1,6 @@
 package com.barber.hopak.web.domain.impl;
 
 import com.barber.hopak.constrain.check.FutureDateTime;
-import com.barber.hopak.model.impl.Barber;
-import com.barber.hopak.model.impl.Client;
-import com.barber.hopak.model.impl.Haircut;
 import com.barber.hopak.model.impl.HaircutOrder;
 import com.barber.hopak.web.domain.DTO;
 import jakarta.validation.constraints.Max;
@@ -11,7 +8,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +26,6 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_BE_L
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 public class HaircutOrderDto implements DTO<HaircutOrder> {
     private Long id;
     @NotNull(message = FIELD_SHOULD_NOT_BE_NULL)
@@ -46,9 +41,9 @@ public class HaircutOrderDto implements DTO<HaircutOrder> {
     private Long haircutId;
     private Long barberId;
 
-    private Client client;
-    private Haircut haircut;
-    private Barber barber;
+    private ClientDto client;
+    private HaircutDto haircut;
+    private BarberDto barber;
 
     @Override
     public HaircutOrder toEntity() {
@@ -59,9 +54,9 @@ public class HaircutOrderDto implements DTO<HaircutOrder> {
                 this.clientId,
                 this.haircutId,
                 this.barberId,
-                this.client,
-                this.haircut,
-                this.barber
+                this.client == null ? null : this.client.toEntity(),
+                this.haircut == null ? null : this.haircut.toEntity(),
+                this.barber == null ? null : this.barber.toEntity()
         );
     }
 }

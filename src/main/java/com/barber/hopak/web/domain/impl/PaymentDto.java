@@ -10,7 +10,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +24,6 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.PAYMENT_TYPE_IS_UN
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @DiscountValidCheck
 public class PaymentDto implements DTO<Payment> {
     private Long id;

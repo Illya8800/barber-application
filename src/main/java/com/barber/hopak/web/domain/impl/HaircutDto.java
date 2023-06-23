@@ -9,14 +9,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import static com.barber.hopak.constrain.DtoConstraintMessage.FIELD_SHOULD_NOT_BE_NULL;
-import static com.barber.hopak.constrain.DtoConstraintMessage.HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_32767;
+import static com.barber.hopak.constrain.DtoConstraintMessage.HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_1440;
 import static com.barber.hopak.constrain.DtoConstraintMessage.INTEGER_MAX_VALUE_CONSTRAIN_TEXT;
 import static com.barber.hopak.constrain.DtoConstraintMessage.MIN_VALUE_SHOULD_BE_MORE_THEN_0;
 import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_BE_IN_RANGE_BETWEEN_1_AND_30_CHARACTER;
@@ -27,7 +26,6 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_NOT_
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @UniqueHaircutName
 public class HaircutDto implements DTO<Haircut> {
     private Long id;
@@ -39,9 +37,9 @@ public class HaircutDto implements DTO<Haircut> {
     @Min(value = 1, message = MIN_VALUE_SHOULD_BE_MORE_THEN_0)
     private Integer price;
     @NotNull(message = FIELD_SHOULD_NOT_BE_NULL)
-    @Max(value = Short.MAX_VALUE, message = HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_32767)
+    @Max(value = 1440, message = HAIRCUT_DURATION_SHOULD_BE_LESS_THEN_1440)
     @Min(value = 1, message = MIN_VALUE_SHOULD_BE_MORE_THEN_0)
-    private Short duration;
+    private Integer duration;
     private Long avatarId;
     private ImageDto avatar;
 

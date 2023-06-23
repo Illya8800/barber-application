@@ -9,12 +9,12 @@ import java.util.List;
 @Component
 public class PaymentTestUtils {
 
-    public static final Long PAYMENT_ID = 1L;
+    public static final Long EXISTING_PAYMENT_ID = 1L;
     public static final Long UNEXISTING_PAYMENT_ID = -1L;
 
     public PaymentDto getPaymentDto() {
         return PaymentDto.builder()
-                .id(PAYMENT_ID)
+                .id(EXISTING_PAYMENT_ID)
                 .price(100)
                 .discount(5)
                 .finalPrice(95)
@@ -24,7 +24,7 @@ public class PaymentTestUtils {
 
     public List<PaymentDto> getPaymentDtoList() {
         PaymentDto firstPayment = PaymentDto.builder()
-                .id(PAYMENT_ID)
+                .id(EXISTING_PAYMENT_ID)
                 .price(100)
                 .discount(5)
                 .finalPrice(95)
@@ -32,7 +32,7 @@ public class PaymentTestUtils {
                 .build();
 
         PaymentDto secondPayment = PaymentDto.builder()
-                .id(PAYMENT_ID)
+                .id(EXISTING_PAYMENT_ID)
                 .price(333)
                 .discount(10)
                 .finalPrice(323)
@@ -40,7 +40,7 @@ public class PaymentTestUtils {
                 .build();
 
         PaymentDto thirdPayment = PaymentDto.builder()
-                .id(PAYMENT_ID)
+                .id(EXISTING_PAYMENT_ID)
                 .price(50)
                 .discount(0)
                 .finalPrice(50)

@@ -91,7 +91,7 @@ class BufferServiceImplTest {
         then(bufferManager).should()
                 .getBytesByFile(file.get());
         assertThat(image).isPresent();
-        assertThat(image.get()).isEqualTo(imageTestUtils.getImageDto());
+        assertThat(image.get().toEntity()).isEqualTo(imageTestUtils.getImageDto().toEntity());
     }
 
     @Test
@@ -130,7 +130,7 @@ class BufferServiceImplTest {
         then(bufferManager).should()
                 .getBytesByFile(file.get());
         assertThat(image).isPresent();
-        assertThat(image.get()).isEqualTo(imageTestUtils.getImageDto());
+        assertThat(image.get().toEntity()).isEqualTo(imageTestUtils.getImageDto().toEntity());
     }
 
     @Test

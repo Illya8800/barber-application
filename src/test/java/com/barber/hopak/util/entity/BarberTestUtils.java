@@ -16,14 +16,14 @@ public class BarberTestUtils {
     private final InstagramCredentialsConfig instagramCredentialsConfig;
     private final ImageTestUtils imageTestUtils;
 
-    public static final Long BARBER_ID = 1L;
+    public static final Long EXISTING_BARBER_ID = 1L;
     public static final Long UNEXISTING_BARBER_ID = -1L;
-    public static final String BARBER_NAME = "Test barber name";
+    public static final String EXISTING_BARBER_NAME = "Test barber name";
 
     public BarberDto getBarberDtoWithAvatarId() {
         return BarberDto.builder()
-                .id(BARBER_ID)
-                .barberName(BARBER_NAME)
+                .id(EXISTING_BARBER_ID)
+                .barberName(EXISTING_BARBER_NAME)
                 .instagram(instagramCredentialsConfig.getUsername())
                 .barberRank(BarberRank.BARBER_SENIOR)
                 .avatarId(imageTestUtils.getNoImageId())
@@ -33,8 +33,8 @@ public class BarberTestUtils {
     public BarberDto getBarberDtoWithAvatar() {
         ImageDto imageDto = imageTestUtils.getImageDto();
         return BarberDto.builder()
-                .id(BARBER_ID)
-                .barberName(BARBER_NAME)
+                .id(EXISTING_BARBER_ID)
+                .barberName(EXISTING_BARBER_NAME)
                 .instagram(instagramCredentialsConfig.getUsername())
                 .barberRank(BarberRank.BARBER_SENIOR)
                 .avatarId(imageDto.getId())

@@ -1,29 +1,27 @@
 package com.barber.hopak.util.entity;
 
 import com.barber.hopak.web.domain.impl.HaircutDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class HaircutTestUtils {
 
     private final ImageTestUtils imageTestUtils;
-    public static final Long HAIRCUT_ID = 1L;
+    public static final Long EXISTING_HAIRCUT_ID = 1L;
     public static final Long UNEXISTING_HAIRCUT_ID = 1L;
     public static final String HAIRCUT_NAME = "Test haircut name";
     public static final String UNEXISTING_HAIRCUT_NAME = "Test haircut name";
 
-    public HaircutTestUtils(ImageTestUtils imageTestUtils) {
-        this.imageTestUtils = imageTestUtils;
-    }
-
     public HaircutDto getHaircutDto() {
         return HaircutDto.builder()
-                .id(HAIRCUT_ID)
+                .id(EXISTING_HAIRCUT_ID)
                 .name(HAIRCUT_NAME)
                 .price(150)
-                .duration((short) 90)
+                .duration(90)
                 .avatarId(imageTestUtils.getNoImageId())
                 .build();
     }
@@ -33,7 +31,7 @@ public class HaircutTestUtils {
                 .id(2L)
                 .name(HAIRCUT_NAME)
                 .price(150)
-                .duration((short) 90)
+                .duration(90)
                 .avatarId(imageTestUtils.getNoImageId())
                 .build();
 
@@ -41,7 +39,7 @@ public class HaircutTestUtils {
                 .id(3L)
                 .name(HAIRCUT_NAME)
                 .price(150)
-                .duration((short) 90)
+                .duration(90)
                 .avatarId(imageTestUtils.getNoImageId())
                 .build();
 
@@ -49,7 +47,7 @@ public class HaircutTestUtils {
                 .id(4L)
                 .name(HAIRCUT_NAME)
                 .price(150)
-                .duration((short) 90)
+                .duration(90)
                 .avatarId(imageTestUtils.getNoImageId())
                 .build();
 

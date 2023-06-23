@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +23,6 @@ import static com.barber.hopak.constrain.DtoConstraintMessage.STRING_SHOULD_NOT_
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 public class BarberDto implements DTO<Barber> {
     private Long id;
     @NotBlank(message = STRING_SHOULD_NOT_BE_NULL_OR_EMPTY_OR_HAVE_ONLY_WHITESPACE)
