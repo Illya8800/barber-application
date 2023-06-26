@@ -58,13 +58,14 @@ class BufferManagerImplTest {
 
     @BeforeEach
     void initBuffer() {
-        bufferTestUtils.initBuffer();
+        bufferState.init();
     }
 
     @AfterEach
     void destroyBuffer() {
-        bufferTestUtils.destroyBuffer();
+        bufferState.destroy();
     }
+
 
     @Test
     void save_thenSaveFile() {
@@ -79,8 +80,6 @@ class BufferManagerImplTest {
 
         String BUFFERED_FILE_NAME = StringUtils3C.join(imageDto.getId(), ID_SEPARATOR, imageDto.getName(), DOT_TXT);
         assertThat(file.getName()).isEqualTo(BUFFERED_FILE_NAME);
-        boolean isDeleted = bufferTestUtils.deleteTestFile(imageTestUtils.getBufferedFileName());
-        assertThat(isDeleted).isTrue();
     }
 
     @Test
@@ -169,8 +168,6 @@ class BufferManagerImplTest {
         File file = bufferTestUtils.fillTestFile(imageTestUtils.getImageDto());
         byte[] bytesByFile = bufferManager.getBytesByFile(file);
         assertThat(IMAGE_DTO_BYTES).isEqualTo(bytesByFile);
-        boolean isDeleted = bufferTestUtils.deleteTestFile(file.getName());
-        assertThat(isDeleted).isTrue();
     }
 
     @Test

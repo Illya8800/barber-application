@@ -28,12 +28,12 @@ class FileSearcherImplTest {
 
     @BeforeEach
     void initBuffer() {
-        bufferTestUtils.initBuffer();
+        bufferState.init();
     }
 
     @AfterEach
     void destroyBuffer() {
-        bufferTestUtils.destroyBuffer();
+        bufferState.destroy();
     }
 
     @Test

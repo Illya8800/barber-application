@@ -1,8 +1,8 @@
 package com.barber.hopak.web.controller;
 
+import com.barber.hopak.buffer.BufferState;
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
 import com.barber.hopak.service.ImageService;
-import com.barber.hopak.util.buffer.BufferTestUtils;
 import com.barber.hopak.util.entity.ImageTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,21 +43,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ImageControllerTest {
     private final ImageTestUtils imageTestUtils;
+    private final BufferState bufferState;
     private final MockMvc mockMvc;
     private final ImageService<ImageDto, Long> imageService;
-    private final BufferTestUtils bufferTestUtils;
 
     @Autowired
-    ImageControllerTest(ImageTestUtils imageTestUtils, MockMvc mockMvc, ImageService<ImageDto, Long> imageService, BufferTestUtils bufferTestUtils) {
+    ImageControllerTest(ImageTestUtils imageTestUtils, BufferState bufferState, MockMvc mockMvc, ImageService<ImageDto, Long> imageService) {
         this.imageTestUtils = imageTestUtils;
+        this.bufferState = bufferState;
         this.mockMvc = mockMvc;
         this.imageService = imageService;
-        this.bufferTestUtils = bufferTestUtils;
     }
 
     @BeforeEach
     void clearDbState() {
-        bufferTestUtils.initBuffer();
+        bufferState.init();
         List<ImageDto> allImages = imageService.findAll();
         allImages.forEach(image -> imageService.deleteById(image.getId()));
         ImageDto noImage = imageService.create(ImageDto.builder().name(NO_IMAGE).image(new MultipartFileWithoutPath(NO_IMAGE, IMAGE_DTO_BYTES)).build());
@@ -66,7 +66,7 @@ class ImageControllerTest {
 
     @AfterEach
     void destroyBuffer() {
-        bufferTestUtils.destroyBuffer();
+        bufferState.destroy();
     }
 
     @Test

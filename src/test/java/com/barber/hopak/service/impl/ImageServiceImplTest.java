@@ -1,12 +1,12 @@
 package com.barber.hopak.service.impl;
 
 import com.barber.hopak.buffer.BufferService;
+import com.barber.hopak.buffer.BufferState;
 import com.barber.hopak.exception.entity.image.ImageNotFoundException;
 import com.barber.hopak.model.enumeration.ImageExtensions;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.repository.ImageRepository;
 import com.barber.hopak.util.StringUtils3C;
-import com.barber.hopak.util.buffer.BufferTestUtils;
 import com.barber.hopak.util.entity.ImageTestUtils;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import org.junit.jupiter.api.AfterEach;
@@ -37,8 +37,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ImageServiceImplTest {
-    private final BufferTestUtils bufferTestUtils;
     private final ImageTestUtils imageTestUtils;
+    private final BufferState bufferState;
     @Mock
     private BufferService<ImageDto> bufferService;
     @Mock
@@ -48,14 +48,14 @@ class ImageServiceImplTest {
     private ImageServiceImpl imageService;
 
     @Autowired
-    ImageServiceImplTest(BufferTestUtils bufferTestUtils, ImageTestUtils imageTestUtils) {
-        this.bufferTestUtils = bufferTestUtils;
+    ImageServiceImplTest(ImageTestUtils imageTestUtils, BufferState bufferState) {
         this.imageTestUtils = imageTestUtils;
+        this.bufferState = bufferState;
     }
 
     @AfterEach
     void destroyBuffer() {
-        bufferTestUtils.destroyBuffer();
+        bufferState.destroy();
     }
 
     @Test
