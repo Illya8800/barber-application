@@ -17,11 +17,13 @@ class FileSearcherImplTest {
 
     private final FileSearcherImpl fileSearcher;
     private final BufferTestUtils bufferTestUtils;
+    private final BufferStateImpl bufferState;
 
     @Autowired
-    FileSearcherImplTest(FileSearcherImpl fileSearcher, BufferTestUtils bufferTestUtils) {
+    FileSearcherImplTest(FileSearcherImpl fileSearcher, BufferTestUtils bufferTestUtils, BufferStateImpl bufferState) {
         this.fileSearcher = fileSearcher;
         this.bufferTestUtils = bufferTestUtils;
+        this.bufferState = bufferState;
     }
 
     @BeforeEach
@@ -66,7 +68,7 @@ class FileSearcherImplTest {
 
     @Test
     void getBufferPath_thenMustBeNotNull() {
-        String bufferPath = fileSearcher.getBufferPath();
+        String bufferPath = bufferState.getBufferPath();
         assertThat(bufferPath).isNotNull();
     }
 }

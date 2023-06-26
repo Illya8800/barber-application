@@ -1,7 +1,9 @@
 package com.barber.hopak.service.impl;
 
+import com.barber.hopak.buffer.impl.BufferServiceImpl;
 import com.barber.hopak.exception.entity.barber.BarberNotFoundException;
 import com.barber.hopak.model.impl.Barber;
+import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.repository.BarberRepository;
 import com.barber.hopak.service.ImageService;
 import com.barber.hopak.util.StringUtils3C;
@@ -35,6 +37,9 @@ import static org.mockito.Mockito.when;
 class BarberServiceImplTest {
     private final ImageTestUtils imageTestUtils;
     private final BarberTestUtils barberTestUtils;
+
+    @Mock
+    private BufferServiceImpl bufferService;
     @Mock
     private BarberRepository barberRepository;
     @Mock
@@ -137,25 +142,34 @@ class BarberServiceImplTest {
     @Test
     void create_thenSuccessfulCreate() {
         BarberDto barberDto = barberTestUtils.getBarberDtoWithAvatar();
-        Barber barberMock = mock(Barber.class);
-        BarberDto createdBarberDtoMock = mock(BarberDto.class);
+        Image imageMock = mock(Image.class);
         ImageDto imageDtoMock = mock(ImageDto.class);
+        Barber createdBarberMock = mock(Barber.class);
+        BarberDto createdBarberDtoMock = mock(BarberDto.class);
 
         when(barberRepository.save(any()))
-                .thenReturn(barberMock);
-        when(barberMock.toDto()).thenReturn(createdBarberDtoMock);
+                .thenReturn(createdBarberMock);
 
-        when(imageService.update(createdBarberDtoMock.getAvatar()))
-                .thenReturn(imageDtoMock);
+        when(createdBarberMock.getAvatar())
+                .thenReturn(imageMock);
+
+        when(imageMock.getId())
+                .thenReturn(barberDto.getAvatar().getId());
+
+        when(createdBarberMock.toDto())
+                .thenReturn(createdBarberDtoMock);
+
+        when(createdBarberDtoMock.getAvatar()).thenReturn(imageDtoMock);
+        doNothing().when(bufferService).save(imageDtoMock);
 
         barberService.create(barberDto);
 
         then(barberRepository)
                 .should(times(1))
                 .save(any());
-        then(imageService)
+        then(bufferService)
                 .should(times(1))
-                .create(createdBarberDtoMock.getAvatar());
+                .save(createdBarberDtoMock.getAvatar());
     }
 
     @Test
@@ -163,25 +177,24 @@ class BarberServiceImplTest {
         BarberDto barberDto = barberTestUtils.getBarberDtoWithAvatar();
         Barber barberMock = mock(Barber.class);
         BarberDto updatedBarberDtoMock = mock(BarberDto.class);
-        ImageDto imageDtoMock = mock(ImageDto.class);
 
         when(barberRepository.save(any()))
                 .thenReturn(barberMock);
 
 
-        when(barberMock.toDto()).thenReturn(updatedBarberDtoMock);
+        when(barberMock.toDto())
+                .thenReturn(updatedBarberDtoMock);
 
-        when(imageService.update(updatedBarberDtoMock.getAvatar()))
-                .thenReturn(imageDtoMock);
+        doNothing().when(bufferService).save(any());
 
         barberService.update(barberDto);
 
         then(barberRepository)
                 .should(times(1))
                 .save(any());
-        then(imageService)
+        then(bufferService)
                 .should(times(1))
-                .update(updatedBarberDtoMock.getAvatar());
+                .save(any());
     }
 
     @Test

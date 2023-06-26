@@ -1,5 +1,6 @@
 package com.barber.hopak.buffer.impl;
 
+import com.barber.hopak.buffer.BufferState;
 import com.barber.hopak.buffer.FileSearcher;
 import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
 import com.barber.hopak.exception.entity.image.inh.SaveImageException;
@@ -33,21 +34,26 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class BufferManagerImplTest {
     private final BufferTestUtils bufferTestUtils;
     private final ImageTestUtils imageTestUtils;
+    private final BufferState bufferState;
+    @Mock
+    private BufferState bufferStateMock;
     @Mock
     private FileSearcher fileSearcher;
     @InjectMocks
     private BufferManagerImpl bufferManager;
 
     @Autowired
-    BufferManagerImplTest(BufferTestUtils bufferTestUtils, ImageTestUtils imageTestUtils) {
+    BufferManagerImplTest(BufferTestUtils bufferTestUtils, ImageTestUtils imageTestUtils, BufferState bufferState) {
         this.bufferTestUtils = bufferTestUtils;
         this.imageTestUtils = imageTestUtils;
+        this.bufferState = bufferState;
     }
 
     @BeforeEach
@@ -63,11 +69,13 @@ class BufferManagerImplTest {
     @Test
     void save_thenSaveFile() {
         ImageDto imageDto = imageTestUtils.getImageDto();
-        when(fileSearcher.getBufferPath()).thenReturn(bufferTestUtils.getBufferFolderPath());
+        when(bufferStateMock.getBufferPath()).thenReturn(bufferState.getBufferPath());
 
         File file = bufferManager.save(imageDto);
 
-        then(fileSearcher).should().getBufferPath();
+        then(bufferStateMock)
+                .should(times(1))
+                .getBufferPath();
 
         String BUFFERED_FILE_NAME = StringUtils3C.join(imageDto.getId(), ID_SEPARATOR, imageDto.getName(), DOT_TXT);
         assertThat(file.getName()).isEqualTo(BUFFERED_FILE_NAME);
@@ -79,6 +87,7 @@ class BufferManagerImplTest {
     void save_thenThrow() throws IOException {
         ImageDto imageDtoMock = mock(ImageDto.class);
         MultipartFile imageMock = mock(MultipartFileWithoutPath.class);
+        when(bufferStateMock.getBufferPath()).thenReturn(bufferState.getBufferPath());
         when(imageDtoMock.getId()).thenReturn(EXISTING_FILE_ID);
         when(imageDtoMock.getName()).thenReturn(EXISTING_FILE_NAME);
         when(imageDtoMock.getImage()).thenReturn(imageMock);
@@ -86,9 +95,14 @@ class BufferManagerImplTest {
         String exceptionText = "anyText";
         when(ioExceptionMock.getMessage()).thenReturn(exceptionText);
         willThrow(ioExceptionMock).given(imageMock).getBytes();
+
         assertThatThrownBy(() -> bufferManager.save(imageDtoMock))
                 .isInstanceOf(SaveImageException.class)
                 .hasMessage("Image can't be saved as txt file." + exceptionText);
+
+        then(bufferStateMock)
+                .should(times(1))
+                .getBufferPath();
     }
 
     @Test

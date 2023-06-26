@@ -7,6 +7,4 @@ public interface FileSearcher {
     Optional<File> getFileByName(String imageName);
 
     Optional<File> getFileById(Long id);
-
-    String getBufferPath();
 }

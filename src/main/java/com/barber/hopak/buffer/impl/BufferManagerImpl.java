@@ -1,15 +1,13 @@
 package com.barber.hopak.buffer.impl;
 
 import com.barber.hopak.buffer.BufferManager;
+import com.barber.hopak.buffer.BufferState;
 import com.barber.hopak.buffer.BufferedFileName;
 import com.barber.hopak.buffer.FileSearcher;
-import com.barber.hopak.exception.buffer.BufferCantBeDeletedException;
-import com.barber.hopak.exception.buffer.BufferedFileCantBeDeletedException;
 import com.barber.hopak.exception.buffer.ImageCantBeConvertedForBufferException;
 import com.barber.hopak.exception.entity.image.inh.SaveImageException;
 import com.barber.hopak.util.ArraysC;
 import com.barber.hopak.web.domain.impl.ImageDto;
-import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ArrayUtils;
@@ -21,7 +19,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,24 +29,20 @@ import static com.barber.hopak.util.ImageUtil.CONVERTER_SPLIT_REGEX;
 @RequiredArgsConstructor
 public class BufferManagerImpl implements BufferManager<File, Long> {
     private final FileSearcher fileSearcher;
-
-    @PreDestroy
-    private void destroyBuffer() {
-        log.info("Destroying buffer");
-        clearBuffer();
-    }
+    private final BufferState bufferState;
 
     /**
-     * @param imageDto should contain id, imageName and the image
-     *                 It will save in the BASIC_BUFFER_PATH.
-     *                 File will get the next name "id-imageName.png.txt". Example: 1-no-image.png.txt
-     * @return file with the image's bytes
-     * @throws SaveImageException If image can't be saved
+     * Saves the image as a text file in the buffer.
+     *
+     * @param imageDto the ImageDto object containing the image information
+     *                 - The object should include the image's ID, imageName, and the image data.
+     * @return a File object representing the saved image file
+     * @throws SaveImageException if the image cannot be saved
      */
     @Override
     public File save(ImageDto imageDto) {
         log.info("Rewriting file as bytes in buffer");
-        File file = new File(fileSearcher.getBufferPath(), new BufferedFileName(imageDto.getId(), imageDto.getName()).getFileName());
+        File file = new File(bufferState.getBufferPath(), new BufferedFileName(imageDto.getId(), imageDto.getName()).getFileName());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(ArraysC.toString(imageDto.getImage().getBytes()));
             return file;
@@ -93,29 +86,5 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
 
     private byte[] getByteArrayFromString(StringBuilder sb) {
         return ArrayUtils.toPrimitive(java.util.Arrays.stream(sb.toString().split(CONVERTER_SPLIT_REGEX)).map(Byte::parseByte).toArray(Byte[]::new));
-    }
-
-    private void clearBuffer() {
-        log.info("Deleting the bufferFolder");
-        File bufferFolder = new File(fileSearcher.getBufferPath());
-        if (bufferFolder.exists()) deleteFiles(bufferFolder);
-    }
-
-    private void deleteFiles(File bufferFolder) {
-        log.info("Deleting a files in bufferFolder");
-        File[] files = bufferFolder.listFiles();
-        if (files != null) {
-            log.info("Found {} file(s) in buffer folder", files.length);
-            Arrays.stream(files)
-                    .forEach(file -> dropFile(bufferFolder, file.getName()));
-        }
-        boolean deleted = bufferFolder.delete();
-        if (!deleted) throw new BufferCantBeDeletedException("Buffer doesn't deleted");
-    }
-
-    private void dropFile(File bufferFolder, String fileName) {
-        boolean isFileDeleted = new File(bufferFolder, fileName).delete();
-        if (!isFileDeleted)
-            throw new BufferedFileCantBeDeletedException("Buffered file can't be deleted");
     }
 }

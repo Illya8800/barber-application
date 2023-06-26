@@ -1,5 +1,6 @@
 package com.barber.hopak.service.impl;
 
+import com.barber.hopak.buffer.impl.BufferServiceImpl;
 import com.barber.hopak.exception.entity.barber.BarberNotFoundException;
 import com.barber.hopak.model.impl.Barber;
 import com.barber.hopak.repository.BarberRepository;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     private final BarberRepository barberRepository;
     private final ImageService<ImageDto, Long> imageService;
+    private final BufferServiceImpl bufferService;
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -50,16 +52,18 @@ public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     @Override
     public BarberDto create(BarberDto barberDto) {
         log.info("Inserting new barber with name = {} in DB ", barberDto.getBarberName());
-        BarberDto savedBarberDto = barberRepository.save(barberDto.toEntity()).toDto();
-        imageService.create(savedBarberDto.getAvatar());
-        return savedBarberDto;
+        Barber createdBarber = barberRepository.save(barberDto.toEntity());
+        createdBarber.setAvatarId(createdBarber.getAvatar().getId());
+        BarberDto createdBarberDto = createdBarber.toDto();
+        bufferService.save(createdBarberDto.getAvatar());
+        return createdBarberDto;
     }
 
     @Override
     public BarberDto update(BarberDto barberDto) {
         log.info("Updating barber with name = {} in DB ", barberDto.getBarberName());
         BarberDto updatedBarberDto = barberRepository.save(barberDto.toEntity()).toDto();
-        imageService.update(updatedBarberDto.getAvatar());
+        bufferService.save(updatedBarberDto.getAvatar());
         return updatedBarberDto;
     }
 
