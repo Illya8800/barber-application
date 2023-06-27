@@ -32,10 +32,11 @@ public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     public BarberDto findById(Long id) {
         log.info("Finding an barber with id = {} in DB", id);
         return barberRepository.findById(id)
-                .map(Barber::toDto)
-                .map(barberDto -> {
-                    barberDto.setAvatar(imageService.findById(barberDto.getAvatarId()));
-                    return barberDto;
+                .map(barber -> {
+                    ImageDto avatarDto = imageService.findById(barber.getAvatarId());
+                    BarberDto dtoBarber = barber.toDto();
+                    dtoBarber.setAvatar(avatarDto);
+                    return dtoBarber;
                 })
                 .orElseThrow(() -> new BarberNotFoundException(StringUtils3C.join("Barber with id ", id, " not found")));
     }

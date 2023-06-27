@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static com.barber.hopak.util.entity.BarberTestUtils.EXISTING_BARBER_ID;
 import static com.barber.hopak.util.entity.BarberTestUtils.UNEXISTING_BARBER_ID;
+import static com.barber.hopak.util.entity.ImageTestUtils.EXISTING_IMAGE_DTO_ID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,16 +57,19 @@ class BarberServiceImplTest {
     @Test
     void findById_thenReturnBarberWithAvatar() {
         BarberDto barberDto = barberTestUtils.getBarberDtoWithAvatar();
+        barberDto.setAvatar(null);
         Barber barberMock = mock(Barber.class);
         ImageDto imageDto = imageTestUtils.getImageDto();
 
 
         when(barberRepository.findById(EXISTING_BARBER_ID))
                 .thenReturn(Optional.of(barberMock));
-        when(barberMock.toDto())
-                .thenReturn(barberDto);
+
+        when(barberMock.getAvatarId()).thenReturn(EXISTING_IMAGE_DTO_ID);
         when(imageService.findById(imageDto.getId()))
                 .thenReturn(imageDto);
+        when(barberMock.toDto())
+                .thenReturn(barberDto);
 
 
         BarberDto testedBarber = barberService.findById(EXISTING_BARBER_ID);
