@@ -25,7 +25,7 @@ public class BufferedFileName {
         this.imageName = getNameFromBufferedFileName(file.getName());
     }
 
-    public String getFileName() {
+    public String getBufferedFileName() {
         return StringUtils3C.join(id, ID_SEPARATOR, imageName, DOT_TXT);
     }
 

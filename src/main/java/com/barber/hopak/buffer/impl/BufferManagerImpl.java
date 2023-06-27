@@ -42,7 +42,7 @@ public class BufferManagerImpl implements BufferManager<File, Long> {
     @Override
     public File save(ImageDto imageDto) {
         log.info("Rewriting file as bytes in buffer");
-        File file = new File(bufferState.getBufferPath(), new BufferedFileName(imageDto.getId(), imageDto.getName()).getFileName());
+        File file = new File(bufferState.getBufferPath(), new BufferedFileName(imageDto.getId(), imageDto.getName()).getBufferedFileName());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(ArraysC.toString(imageDto.getImage().getBytes()));
             return file;
