@@ -116,13 +116,13 @@ class BarberServiceImplTest {
         when(barberRepository.findAll())
                 .thenReturn(barberList);
 
-        List<Barber> all = barberRepository.findAll();
+        List<BarberDto> all = barberService.findAll();
 
         then(barberRepository)
                 .should(times(1))
                 .findAll();
 
-        assertThat(all).isEqualTo(barberList);
+        assertThat(all.stream().map(BarberDto::toEntity).toList()).isEqualTo(barberList);
     }
 
     @Test
@@ -130,7 +130,7 @@ class BarberServiceImplTest {
         when(barberRepository.findAll())
                 .thenReturn(Collections.emptyList());
 
-        List<Barber> all = barberRepository.findAll();
+        List<BarberDto> all = barberService.findAll();
 
         then(barberRepository)
                 .should(times(1))

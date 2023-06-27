@@ -166,13 +166,13 @@ class HaircutServiceImplTest {
         when(haircutRepository.findAll())
                 .thenReturn(haircutList);
 
-        List<Haircut> all = haircutRepository.findAll();
+        List<HaircutDto> all = haircutService.findAll();
 
         then(haircutRepository)
                 .should(times(1))
                 .findAll();
 
-        assertThat(all).isEqualTo(haircutList);
+        assertThat(all.stream().map(HaircutDto::toEntity).toList()).isEqualTo(haircutList);
     }
 
     @Test
@@ -180,7 +180,7 @@ class HaircutServiceImplTest {
         when(haircutRepository.findAll())
                 .thenReturn(Collections.emptyList());
 
-        List<Haircut> all = haircutRepository.findAll();
+        List<HaircutDto> all = haircutService.findAll();
 
         then(haircutRepository)
                 .should(times(1))
