@@ -72,6 +72,6 @@ public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     public void delete(BarberDto barberDto) {
         log.info("Deleting a barber with id = {} from DB", barberDto.getId());
         barberRepository.deleteById(barberDto.getId());
-        imageService.deleteById(barberDto.getAvatarId());
+        bufferService.deleteImageById(barberDto.getAvatarId());
     }
 }

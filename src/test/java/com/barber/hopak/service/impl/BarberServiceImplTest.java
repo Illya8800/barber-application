@@ -205,15 +205,15 @@ class BarberServiceImplTest {
     void deleteById_thenSuccessfulDelete() {
         BarberDto barberDto = barberTestUtils.getBarberDtoWithAvatar();
         doNothing().when(barberRepository).deleteById(barberDto.getId());
-        doNothing().when(imageService).deleteById(barberDto.getAvatarId());
+        doNothing().when(bufferService).deleteImageById(barberDto.getAvatarId());
 
         barberService.delete(barberDto);
 
         then(barberRepository)
                 .should(times(1))
                 .deleteById(barberDto.getId());
-        then(imageService)
+        then(bufferService)
                 .should(times(1))
-                .deleteById(barberDto.getAvatarId());
+                .deleteImageById(barberDto.getAvatarId());
     }
 }

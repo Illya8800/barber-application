@@ -1,5 +1,6 @@
 package com.barber.hopak.service.impl;
 
+import com.barber.hopak.buffer.impl.BufferServiceImpl;
 import com.barber.hopak.exception.entity.haircut.HaircutNotFoundException;
 import com.barber.hopak.model.impl.Haircut;
 import com.barber.hopak.repository.HaircutRepository;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
     private final HaircutRepository haircutRepository;
+    private final BufferServiceImpl bufferService;
     private final ImageService<ImageDto, Long> imageService;
 
     @Override
@@ -63,9 +65,11 @@ public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
     @Override
     public HaircutDto create(HaircutDto haircutDto) {
         log.info("Inserting new haircut with name = {} in DB ", haircutDto.getName());
-        HaircutDto savedHaircutDto = haircutRepository.save(haircutDto.toEntity()).toDto();
-        imageService.create(savedHaircutDto.getAvatar());
-        return savedHaircutDto;
+        Haircut createdHaircut = haircutRepository.save(haircutDto.toEntity());
+        createdHaircut.setAvatarId(createdHaircut.getAvatar().getId());
+        HaircutDto createdHaircutDto = createdHaircut.toDto();
+        bufferService.save(createdHaircutDto.getAvatar());
+        return createdHaircutDto;
     }
 
     @Override
@@ -80,7 +84,7 @@ public class HaircutServiceImpl implements HaircutService<HaircutDto, Long> {
     public void delete(HaircutDto haircutDto) {
         log.info("Deleting a haircut with id = {} from DB", haircutDto.getId());
         haircutRepository.deleteById(haircutDto.getId());
-        imageService.deleteById(haircutDto.getAvatarId());
+        bufferService.deleteImageById(haircutDto.getAvatarId());
     }
 
     @Override

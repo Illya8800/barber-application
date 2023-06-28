@@ -1,7 +1,9 @@
 package com.barber.hopak.service.impl;
 
+import com.barber.hopak.buffer.impl.BufferServiceImpl;
 import com.barber.hopak.exception.entity.haircut.HaircutNotFoundException;
 import com.barber.hopak.model.impl.Haircut;
+import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.repository.HaircutRepository;
 import com.barber.hopak.service.ImageService;
 import com.barber.hopak.util.StringUtils3C;
@@ -24,6 +26,7 @@ import static com.barber.hopak.util.entity.HaircutTestUtils.EXISTING_HAIRCUT_ID;
 import static com.barber.hopak.util.entity.HaircutTestUtils.HAIRCUT_NAME;
 import static com.barber.hopak.util.entity.HaircutTestUtils.UNEXISTING_HAIRCUT_ID;
 import static com.barber.hopak.util.entity.HaircutTestUtils.UNEXISTING_HAIRCUT_NAME;
+import static com.barber.hopak.util.entity.ImageTestUtils.EXISTING_IMAGE_DTO_ID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +43,8 @@ class HaircutServiceImplTest {
     private final HaircutTestUtils haircutTestUtils;
     @Mock
     private HaircutRepository haircutRepository;
+    @Mock
+    private BufferServiceImpl bufferService;
     @Mock
     private ImageService<ImageDto, Long> imageService;
     @InjectMocks
@@ -191,26 +196,31 @@ class HaircutServiceImplTest {
 
     @Test
     void create_thenSuccessfulCreate() {
-        HaircutDto barberhaircutDto = haircutTestUtils.getHaircutDto();
-        Haircut haircutMock = mock(Haircut.class);
+        HaircutDto barberHaircutDto = haircutTestUtils.getHaircutDto();
+        Haircut createdHaircutMock = mock(Haircut.class);
         HaircutDto createdHaircutDtoMock = mock(HaircutDto.class);
         ImageDto imageDtoMock = mock(ImageDto.class);
+        Image imageMock = mock(Image.class);
 
         when(haircutRepository.save(any()))
-                .thenReturn(haircutMock);
-        when(haircutMock.toDto()).thenReturn(createdHaircutDtoMock);
-
-        when(imageService.update(createdHaircutDtoMock.getAvatar()))
+                .thenReturn(createdHaircutMock);
+        when(createdHaircutMock.getAvatar())
+                .thenReturn(imageMock);
+        when(imageMock.getId())
+                .thenReturn(EXISTING_IMAGE_DTO_ID);
+        when(createdHaircutMock.toDto())
+                .thenReturn(createdHaircutDtoMock);
+        when(createdHaircutDtoMock.getAvatar())
                 .thenReturn(imageDtoMock);
 
-        haircutService.create(barberhaircutDto);
+        haircutService.create(barberHaircutDto);
 
         then(haircutRepository)
                 .should(times(1))
                 .save(any());
-        then(imageService)
+        then(bufferService)
                 .should(times(1))
-                .create(createdHaircutDtoMock.getAvatar());
+                .save(createdHaircutDtoMock.getAvatar());
     }
 
     @Test
@@ -241,16 +251,16 @@ class HaircutServiceImplTest {
     void deleteById_thenSuccessfulDelete() {
         HaircutDto haircutDto = haircutTestUtils.getHaircutDto();
         doNothing().when(haircutRepository).deleteById(haircutDto.getId());
-        doNothing().when(imageService).deleteById(haircutDto.getAvatarId());
+        doNothing().when(bufferService).deleteImageById(haircutDto.getAvatarId());
 
         haircutService.delete(haircutDto);
 
         then(haircutRepository)
                 .should(times(1))
                 .deleteById(haircutDto.getId());
-        then(imageService)
+        then(bufferService)
                 .should(times(1))
-                .deleteById(haircutDto.getAvatarId());
+                .deleteImageById(haircutDto.getAvatarId());
     }
 
     @Test
