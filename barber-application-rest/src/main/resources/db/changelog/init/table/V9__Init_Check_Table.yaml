@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ilia
+      created: 2023-03-24
+      changes:
+        - createTable:
+            tableName: "check"
+            columns:
+              - column:
+                  name: "id"
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "date_time"
+                  type: dateTime(6)
+                  defaultValueComputed: NOW(6)
+              - column:
+                  name: "payment_id"
+                  type: bigint
+              - column:
+                  name: "haircut_id"
+                  type: bigint
+              - column:
+                  name: "barber_id"
+                  type: bigint
+              - column:
+                  name: "client_id"
+                  type: bigint
