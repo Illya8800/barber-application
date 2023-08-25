@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "isntagram.username",
+      "type": "java.lang.String",
+      "description": "This username is used for login Instagram account for validation of another account."
+    },
+    {
+      "name": "instagram.password",
+      "type": "java.lang.String",
+      "description": "This password is used to login to an Instagram account for validation of other accounts."
+    },
+    {
+      "name": "no-image.path",
+      "type": "java.lang.String",
+      "description": "This file path will be use as NO_IMAGE file."
+    },
+    {
+      "name": "buffer.path",
+      "type": "java.lang.String",
+      "description": "The path to file(s) buffer."
+    }
+  ]
+}

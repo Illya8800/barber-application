@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="http://localhost:8080/images" method="post" enctype="multipart/form-data">
+    <label>
+        <input type="text" name="imageName">
+    </label>
+    <input type="file" name="image">
+    <button type="submit">Upload</button>
+</form>
+
+</br>
+
+<form method="POST" action="http://localhost:8080/barbers" enctype="multipart/form-data">
+    <label for="barberId">Barber ID:</label>
+    <input type="text" id="barberId" name="id" value=""><br><br>
+
+    <label for="barberName">Barber Name:</label>
+    <input type="text" id="barberName" name="barberName" value="Vasya"><br><br>
+
+    <label for="barberInstagram">Barber Instagram:</label>
+    <input type="text" id="barberInstagram" name="instagram" value="j_p4nika"><br><br>
+
+    <label for="barberRank">Barber Rank:</label>
+    <input type="text" id="barberRank" name="barberRank" value="BARBER_APPRENTICE"><br><br>
+
+    <input type="file" name="image">
+
+    <input type="submit" value="Submit">
+</form>
+
+</br>
+
+<form method="POST" action="http://localhost:8080/payments">
+    <label for="price">price</label>
+    <input type="text" id="price" name="price"><br><br>
+
+    <label for="discount">discount</label>
+    <input type="text" id="discount" name="discount"><br><br>
+
+    <label for="finalPrice">finalPrice</label>
+    <input type="text" id="finalPrice" name="finalPrice"><br><br>
+
+    <label for="paymentType">paymentType</label>
+    <input type="text" id="paymentType" name="paymentType" value="CARD"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
