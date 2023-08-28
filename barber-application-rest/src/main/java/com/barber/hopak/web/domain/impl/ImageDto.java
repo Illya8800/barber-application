@@ -7,7 +7,6 @@ import com.barber.hopak.constrain.image.UniqueImageName;
 import com.barber.hopak.converter.ImageConverter;
 import com.barber.hopak.model.impl.Image;
 import com.barber.hopak.web.domain.DTO;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.barber.hopak.constrain.DtoConstraintMessage.IMAGE_FILE_IS_NOT_SELECTED;
@@ -33,7 +31,7 @@ public class ImageDto implements DTO<Image> {
     private Long id;
     @Schema(description = "Image name", example = "NickBarber")
     private String name;
-    @Schema(description = "Image",example = "Any photo")
+    @Schema(description = "Image", example = "An image", format = "binary")
     @NotNull(message = IMAGE_FILE_IS_NOT_SELECTED)
     @OriginalFileNameNotBlank
     @ImageExtensionsName

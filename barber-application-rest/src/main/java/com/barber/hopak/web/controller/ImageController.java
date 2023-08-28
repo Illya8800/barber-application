@@ -4,9 +4,6 @@ import com.barber.hopak.service.ImageService;
 import com.barber.hopak.web.domain.impl.ImageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,7 +72,7 @@ public class ImageController {
             @ApiResponse(responseCode = "201", description = "Image created successfully"),
             @ApiResponse(responseCode = "422", description = "Probably illegal value(s) in request")
     })
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createImage(@Valid @ModelAttribute ImageDto imageDto) {
         log.info("Controller processing the POST \"createImage\" mapping");
         imageService.setImageNameByOriginalFileName(imageDto);
@@ -87,9 +85,9 @@ public class ImageController {
             @ApiResponse(responseCode = "204", description = "Image updated successfully."),
             @ApiResponse(responseCode = "422", description = "Bad request. Probably illegal value(s) in request")
     })
-    @PatchMapping
+    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateImage(
-            @Valid @ModelAttribute @RequestBody(required = true, description = "An image") ImageDto imageDto
+            @Valid @ModelAttribute ImageDto imageDto
     ) {
         log.info("Controller processing the PATCH \"updateImage\" mapping");
         imageService.setImageNameByOriginalFileName(imageDto);

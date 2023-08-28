@@ -41,6 +41,7 @@ public class PaymentController {
         log.info("Controller processing the GET \"findPaymentById\" mapping");
         return new ResponseEntity<>(paymentService.findById(id), HttpStatus.OK);
     }
+
     @Operation(summary = "Find all payments (paginated)", description = "Get a paginated list of all payments")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the paginated list of payments"),
@@ -64,6 +65,11 @@ public class PaymentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Update an payment", description = "Update an existing payment's details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Payment updated successfully."),
+            @ApiResponse(responseCode = "422", description = "Bad request. Probably illegal value(s) in request")
+    })
     @PatchMapping
     public ResponseEntity<Void> updatePayment(@ModelAttribute @Valid PaymentDto barberDto) {
         log.info("Controller processing the PATCH \"updatePayment\" mapping");
@@ -71,6 +77,11 @@ public class PaymentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(summary = "Delete a payment", description = "Delete an existing payment's details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Payment deleted successfully."),
+            @ApiResponse(responseCode = "400", description = "Bad request.")
+    })
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletePaymentById(@PathVariable Long id) {
         log.info("Controller processing the DELETE \"deletePaymentById\" mapping");

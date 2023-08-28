@@ -4,6 +4,9 @@ import com.barber.hopak.service.BarberService;
 import com.barber.hopak.service.ImageService;
 import com.barber.hopak.web.domain.impl.BarberDto;
 import com.barber.hopak.web.domain.impl.ImageDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,17 +34,32 @@ public class BarberController {
     private final BarberService<BarberDto, Long> barberService;
     private final ImageService<ImageDto, Long> imageService;
 
+    @Operation(summary = "Get a barber by id", description = "Returns a barber as per the id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
+            @ApiResponse(responseCode = "400", description = "Not found - The barber was not found")
+    })
     @GetMapping(value = "/{id}")
     public ResponseEntity<BarberDto> findBarberById(@PathVariable Long id) {
         log.info("Controller processing the GET \"findBarberById\" mapping");
         return new ResponseEntity<>(barberService.findById(id), HttpStatus.OK);
     }
+
+    @Operation(summary = "Find all barbers (paginated)", description = "Get a paginated list of all barbers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the paginated list of barbers"),
+    })
     @GetMapping()
     public ResponseEntity<List<BarberDto>> findAllBarbers() {
         log.info("Controller processing the GET \"findAllBarbers\" mapping");
         return new ResponseEntity<>(barberService.findAll(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Create an barber", description = "Upload and create a new barber.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Barber created successfully"),
+            @ApiResponse(responseCode = "422", description = "Probably illegal value(s) in request")
+    })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createBarber(@ModelAttribute("barberDto") @Valid BarberDto barberDto,
                                              @ModelAttribute("imageDto") @Valid ImageDto imageDto) {
@@ -52,6 +70,11 @@ public class BarberController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Update an barber", description = "Update an existing barber's details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Barber updated successfully."),
+            @ApiResponse(responseCode = "422", description = "Bad request. Probably illegal value(s) in request")
+    })
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateBarber(@ModelAttribute("barberDto") @Valid BarberDto barberDto,
                                              @ModelAttribute("imageDto") @Valid ImageDto imageDto) {
@@ -62,6 +85,11 @@ public class BarberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(summary = "Delete an barber", description = "Delete an existing barber's details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Barber deleted successfully."),
+            @ApiResponse(responseCode = "400", description = "Bad request.")
+    })
     @DeleteMapping
     public ResponseEntity<Void> deleteBarberById(@ModelAttribute("barberDto") @Valid BarberDto barberDto) {
         log.info("Controller processing the DELETE \"deleteBarberById\" mapping");
