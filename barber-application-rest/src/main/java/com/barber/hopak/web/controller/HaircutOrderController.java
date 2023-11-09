@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/orders")
+//@RestController
+//@RequestMapping("/orders")
 @RequiredArgsConstructor
 @Log4j2
 @Tag(name = "Haircut order Management", description = "APIs for managing haircut orders")

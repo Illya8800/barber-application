@@ -2,6 +2,7 @@ package com.barber.hopak.converter;
 
 import com.barber.hopak.exception.entity.image.inh.ImageConversionException;
 import com.barber.hopak.org.springframework.web.multipart.custom.MultipartFileWithoutPath;
+import lombok.Cleanup;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,7 @@ public class ImageConverter {
     public static Blob convertMultipartFileToBlob(MultipartFile file) {
         log.info("Converting MultipartFile to the Blob type");
         try (InputStream inputStream = file.getInputStream();
-             ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream()) {
+            @Cleanup ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = inputStream.read(buffer)) != -1) {

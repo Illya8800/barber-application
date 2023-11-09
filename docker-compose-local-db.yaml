@@ -1,0 +1,53 @@
+version: '3.3'
+volumes:
+  db-volume:
+  db-keycloak-volume:
+networks:
+  aim-net:
+  keycloak-net:
+services:
+  database:
+    image: mysql:8.0
+    networks:
+      - aim-net
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=$PASSWORD
+      - MYSQL_PASSWORD=$PASSWORD
+      - MYSQL_USER=$USERNAME
+    volumes:
+      - db-volume:/var/lib/mysql
+  keycloak-database:
+    image: bitnami/postgresql
+    networks:
+      - keycloak-net
+    hostname: keycloak-host
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRESQL_DATABASE=$KEYCLOAK_DB_NAME
+      - POSTGRESQL_USERNAME=$KEYCLOAK_DB_USERNAME
+      - POSTGRESQL_PASSWORD=$KEYCLOAK_DB_PASSWORD
+    volumes:
+      - db-keycloak-volume:/var/lib/psql/keycloak
+  keycloak:
+    image: bitnami/keycloak:latest
+    depends_on:
+      - keycloak-database
+    networks:
+      - keycloak-net
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KEYCLOAK_DATABASE_PASSWORD=$KEYCLOAK_DB_PASSWORD
+      - KEYCLOAK_DATABASE_HOST=keycloak-database

@@ -4,6 +4,8 @@ import com.barber.hopak.constrain.barber.BarberRankName;
 import com.barber.hopak.model.enumeration.BarberRank;
 import com.barber.hopak.model.impl.Barber;
 import com.barber.hopak.web.domain.DTO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -35,6 +37,8 @@ public class BarberDto implements DTO<Barber> {
     @BarberRankName(message = BARBER_RANK_SHOULD_BE_CORRECT)
     private BarberRank barberRank;
     private Long avatarId;
+    @Schema(description = "Avatar image")
+    @Valid
     private ImageDto avatar;
 
     @Override

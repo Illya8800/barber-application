@@ -68,9 +68,11 @@ public class BarberServiceImpl implements BarberService<BarberDto, Long> {
     }
 
     @Override
-    public void delete(BarberDto barberDto) {
-        log.info("Deleting a barber with id = {} from DB", barberDto.getId());
-        barberRepository.deleteById(barberDto.getId());
-        bufferService.deleteImageById(barberDto.getAvatarId());
+    public void deleteById(Long id) {
+        log.info("Deleting a barber with id = {} from DB", id);
+        barberRepository.findById(id).ifPresent(barber -> {
+            barberRepository.deleteById(id);
+            bufferService.deleteImageById(barber.getAvatarId());
+        });
     }
 }

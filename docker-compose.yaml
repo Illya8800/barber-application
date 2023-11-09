@@ -1,0 +1,37 @@
+version: '3.3'
+volumes:
+  db-volume:
+networks:
+  aim-net:
+services:
+  backend:
+    image: barber-application-rest:0.0.1-SNAPSHOT
+    networks:
+      - aim-net
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      HOST: $HOST
+      PORT: $PORT
+      DB_NAME: $DB_NAME
+      USERNAME: $USERNAME
+      PASSWORD: $PASSWORD
+    depends_on:
+      - database
+  database:
+    image: mysql:8.0
+    networks:
+      - aim-net
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=$PASSWORD
+      - MYSQL_PASSWORD=$PASSWORD
+      - MYSQL_USER=$USERNAME
+    volumes:
+      - db-volume:/var/lib/mysql

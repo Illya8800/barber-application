@@ -203,17 +203,26 @@ class BarberServiceImplTest {
 
     @Test
     void deleteById_thenSuccessfulDelete() {
+        Barber barberMock = mock(Barber.class);
+
         BarberDto barberDto = barberTestUtils.getBarberDtoWithAvatar();
+
+        when(barberRepository.findById(EXISTING_BARBER_ID))
+                .thenReturn(Optional.of(barberMock));
         doNothing().when(barberRepository).deleteById(barberDto.getId());
-        doNothing().when(bufferService).deleteImageById(barberDto.getAvatarId());
+        when(barberMock.getAvatarId()).thenReturn(EXISTING_IMAGE_DTO_ID);
+        doNothing().when(bufferService).deleteImageById(any());
 
-        barberService.delete(barberDto);
+        barberService.deleteById(barberDto.getId());
 
+        then(barberRepository)
+                .should(times(1))
+                .findById(barberDto.getId());
         then(barberRepository)
                 .should(times(1))
                 .deleteById(barberDto.getId());
         then(bufferService)
                 .should(times(1))
-                .deleteImageById(barberDto.getAvatarId());
+                .deleteImageById(barberMock.getAvatarId());
     }
 }

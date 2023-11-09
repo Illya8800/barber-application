@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,10 +64,11 @@ public class BarberController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createBarber(@ModelAttribute("barberDto") @Valid BarberDto barberDto,
-                                             @ModelAttribute("imageDto") @Valid ImageDto imageDto) {
+                                             @RequestParam("image") MultipartFile image/*,
+                                             @ModelAttribute("imageDto") @Valid ImageDto imageDto*/) {
         log.info("Controller processing the POST \"createBarber\" mapping");
-        imageService.setImageNameByOriginalFileName(imageDto);
-        barberDto.setAvatar(imageDto);
+//        imageService.setImageNameByOriginalFileName(imageDto);
+//        barberDto.setAvatar(imageDto);
         barberService.create(barberDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -90,10 +93,10 @@ public class BarberController {
             @ApiResponse(responseCode = "204", description = "Barber deleted successfully."),
             @ApiResponse(responseCode = "400", description = "Bad request.")
     })
-    @DeleteMapping
-    public ResponseEntity<Void> deleteBarberById(@ModelAttribute("barberDto") @Valid BarberDto barberDto) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBarberById(@PathVariable("id") Long id) {
         log.info("Controller processing the DELETE \"deleteBarberById\" mapping");
-        barberService.delete(barberDto);
+        barberService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
